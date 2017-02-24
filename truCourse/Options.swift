@@ -102,4 +102,15 @@ struct Options
     }
   }
   
+  func differ(from x:Options) -> Bool
+  {
+    if northType != x.northType { return true }
+    if baseUnit  != x.baseUnit  { return true }
+    if trackingEnabled != x.trackingEnabled { return true }
+    if headingUp != x.headingUp { return true }
+    
+    if (emailAddress != nil || x.emailAddress != nil) && (emailAddress != x.emailAddress) { return true }
+    
+    return false
+  }
 }

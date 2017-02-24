@@ -36,7 +36,7 @@ class OptionsViewController: UITableViewController, UITextFieldDelegate
     baseUnitController.selectedSegmentIndex  = options.baseUnit.rawValue
     
     trackingEnabled.isOn                     = options.trackingEnabled
-    trackingDirection.selectedSegmentIndex   = options.headingUp ? 0 : 1
+    trackingDirection.selectedSegmentIndex   = options.headingUp ? 1 : 0
     
     emailField.text                          = options.emailAddress
     
@@ -90,8 +90,18 @@ class OptionsViewController: UITableViewController, UITextFieldDelegate
   func textFieldShouldReturn(_ textField: UITextField) -> Bool
   {
     emailField.resignFirstResponder()
-    self.options.setEmailAddress(textField.text)
-    updateEmailAddressColor( valid: self.options.emailAddress != nil )
+    
+    if let address = textField.text, address.isEmpty == false
+    {
+      self.options.setEmailAddress(address)
+      updateEmailAddressColor( valid: self.options.emailAddress != nil )
+    }
+    else
+    {
+      self.options.emailAddress = nil
+      updateEmailAddressColor(valid: true)
+    }
+
     return true
   }
   

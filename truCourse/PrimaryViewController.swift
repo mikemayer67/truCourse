@@ -21,9 +21,16 @@ class PrimaryViewController :
   {
     didSet
     {
-      print("PVC Options updated: \(options)")
-      options.updateDefaults()
-      Options.commit()
+      if options.differ(from: oldValue)
+      {
+        print("PVC Options updated: \(options)")
+        options.updateDefaults()
+        Options.commit()
+      }
+      else
+      {
+        print("PVC Options --- no change")
+      }
     }
   }
     
