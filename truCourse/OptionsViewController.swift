@@ -20,12 +20,14 @@ class OptionsViewController: UITableViewController, UITextFieldDelegate
   @IBOutlet weak var emailField          : UITextField!
   
   var options = Options()
+  var canceled = false
   
   override func viewDidLoad()
   {
     super.viewDidLoad()
     updateUI(with:options)
     updateEmailAddressColor(valid:true)
+    canceled = false
   }
   
   func updateUI(with options: Options)
@@ -102,5 +104,17 @@ class OptionsViewController: UITableViewController, UITextFieldDelegate
     
     emailCell.backgroundColor = bg
     emailField.textColor = fg
+  }
+  
+  @IBAction func handleCancel(_ sender : UIButton)
+  {
+    let nc = self.navigationController as! PrimaryNavigationController
+    nc.closeOptions(self, options: nil)
+  }
+  
+  @IBAction func handleUpdate(_ sender : UIButton)
+  {
+    let nc = self.navigationController as! PrimaryNavigationController
+    nc.closeOptions(self, options: self.options)
   }
 }

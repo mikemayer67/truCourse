@@ -19,7 +19,12 @@ class PrimaryViewController :
   
   var options = Options()
   {
-    didSet { print("PVC Options updated") }
+    didSet
+    {
+      print("PVC Options updated: \(options)")
+      options.updateDefaults()
+      Options.commit()
+    }
   }
     
   override func viewDidLoad()
@@ -37,9 +42,6 @@ class PrimaryViewController :
     self.dataSource = self
     self.delegate = self
     self.setViewControllers([dataControllers[currentViewType]!], direction: .forward, animated: false, completion: nil)
-    
-    print("viewDidLoad is done")
-    // Do any additional setup after loading the view.
   }
   
   // MARK: - Page View Data Source

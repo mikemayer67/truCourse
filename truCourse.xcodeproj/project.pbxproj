@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		27B10CFE1E6060E3005099BD /* PrimaryNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27B10CFD1E6060E3005099BD /* PrimaryNavigationController.swift */; };
+		27B10D001E606EC1005099BD /* Back_ffffff_25.png in Resources */ = {isa = PBXBuildFile; fileRef = 27B10CFF1E606EC1005099BD /* Back_ffffff_25.png */; };
+		27B10D061E608803005099BD /* Options.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 27B10D051E608803005099BD /* Options.storyboard */; };
 		27C558351E5F872E004FF32A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 27C558331E5F872E004FF32A /* LaunchScreen.storyboard */; };
 		27C558411E5F8769004FF32A /* Globe_ffffff_25.png in Resources */ = {isa = PBXBuildFile; fileRef = 27C5583C1E5F8769004FF32A /* Globe_ffffff_25.png */; };
 		27C558421E5F8769004FF32A /* Near Me_ffffff_25.png in Resources */ = {isa = PBXBuildFile; fileRef = 27C5583D1E5F8769004FF32A /* Near Me_ffffff_25.png */; };
@@ -27,6 +30,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		27B10CFD1E6060E3005099BD /* PrimaryNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PrimaryNavigationController.swift; sourceTree = "<group>"; };
+		27B10CFF1E606EC1005099BD /* Back_ffffff_25.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Back_ffffff_25.png; sourceTree = "<group>"; };
+		27B10D051E608803005099BD /* Options.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Options.storyboard; sourceTree = "<group>"; };
 		27C558271E5F872E004FF32A /* truCourse.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = truCourse.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		27C558341E5F872E004FF32A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		27C558361E5F872E004FF32A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -79,15 +85,17 @@
 			isa = PBXGroup;
 			children = (
 				27C558471E5F8790004FF32A /* AppDelegate.swift */,
+				27C5584C1E5F8790004FF32A /* Types.swift */,
+				27B10CFD1E6060E3005099BD /* PrimaryNavigationController.swift */,
+				27C5584B1E5F8790004FF32A /* PrimaryViewController.swift */,
 				27C558481E5F8790004FF32A /* BearingViewController.swift */,
 				27C558491E5F8790004FF32A /* LatLonViewController.swift */,
 				27C5584A1E5F8790004FF32A /* MapViewController.swift */,
-				27C5584B1E5F8790004FF32A /* PrimaryViewController.swift */,
-				27C5584C1E5F8790004FF32A /* Types.swift */,
-				27C558531E5F885B004FF32A /* Main.storyboard */,
 				27C558551E5F8ABB004FF32A /* Options.swift */,
 				27C5585D1E5F97B2004FF32A /* OptionsViewController.swift */,
 				27C558331E5F872E004FF32A /* LaunchScreen.storyboard */,
+				27C558531E5F885B004FF32A /* Main.storyboard */,
+				27B10D051E608803005099BD /* Options.storyboard */,
 				27C558361E5F872E004FF32A /* Info.plist */,
 				27C558591E5F9578004FF32A /* FactoryDefaults.plist */,
 				27C5585A1E5F9578004FF32A /* FactoryLimits.plist */,
@@ -99,6 +107,7 @@
 		27C558461E5F877E004FF32A /* Icons */ = {
 			isa = PBXGroup;
 			children = (
+				27B10CFF1E606EC1005099BD /* Back_ffffff_25.png */,
 				27C5583C1E5F8769004FF32A /* Globe_ffffff_25.png */,
 				27C5583D1E5F8769004FF32A /* Near Me_ffffff_25.png */,
 				27C5583E1E5F8769004FF32A /* Settings_ffffff_25.png */,
@@ -174,9 +183,11 @@
 				27C558411E5F8769004FF32A /* Globe_ffffff_25.png in Resources */,
 				27C558441E5F8769004FF32A /* Signpost_ffffff_25.png in Resources */,
 				27C558351E5F872E004FF32A /* LaunchScreen.storyboard in Resources */,
+				27B10D001E606EC1005099BD /* Back_ffffff_25.png in Resources */,
 				27C558431E5F8769004FF32A /* Settings_ffffff_25.png in Resources */,
 				27C558451E5F8769004FF32A /* Waypoint Map_ffffff_25.png in Resources */,
 				27C5585B1E5F9578004FF32A /* FactoryDefaults.plist in Resources */,
+				27B10D061E608803005099BD /* Options.storyboard in Resources */,
 				27C5585C1E5F9578004FF32A /* FactoryLimits.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -192,6 +203,7 @@
 				27C5584D1E5F8790004FF32A /* AppDelegate.swift in Sources */,
 				27C5584E1E5F8790004FF32A /* BearingViewController.swift in Sources */,
 				27C558521E5F8790004FF32A /* Types.swift in Sources */,
+				27B10CFE1E6060E3005099BD /* PrimaryNavigationController.swift in Sources */,
 				27C5585E1E5F97B2004FF32A /* OptionsViewController.swift in Sources */,
 				27C558511E5F8790004FF32A /* PrimaryViewController.swift in Sources */,
 				27C558501E5F8790004FF32A /* MapViewController.swift in Sources */,
@@ -356,6 +368,7 @@
 				27C5583B1E5F872E004FF32A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
