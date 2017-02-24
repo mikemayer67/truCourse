@@ -92,15 +92,6 @@ class PrimaryViewController :
   
   // MARK: - Page View Delegate
   
-  func pageViewController(_ pageViewController: UIPageViewController,
-                          willTransitionTo pendingViewControllers: [UIViewController])
-  {
-    let c = pendingViewControllers[0]
-    
-    let t = c as! VisualizationView
-    
-    print("will transistion to: \(t.visualizationType)")
-  }
   
   func pageViewController(_ pageViewController: UIPageViewController,
                           didFinishAnimating finished: Bool,

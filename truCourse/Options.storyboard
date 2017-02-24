@@ -235,6 +235,7 @@
                             <outlet property="delegate" destination="NYa-dR-8wH" id="QBj-Z5-aqc"/>
                         </connections>
                     </tableView>
+                    <toolbarItems/>
                     <navigationItem key="navigationItem" title="Settings" id="wDa-24-roM">
                         <barButtonItem key="leftBarButtonItem" style="plain" id="In4-vW-1od">
                             <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="iyN-Wg-yMP">
