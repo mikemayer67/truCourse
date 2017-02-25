@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		277689631E61159C00F25FE3 /* OptionsViewAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 277689621E61159C00F25FE3 /* OptionsViewAnimator.swift */; };
 		27B10CFE1E6060E3005099BD /* PrimaryNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27B10CFD1E6060E3005099BD /* PrimaryNavigationController.swift */; };
 		27B10D001E606EC1005099BD /* Back_ffffff_25.png in Resources */ = {isa = PBXBuildFile; fileRef = 27B10CFF1E606EC1005099BD /* Back_ffffff_25.png */; };
 		27B10D061E608803005099BD /* Options.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 27B10D051E608803005099BD /* Options.storyboard */; };
@@ -30,6 +31,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		277689621E61159C00F25FE3 /* OptionsViewAnimator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OptionsViewAnimator.swift; sourceTree = "<group>"; };
 		27B10CFD1E6060E3005099BD /* PrimaryNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PrimaryNavigationController.swift; sourceTree = "<group>"; };
 		27B10CFF1E606EC1005099BD /* Back_ffffff_25.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Back_ffffff_25.png; sourceTree = "<group>"; };
 		27B10D051E608803005099BD /* Options.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Options.storyboard; sourceTree = "<group>"; };
@@ -117,6 +119,7 @@
 			children = (
 				27C558551E5F8ABB004FF32A /* Options.swift */,
 				27C5585D1E5F97B2004FF32A /* OptionsViewController.swift */,
+				277689621E61159C00F25FE3 /* OptionsViewAnimator.swift */,
 				27B10D051E608803005099BD /* Options.storyboard */,
 			);
 			name = Options;
@@ -219,6 +222,7 @@
 				27C5584D1E5F8790004FF32A /* AppDelegate.swift in Sources */,
 				27C5584E1E5F8790004FF32A /* BearingViewController.swift in Sources */,
 				27C558521E5F8790004FF32A /* Types.swift in Sources */,
+				277689631E61159C00F25FE3 /* OptionsViewAnimator.swift in Sources */,
 				27B10CFE1E6060E3005099BD /* PrimaryNavigationController.swift in Sources */,
 				27C5585E1E5F97B2004FF32A /* OptionsViewController.swift in Sources */,
 				27C558511E5F8790004FF32A /* PrimaryViewController.swift in Sources */,
