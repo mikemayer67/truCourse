@@ -50,7 +50,7 @@ class PrimaryViewController :
     self.delegate = self
     self.setViewControllers([dataControllers[currentViewType]!], direction: .forward, animated: false, completion: nil)
   }
-  
+
   // MARK: - Page View Data Source
   
   @IBAction func setCurrentViewType(_ sender: UISegmentedControl)

@@ -16,19 +16,6 @@ class PrimaryNavigationController : UINavigationController, UINavigationControll
     self.delegate = self
   }
   
-  func closeOptions(_ vc:OptionsViewController, options:Options?)
-  {    
-    guard topViewController == vc else { return }
-    
-    popViewController(animated: true)
-    
-    if options == nil { return }
-    
-    guard topViewController is PrimaryViewController else { return }
-    let pvc = topViewController as! PrimaryViewController
-    pvc.options = options!
-  }
-  
   // MARK: - Navigation Controller Delegate
   
   func navigationController(_ navigationController: UINavigationController,
@@ -38,7 +25,7 @@ class PrimaryNavigationController : UINavigationController, UINavigationControll
     ) -> UIViewControllerAnimatedTransitioning?
   {
     var animator : UIViewControllerAnimatedTransitioning?
-    
+
     if ( toVC   is OptionsViewController && operation == .push ) ||
        ( fromVC is OptionsViewController && operation == .pop )
     {
@@ -46,5 +33,11 @@ class PrimaryNavigationController : UINavigationController, UINavigationControll
     }
     
     return animator
+  }
+  
+  override func unwind(for unwindSegue: UIStoryboardSegue, towardsViewController subsequentVC: UIViewController)
+  {
+    super.unwind(for: unwindSegue, towardsViewController: subsequentVC)
+    print("unwind PNC toward \(subsequentVC)\n  \(unwindSegue.source) --> \(unwindSegue.destination)")
   }
 }

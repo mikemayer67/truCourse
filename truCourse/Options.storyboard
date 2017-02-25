@@ -12,7 +12,7 @@
         <!--Settings-->
         <scene sceneID="j7o-GE-Dyv">
             <objects>
-                <tableViewController title="Settings" hidesBottomBarWhenPushed="YES" id="NYa-dR-8wH" customClass="OptionsViewController" customModule="truCourse" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController title="Settings" id="NYa-dR-8wH" customClass="OptionsViewController" customModule="truCourse" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="18" sectionFooterHeight="18" id="IKr-SL-2ev">
                         <rect key="frame" x="0.0" y="64" width="320" height="892"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

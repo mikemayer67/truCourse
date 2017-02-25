@@ -118,13 +118,25 @@ class OptionsViewController: UITableViewController, UITextFieldDelegate
   
   @IBAction func handleCancel(_ sender : UIButton)
   {
-    let nc = self.navigationController as! PrimaryNavigationController
-    nc.closeOptions(self, options: nil)
+    closeOptions(options: nil)
   }
   
   @IBAction func handleUpdate(_ sender : UIButton)
   {
+    closeOptions(options: self.options)
+  }
+  
+  func closeOptions(options:Options?)
+  {
     let nc = self.navigationController as! PrimaryNavigationController
-    nc.closeOptions(self, options: self.options)
+
+    nc.popViewController(animated: true)
+
+    if options != nil
+    {
+      let pvc = nc.topViewController as! PrimaryViewController
+      pvc.options = options!
+    }
+
   }
 }
