@@ -9,11 +9,11 @@
 import UIKit
 
 class PrimaryNavigationController : UINavigationController, UINavigationControllerDelegate
-{
+{  
   override func viewDidLoad()
   {
     super.viewDidLoad()
-    self.delegate = self
+    self.delegate = self    
   }
   
   // MARK: - Navigation Controller Delegate
@@ -29,7 +29,7 @@ class PrimaryNavigationController : UINavigationController, UINavigationControll
     if ( toVC   is OptionsViewController && operation == .push ) ||
        ( fromVC is OptionsViewController && operation == .pop )
     {
-      animator = OptionsViewAnimator(operation)
+      animator = OptionsViewAnimator(operator: operation)
     }
     
     return animator

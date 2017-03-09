@@ -12,71 +12,99 @@ class OptionsViewAnimator: NSObject, UIViewControllerAnimatedTransitioning
 {
   var type : UINavigationControllerOperation
   
-  init(_ type : UINavigationControllerOperation)
+  let duration = 0.35
+  
+  init(operator type:UINavigationControllerOperation)
   {
     self.type = type
   }
   
   func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval
   {
-    return 0.35
+    return self.duration
   }
   
   func animateTransition(using transitionContext: UIViewControllerContextTransitioning)
   {
-    if      self.type == .push { showOptions(using:transitionContext) }
-    else if self.type == .pop  { hideOptions(using:transitionContext) }
+    switch type
+    {
+    case .push: showOptions(using: transitionContext)
+    case .pop:  hideOptions(using: transitionContext)
+    default:    break
+    }
   }
   
   func showOptions(using context: UIViewControllerContextTransitioning)
   {
-    let src = context.viewController(forKey: .from)!
-    let dst = context.viewController(forKey: .to  )!
+    let src        = context.viewController(forKey: .from)!
+    let srcView    = context.view(forKey: .from)!
+    let dstView    = context.view(forKey: .to)!
     
-    let srcView = src.view!
-    let dstView = dst.view!
+    let nav        = src.navigationController
+    let toolbar    = nav?.toolbar
+
+    let screen     = UIScreen.main.bounds
+    let origin     = srcView.frame.origin
+    var dstSize    = srcView.frame.size
     
-    let barHeight = src.navigationController?.toolbar.frame.height ?? 0.0
+    dstSize.height = screen.height - origin.y
     
-    let origin   = srcView.frame.origin
-    
-    let srcSize  = srcView.frame.size
-    var dstSize  = srcSize; dstSize.height += barHeight
-    
-    dstView.frame = CGRect(origin:origin, size:dstSize)
-    
+    dstView.frame = CGRect(origin: origin, size: dstSize)
     dstView.layer.position = origin
     dstView.layer.anchorPoint = CGPoint(x:0.0,y:0.0)
     dstView.transform = dstView.transform.scaledBy(x: 1.0, y: 0.01)
     
-    UIApplication.shared.keyWindow!.insertSubview(dstView, aboveSubview: srcView)
+    let container = context.containerView
+    container.addSubview(dstView)
     
-    UIView.animate(withDuration: 0.35, animations:
+    srcView.window?.backgroundColor = toolbar?.barTintColor
+    nav?.setToolbarHidden(true, animated: false)
+    
+    UIView.animate(withDuration: self.duration, animations:
       {
         dstView.transform = .identity
+        toolbar?.alpha = 0.0
+      } )
+      {
+        (finished)->Void in
+        context.completeTransition( !context.transitionWasCancelled )
       }
-    ) { (finished)->Void in context.completeTransition( !context.transitionWasCancelled ) }
   }
-  
+ 
   func hideOptions(using context: UIViewControllerContextTransitioning)
   {
-    let src = context.viewController(forKey: .from)!
-    let dst = context.viewController(forKey: .to  )!
+    let src        = context.viewController(forKey: .from)!
+    let srcView    = context.view(forKey: .from)!
+    let dstView    = context.view(forKey: .to)!
     
-    let srcView = src.view!
-    let dstView = dst.view!
+    let screen     = UIScreen.main.bounds
+    let origin     = srcView.frame.origin
+    var dstSize    = srcView.frame.size
     
-    srcView.layer.position = srcView.frame.origin
+    let nav        = src.navigationController
+    let toolbar    = nav?.toolbar
+    let barHeight  = toolbar?.frame.height ?? 0.0
+    
+    dstSize.height = screen.height - (origin.y + barHeight)
+    
+    dstView.frame = CGRect(origin:origin, size:dstSize)
+    
+    let container = context.containerView
+    container.addSubview(dstView)
+    container.addSubview(srcView)
+    
     srcView.layer.anchorPoint = CGPoint(x:0.0,y:0.0)
-    srcView.transform = .identity
-    
-    UIApplication.shared.keyWindow!.insertSubview(dstView, belowSubview: srcView)
-    
+    nav?.setToolbarHidden(false, animated: false)
+    toolbar?.alpha = 0.0
+
     UIView.animate(withDuration: 0.35, animations:
       {
         srcView.transform = srcView.transform.scaledBy(x: 1.0, y: 0.01)
+        toolbar?.alpha = 1.0
+      } )
+      {
+        (finished)->Void in
+        context.completeTransition( !context.transitionWasCancelled )
       }
-    ) { (finished)->Void in context.completeTransition( !context.transitionWasCancelled ) }
   }
-
 }
