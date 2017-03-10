@@ -29,7 +29,7 @@ class PrimaryNavigationController : UINavigationController, UINavigationControll
     if ( toVC   is OptionsViewController && operation == .push ) ||
        ( fromVC is OptionsViewController && operation == .pop )
     {
-      animator = OptionsViewAnimator(operator: operation)
+      animator = OptionsViewAnimator(self, operator: operation)
     }
     
     return animator

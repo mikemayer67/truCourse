@@ -10,12 +10,14 @@ import UIKit
 
 class OptionsViewAnimator: NSObject, UIViewControllerAnimatedTransitioning
 {
+  var nav  : UINavigationController
   var type : UINavigationControllerOperation
   
   let duration = 0.35
   
-  init(operator type:UINavigationControllerOperation)
+  init(_ nav:UINavigationController, operator type:UINavigationControllerOperation)
   {
+    self.nav  = nav
     self.type = type
   }
   
@@ -36,29 +38,22 @@ class OptionsViewAnimator: NSObject, UIViewControllerAnimatedTransitioning
   
   func showOptions(using context: UIViewControllerContextTransitioning)
   {
-    let src        = context.viewController(forKey: .from)!
-    let srcView    = context.view(forKey: .from)!
+    let dst        = context.viewController(forKey: .to)!
     let dstView    = context.view(forKey: .to)!
     
-    let nav        = src.navigationController
-    let toolbar    = nav?.toolbar
-
-    let screen     = UIScreen.main.bounds
-    let origin     = srcView.frame.origin
-    var dstSize    = srcView.frame.size
+    let finalFrame = context.finalFrame(for:dst)
     
-    dstSize.height = screen.height - origin.y
+    let toolbar    = nav.toolbar
     
-    dstView.frame = CGRect(origin: origin, size: dstSize)
-    dstView.layer.position = origin
+    dstView.frame             = finalFrame
+    dstView.layer.position    = finalFrame.origin
     dstView.layer.anchorPoint = CGPoint(x:0.0,y:0.0)
-    dstView.transform = dstView.transform.scaledBy(x: 1.0, y: 0.01)
+    dstView.transform         = dstView.transform.scaledBy(x: 1.0, y: 0.01)
     
     let container = context.containerView
     container.addSubview(dstView)
     
-    srcView.window?.backgroundColor = toolbar?.barTintColor
-    nav?.setToolbarHidden(true, animated: false)
+    container.window?.backgroundColor = toolbar?.barTintColor
     
     UIView.animate(withDuration: self.duration, animations:
       {
@@ -73,28 +68,20 @@ class OptionsViewAnimator: NSObject, UIViewControllerAnimatedTransitioning
  
   func hideOptions(using context: UIViewControllerContextTransitioning)
   {
-    let src        = context.viewController(forKey: .from)!
+    let dst        = context.viewController(forKey: .to)!
     let srcView    = context.view(forKey: .from)!
     let dstView    = context.view(forKey: .to)!
+    let finalFrame = context.finalFrame(for:dst)
     
-    let screen     = UIScreen.main.bounds
-    let origin     = srcView.frame.origin
-    var dstSize    = srcView.frame.size
+    let toolbar    = nav.toolbar
     
-    let nav        = src.navigationController
-    let toolbar    = nav?.toolbar
-    let barHeight  = toolbar?.frame.height ?? 0.0
-    
-    dstSize.height = screen.height - (origin.y + barHeight)
-    
-    dstView.frame = CGRect(origin:origin, size:dstSize)
+    dstView.frame  = finalFrame
+    srcView.layer.anchorPoint = CGPoint(x:0.0,y:0.0)
     
     let container = context.containerView
     container.addSubview(dstView)
     container.addSubview(srcView)
     
-    srcView.layer.anchorPoint = CGPoint(x:0.0,y:0.0)
-    nav?.setToolbarHidden(false, animated: false)
     toolbar?.alpha = 0.0
 
     UIView.animate(withDuration: 0.35, animations:
