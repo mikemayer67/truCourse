@@ -26,72 +26,45 @@ class OptionsViewAnimator: NSObject, UIViewControllerAnimatedTransitioning
     return self.duration
   }
   
-  func animateTransition(using transitionContext: UIViewControllerContextTransitioning)
+  func animateTransition(using context: UIViewControllerContextTransitioning)
   {
-    switch type
-    {
-    case .push: showOptions(using: transitionContext)
-    case .pop:  hideOptions(using: transitionContext)
-    default:    break
-    }
-  }
-  
-  func showOptions(using context: UIViewControllerContextTransitioning)
-  {
+    var anim : (()->Void)!
+
     let dst        = context.viewController(forKey: .to)!
     let dstView    = context.view(forKey: .to)!
-    
-    let finalFrame = context.finalFrame(for:dst)
-    
-    let toolbar    = nav.toolbar
-    
-    dstView.frame             = finalFrame
-    dstView.layer.position    = finalFrame.origin
-    dstView.layer.anchorPoint = CGPoint(x:0.0,y:0.0)
-    dstView.transform         = dstView.transform.scaledBy(x: 1.0, y: 0.01)
-    
-    let container = context.containerView
-    container.addSubview(dstView)
-    
-    container.window?.backgroundColor = toolbar?.barTintColor
-    
-    UIView.animate(withDuration: self.duration, animations:
-      {
-        dstView.transform = .identity
-        toolbar?.alpha = 0.0
-      } )
-      {
-        (finished)->Void in
-        context.completeTransition( !context.transitionWasCancelled )
-      }
-  }
- 
-  func hideOptions(using context: UIViewControllerContextTransitioning)
-  {
-    let dst        = context.viewController(forKey: .to)!
     let srcView    = context.view(forKey: .from)!
-    let dstView    = context.view(forKey: .to)!
+    let container  = context.containerView
     let finalFrame = context.finalFrame(for:dst)
-    
-    let toolbar    = nav.toolbar
     
     dstView.frame  = finalFrame
-    srcView.layer.anchorPoint = CGPoint(x:0.0,y:0.0)
-    
-    let container = context.containerView
-    container.addSubview(dstView)
-    container.addSubview(srcView)
-    
-    toolbar?.alpha = 0.0
 
-    UIView.animate(withDuration: 0.35, animations:
-      {
-        srcView.transform = srcView.transform.scaledBy(x: 1.0, y: 0.01)
-        toolbar?.alpha = 1.0
-      } )
-      {
-        (finished)->Void in
-        context.completeTransition( !context.transitionWasCancelled )
-      }
+    container.window?.backgroundColor = nav.toolbar?.barTintColor
+    container.addSubview(dstView)
+    
+    if type == .push
+    {
+      dstView.layer.anchorPoint = CGPoint(x:0.0,y:0.0)
+      dstView.layer.position    = finalFrame.origin
+      dstView.transform         = dstView.transform.scaledBy(x: 1.0, y: 0.01)
+      
+      anim = { dstView.transform = .identity; self.nav.toolbar?.alpha = 0.0 }
+    }
+    else if type == .pop
+    {
+      container.addSubview(srcView)
+
+      srcView.layer.anchorPoint = CGPoint(x:0.0,y:0.0)
+      srcView.layer.position    = finalFrame.origin
+      nav.toolbar?.alpha = 0.0
+
+      anim = { srcView.transform = srcView.transform.scaledBy(x: 1.0, y: 0.01); self.nav.toolbar?.alpha = 1.0 }
+    }
+    
+    UIView.animate(withDuration: 0.35, animations:anim)
+    {
+      (finished:Bool)->Void in
+      context.completeTransition( !context.transitionWasCancelled )
+    }
   }
+
 }
