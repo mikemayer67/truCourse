@@ -11,10 +11,10 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--PrimaryController-->
+        <!--PageController-->
         <scene sceneID="ejl-am-6sl">
             <objects>
-                <pageViewController autoresizesArchivedViewToFullSize="NO" automaticallyAdjustsScrollViewInsets="NO" modalTransitionStyle="flipHorizontal" transitionStyle="scroll" navigationOrientation="horizontal" spineLocation="none" id="BeN-nG-LRN" userLabel="PrimaryController" customClass="PrimaryViewController" customModule="truCourse" customModuleProvider="target" sceneMemberID="viewController">
+                <pageViewController autoresizesArchivedViewToFullSize="NO" automaticallyAdjustsScrollViewInsets="NO" modalTransitionStyle="flipHorizontal" transitionStyle="scroll" navigationOrientation="horizontal" spineLocation="none" id="BeN-nG-LRN" userLabel="PageController" customClass="PageController" customModule="truCourse" customModuleProvider="target" sceneMemberID="viewController">
                     <extendedEdge key="edgesForExtendedLayout"/>
                     <toolbarItems>
                         <barButtonItem style="plain" systemItem="flexibleSpace" id="AvA-5K-e2H"/>
@@ -190,7 +190,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ANC-dY-zeT" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="518" y="-138"/>
+            <point key="canvasLocation" x="-148" y="579"/>
         </scene>
         <!--Bearing View Controller-->
         <scene sceneID="M5h-sb-MN6">
@@ -219,7 +219,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="emL-nz-LiU" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1183" y="-138"/>
+            <point key="canvasLocation" x="559" y="579"/>
         </scene>
         <!--Lat Lon View Controller-->
         <scene sceneID="3mU-Tr-XdP">
@@ -248,12 +248,12 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="nm2-fv-Tsg" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1896" y="-138"/>
+            <point key="canvasLocation" x="1290" y="579"/>
         </scene>
-        <!--Primary Navigation Controller-->
+        <!--Main Controller-->
         <scene sceneID="1og-LY-QHb">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" toolbarHidden="NO" id="wch-x0-wrd" customClass="PrimaryNavigationController" customModule="truCourse" customModuleProvider="target" sceneMemberID="viewController">
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" toolbarHidden="NO" id="wch-x0-wrd" customClass="MainController" customModule="truCourse" customModuleProvider="target" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" barStyle="black" translucent="NO" id="nBc-yE-uRW">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
@@ -283,7 +283,7 @@
                 <viewControllerPlaceholder storyboardName="Options" id="0oY-CD-5IB" sceneMemberID="viewController"/>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="MI2-gr-U8A" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="77" y="391"/>
+            <point key="canvasLocation" x="523" y="-138"/>
         </scene>
     </scenes>
     <resources>

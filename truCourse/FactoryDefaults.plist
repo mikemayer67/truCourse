@@ -2,13 +2,17 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>baseUnit</key>
-	<integer>1</integer>
+	<key>topOfScreen</key>
+	<integer>0</integer>
+	<key>mapType</key>
+	<integer>0</integer>
 	<key>northType</key>
 	<integer>0</integer>
-	<key>trackingEnabled</key>
-	<true/>
-	<key>headingUp</key>
-	<true/>
+	<key>baseUnit</key>
+	<integer>1</integer>
+	<key>locationAccuracyFrac</key>
+	<real>1</real>
+	<key>headingAccuracy</key>
+	<integer>1</integer>
 </dict>
 </plist>

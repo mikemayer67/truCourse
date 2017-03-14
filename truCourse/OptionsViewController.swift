@@ -9,77 +9,143 @@
 import UIKit
 import MapKit
 
+protocol OptionViewControllerDelegate : NSObjectProtocol
+{
+  func updateOptions(_ newOptions:Options) -> Void
+  func optionsDiffer(from candidateOptions:Options) -> Bool
+}
+
 class OptionsViewController: UITableViewController, UITextFieldDelegate
 {
-  @IBOutlet weak var northTypeController : UISegmentedControl!
-  @IBOutlet weak var baseUnitController  : UISegmentedControl!
-  @IBOutlet weak var trackingEnabled     : UISwitch!
-  @IBOutlet weak var trackingDirection   : UISegmentedControl!
+  @IBOutlet weak var updateButton        : UIButton!
+  @IBOutlet weak var cancelButton        : UIButton!
+  
+  @IBOutlet weak var topOfScreenSC       : UISegmentedControl!
+  @IBOutlet weak var headingAccuracySC   : UISegmentedControl!
+  @IBOutlet weak var mapTypeSC           : UISegmentedControl!
+  @IBOutlet weak var northTypeSC         : UISegmentedControl!
+  @IBOutlet weak var baseUnitSC          : UISegmentedControl!
+  @IBOutlet weak var locAccuracySlider   : UISlider!
+  @IBOutlet weak var locAccuracyText     : UILabel!
   
   @IBOutlet weak var emailCell           : UITableViewCell!
   @IBOutlet weak var emailField          : UITextField!
   
+  var delegate : OptionViewControllerDelegate?
+  
+  var hasUpdates = false
+  
+  func enable(_ control: UISegmentedControl, value:Int)
+  {
+    control.isMomentary = false
+    control.alpha = 1.0
+    control.isEnabled = true
+    control.selectedSegmentIndex = value
+  }
+  
+  func disable(_ control: UISegmentedControl)
+  {
+    if control==headingAccuracySC { control.isMomentary = true }
+    control.alpha = 0.2
+    control.isEnabled = false
+  }
+  
   var options = Options()
-  var canceled = false
   
   override func viewDidLoad()
   {
     super.viewDidLoad()
-    updateUI(with:options)
+    
+    let hasCompass = CLLocationManager.headingAvailable()
+
+    if hasCompass
+    {
+      enable(topOfScreenSC,     value:options.topOfScreen.rawValue    )
+      enable(headingAccuracySC, value:options.headingAccuracy.index() )
+      enable(northTypeSC,       value:options.northType.rawValue    )
+    }
+    else
+    {
+      disable(topOfScreenSC)
+      disable(headingAccuracySC)
+      disable(northTypeSC)
+    }
+    
+    switch options.mapType
+    {
+    case .standard:
+      mapTypeSC.selectedSegmentIndex = 0
+    case .satellite:
+      mapTypeSC.selectedSegmentIndex = 1
+    case .hybrid:
+      mapTypeSC.selectedSegmentIndex = 2
+    default:
+      mapTypeSC.selectedSegmentIndex = 0
+    }
+    
+    baseUnitSC.selectedSegmentIndex  = options.baseUnit.rawValue
+    
+    locAccuracySlider.value = Float(options.locAccFrac)
+    locAccuracyText.text    = options.locationAccuracyString
+    
+    emailField.text         = options.emailAddress
+    
     updateEmailAddressColor(valid:true)
-    canceled = false
+    checkState()
   }
-  
-  func updateUI(with options: Options)
-  {
-    northTypeController.selectedSegmentIndex = options.northType.rawValue
-    baseUnitController.selectedSegmentIndex  = options.baseUnit.rawValue
-    
-    trackingEnabled.isOn                     = options.trackingEnabled
-    trackingDirection.selectedSegmentIndex   = options.headingUp ? 1 : 0
-    
-    emailField.text                          = options.emailAddress
-    
-    updateTrackingControllers(for: options)
-  }
-  
-  private func updateTrackingControllers(for options:Options)
-  {
-    let t1 = options.headingAvailable
-    let t2 = t1 && options.trackingEnabled
-    
-    trackingEnabled.isEnabled = t1
-    trackingEnabled.alpha     = (t1 ? 1.0 : 0.2)
-    
-    trackingDirection.isEnabled = t2
-    trackingDirection.alpha     = (t2 ? 1.0 : 0.2)
-  }
-  
-  
   
   // MARK: - Actions
+  
+  @IBAction func handleTopOfScreen(_ sender : UISegmentedControl)
+  {
+    options.topOfScreen = MapOrientation(rawValue: sender.selectedSegmentIndex)!
+    
+    switch options.topOfScreen
+    {
+    case .North:   disable(headingAccuracySC)
+    case .Heading: enable(headingAccuracySC, value:options.headingAccuracy.index())
+    }
+    checkState()
+  }
+  
+  @IBAction func handleHeadingAccuracy(_ sender : UISegmentedControl)
+  {
+    options.headingAccuracy.set(byIndex: sender.selectedSegmentIndex)
+    checkState()
+  }
+  
+  @IBAction func handleMapType(_ sender : UISegmentedControl)
+  {
+    switch(sender.selectedSegmentIndex)
+    {
+    case 0: options.mapType = .standard
+    case 1: options.mapType = .satellite
+    case 2: options.mapType = .hybrid
+    default: options.mapType = .standard
+    }
+    
+    checkState()
+  }
   
   @IBAction func handleNorthType(_ sender : UISegmentedControl)
   {
     self.options.northType = NorthType(rawValue: sender.selectedSegmentIndex)!
+    checkState()
   }
   
   @IBAction func handleBaseUnit(_ sender : UISegmentedControl)
   {
     self.options.baseUnit = BaseUnitType(rawValue: sender.selectedSegmentIndex)!
+    locAccuracyText.text = options.locationAccuracyString
+    checkState()
   }
   
-  @IBAction func handleTrackingEnabled(_ sender : UISwitch)
+  @IBAction func handleLocationAccuracy(_ sender : UISlider)
   {
-    self.options.trackingEnabled = sender.isOn
-    updateTrackingControllers(for: self.options)
+    options.locAccFrac = Double(sender.value)
+    locAccuracyText.text = options.locationAccuracyString
+    checkState()
   }
-  
-  @IBAction func handleTrackingDirection(_ sender : UISegmentedControl)
-  {
-    self.options.headingUp = ( sender.selectedSegmentIndex == 1 )
-  }
-  
   
   func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool
   {
@@ -101,7 +167,8 @@ class OptionsViewController: UITableViewController, UITextFieldDelegate
       self.options.emailAddress = nil
       updateEmailAddressColor(valid: true)
     }
-
+    
+    checkState()
     return true
   }
   
@@ -118,25 +185,28 @@ class OptionsViewController: UITableViewController, UITextFieldDelegate
   
   @IBAction func handleCancel(_ sender : UIButton)
   {
-    closeOptions(options: nil)
+    close()
   }
   
   @IBAction func handleUpdate(_ sender : UIButton)
   {
-    closeOptions(options: self.options)
+    if hasUpdates { delegate?.updateOptions(options) }
+    close()
   }
   
-  func closeOptions(options:Options?)
+  func checkState()
   {
-    let nc = self.navigationController as! PrimaryNavigationController
-
+    if delegate == nil { hasUpdates = false                                  }
+    else               { hasUpdates = delegate!.optionsDiffer(from: options) }
+    
+    updateButton.setTitle((hasUpdates ? "Apply" : "Back"), for: .normal)
+    cancelButton.isEnabled = hasUpdates
+    cancelButton.isHidden  = (hasUpdates == false)
+  }
+  
+  func close()
+  {
+    let nc = self.navigationController as! MainController
     nc.popViewController(animated: true)
-
-    if options != nil
-    {
-      let pvc = nc.topViewController as! PrimaryViewController
-      pvc.options = options!
-    }
-
   }
 }

@@ -40,40 +40,88 @@ struct Options
   
   // MARK: - Options Data
   
+  var topOfScreen     : MapOrientation
+  var headingAccuracy : HeadingAccuracy  // map orientation update frequency
+  var mapType         : MKMapType
   var northType       : NorthType
   var baseUnit        : BaseUnitType
-  var trackingEnabled : Bool
-  var headingUp       : Bool
+  var locAccFrac      : Double         // used with baseUnit to determine location accuracy
+  
+  var emailAddress    : String?
+  
+  var locationAccuracy : CLLocationAccuracy
+  {
+    var min : Double!
+    var max : Double!
+    switch baseUnit
+    {
+    case .English:
+      min =   5.0 * 0.3048
+      max = 500.0 * 0.3048
+    case .Metric:
+      min = 1.0
+      max = 250.0
+    }
+    
+    return min * exp((1.0-locAccFrac)*log(max/min))
+  }
+  
+  var locationAccuracyString : String
+  {
+    let formatter = MKDistanceFormatter()
+    switch baseUnit
+    {
+    case .English: formatter.units = .imperial
+    case .Metric:  formatter.units = .metric
+    }
+    return formatter.string(fromDistance: self.locationAccuracy)
+  }
+
+  var locationFilter : CLLocationDistance
+  {
+    return 2.0 * locationAccuracy
+  }
   
   var trackingMode : MKUserTrackingMode
   {
-    return ( trackingEnabled ? (headingUp ? .followWithHeading : .follow) : .none );
+    switch(topOfScreen)
+    {
+    case .Heading: return .follow
+    case .North:   return .followWithHeading
+    }
   }
   
-  var headingAvailable  : Bool
-  
-  var emailAddress : String?
+  var headingFilter : CLLocationDegrees
+  {
+    return headingAccuracy.rawValue
+  }
   
   init()
   {
     let dv = Options.defaults
-    northType       = NorthType(         rawValue: dv.integer(forKey: "northType"   ))!
-    baseUnit        = BaseUnitType(      rawValue: dv.integer(forKey: "baseUnit"    ))!
-    trackingEnabled = dv.bool(forKey: "trackingEnabled")
-    headingUp       = dv.bool(forKey: "headingUp")
+    topOfScreen     = MapOrientation(    rawValue: dv.integer(forKey: "topOfScreen"   ))!
+    mapType         = MKMapType(         rawValue: UInt(dv.integer(forKey: "mapType" )))!
+    northType       = NorthType(         rawValue: dv.integer(forKey: "northType"     ))!
+    baseUnit        = BaseUnitType(      rawValue: dv.integer(forKey: "baseUnit"      ))!
+    locAccFrac      = dv.double(forKey: "locationAccuracyFrac")
+    
+    headingAccuracy = .Good
+    headingAccuracy.set(byIndex: dv.integer(forKey: "headingAccuracy"))
     
     emailAddress = Options.defaults.string(forKey: "emailAddress")
-    
-    headingAvailable =  CLLocationManager.headingAvailable()
   }
   
   func updateDefaults()
   {
     let dv = Options.defaults
-    dv.set(    northType.rawValue, forKey:"northType"       )
-    dv.set(     baseUnit.rawValue, forKey:"baseUnit"        )
-    dv.set(       trackingEnabled, forKey:"trackingEnabled" )
-    dv.set(             headingUp, forKey:"headingUp"       )
+    
+    dv.set( topOfScreen.rawValue,    forKey: "topOfScreen"          )
+    dv.set( mapType.rawValue,        forKey: "mapType"              )
+    dv.set( northType.rawValue,      forKey: "northType"            )
+    dv.set( baseUnit.rawValue,       forKey: "baseUnit"             )
+    dv.set( locAccFrac,              forKey: "locationAccuracyFrac" )
+    
+    dv.set( headingAccuracy.index(), forKey: "headingAccuracy"      )
     
     if emailAddress == nil
     {
@@ -104,10 +152,13 @@ struct Options
   
   func differ(from x:Options) -> Bool
   {
-    if northType != x.northType { return true }
-    if baseUnit  != x.baseUnit  { return true }
-    if trackingEnabled != x.trackingEnabled { return true }
-    if headingUp != x.headingUp { return true }
+    if topOfScreen != x.topOfScreen { return true }
+    if mapType     != x.mapType     { return true }
+    if northType   != x.northType   { return true }
+    if baseUnit    != x.baseUnit    { return true }
+    if locAccFrac  != x.locAccFrac  { return true }
+    
+    if headingAccuracy != x.headingAccuracy { return true }
     
     if (emailAddress != nil || x.emailAddress != nil) && (emailAddress != x.emailAddress) { return true }
     

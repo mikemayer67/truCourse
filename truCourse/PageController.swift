@@ -8,47 +8,46 @@
 
 import UIKit
 import CoreGraphics
+import CoreLocation
 
-class PrimaryViewController :
-  UIPageViewController, UIPageViewControllerDataSource, UIPageViewControllerDelegate
+class PageController :
+  UIPageViewController, UIPageViewControllerDataSource, UIPageViewControllerDelegate,
+  OptionViewControllerDelegate
 {
   @IBOutlet var viewTypeControl : UISegmentedControl!
   
   var dataControllers = [VisualizationType:UIViewController]()
   var currentViewType = VisualizationType.MapView
   
+  let locationManager = CLLocationManager()
+    
   var options = Options()
   {
     didSet
     {
-      if options.differ(from: oldValue)
-      {
-        print("PVC Options updated: \(options)")
-        options.updateDefaults()
-        Options.commit()
-      }
-      else
-      {
-        print("PVC Options --- no change")
-      }
+      options.updateDefaults()
+      Options.commit()
     }
   }
     
   override func viewDidLoad()
   {
     super.viewDidLoad()
-    
+        
     let sb = self.storyboard!
     
     dataControllers[.MapView]     = sb.instantiateViewController(withIdentifier: "mapViewController")
     dataControllers[.BearingView] = sb.instantiateViewController(withIdentifier: "bearingViewController")
     dataControllers[.LatLonView]  = sb.instantiateViewController(withIdentifier: "latLonViewController")
     
-    self.navigationController?.navigationBar.tintColor = UIColor.white
+    self.navigationController!.navigationBar.tintColor = UIColor.white
+    (self.navigationController as! MainController).pageController = self
     
     self.dataSource = self
     self.delegate = self
     self.setViewControllers([dataControllers[currentViewType]!], direction: .forward, animated: false, completion: nil)
+
+    LocationServices.shared.requestAuthorization()
   }
 
   // MARK: - Page View Data Source
@@ -109,5 +108,17 @@ class PrimaryViewController :
         self.viewTypeControl.selectedSegmentIndex = newType.rawValue
       }
     }
+  }
+  
+  // MARK: - OptionViewController Delegate
+  
+  func optionsDiffer(from candidateOptions: Options) -> Bool
+  {
+    return candidateOptions.differ(from: self.options)
+  }
+  
+  func updateOptions(_ newOptions: Options)
+  {
+    self.options = newOptions
   }
 }

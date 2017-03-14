@@ -8,8 +8,10 @@
 
 import UIKit
 
-class PrimaryNavigationController : UINavigationController, UINavigationControllerDelegate
-{  
+class MainController : UINavigationController, UINavigationControllerDelegate
+{
+  weak var pageController : PageController!
+  
   override func viewDidLoad()
   {
     super.viewDidLoad()
@@ -35,9 +37,14 @@ class PrimaryNavigationController : UINavigationController, UINavigationControll
     return animator
   }
   
-  override func unwind(for unwindSegue: UIStoryboardSegue, towardsViewController subsequentVC: UIViewController)
+  func navigationController(_ navigationController: UINavigationController,
+                            willShow viewController: UIViewController,
+                            animated: Bool)
   {
-    super.unwind(for: unwindSegue, towardsViewController: subsequentVC)
-    print("unwind PNC toward \(subsequentVC)\n  \(unwindSegue.source) --> \(unwindSegue.destination)")
+    if let ovc = viewController as? OptionsViewController
+    {
+      ovc.delegate = pageController
+      ovc.checkState()
+    }
   }
 }
