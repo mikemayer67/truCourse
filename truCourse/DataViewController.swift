@@ -1,5 +1,5 @@
 //
-//  MyPageViewController.swift
+//  DataViewController.swift
 //  truCourse
 //
 //  Created by Mike Mayer on 2/22/17.
@@ -10,7 +10,7 @@ import UIKit
 import CoreGraphics
 import CoreLocation
 
-class PageController :
+class DataViewController :
   UIPageViewController, UIPageViewControllerDataSource, UIPageViewControllerDelegate,
   OptionViewControllerDelegate
 {
@@ -19,7 +19,9 @@ class PageController :
   var dataControllers = [VisualizationType:UIViewController]()
   var currentViewType = VisualizationType.MapView
   
-  let locationManager = CLLocationManager()
+  let dataController = DataController.shared
+  
+  private(set) var route : Route?
     
   var options = Options()
   {
@@ -27,6 +29,7 @@ class PageController :
     {
       options.updateDefaults()
       Options.commit()
+      applyOptions()
     }
   }
     
@@ -41,13 +44,20 @@ class PageController :
     dataControllers[.LatLonView]  = sb.instantiateViewController(withIdentifier: "latLonViewController")
     
     self.navigationController!.navigationBar.tintColor = UIColor.white
-    (self.navigationController as! MainController).pageController = self
+    (self.navigationController as! MainController).dataViewController = self
     
     self.dataSource = self
     self.delegate = self
     self.setViewControllers([dataControllers[currentViewType]!], direction: .forward, animated: false, completion: nil)
-
-    LocationServices.shared.requestAuthorization()
+    
+    dataController.dataViewController = self
+    
+    applyOptions()
+  }
+  
+  func applyOptions()
+  {
+    for (_,controller) in dataControllers { (controller as! VisualizationView).applyOptions(options) }
   }
 
   // MARK: - Page View Data Source
@@ -121,4 +131,8 @@ class PageController :
   {
     self.options = newOptions
   }
+  
+  // MARK: - Toolbar handler
+  
+  
 }

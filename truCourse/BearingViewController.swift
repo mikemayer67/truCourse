@@ -10,7 +10,6 @@ import UIKit
 
 class BearingViewController: UITableViewController, VisualizationView
 {
-  
   var visualizationType : VisualizationType { return .BearingView }
   
   override func viewDidLoad() {
@@ -21,6 +20,13 @@ class BearingViewController: UITableViewController, VisualizationView
     
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem()
+  }
+  
+  // MARK: - Options
+  
+  func applyOptions(_ options: Options)
+  {
+    print("BearingViewController::applyOptions: \(options)")
   }
   
   // MARK: - Table view data source

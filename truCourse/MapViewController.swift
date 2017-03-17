@@ -7,34 +7,25 @@
 //
 
 import UIKit
+import MapKit
 
 class MapViewController: UIViewController, VisualizationView
 {
-  @IBOutlet var subView : UIView!
-  @IBOutlet var xOffset : UISlider!
-  @IBOutlet var yOffset : UISlider!
+  @IBOutlet weak var mapView: MKMapView!
   
   var visualizationType : VisualizationType { return .MapView }
   
   override func viewDidLoad() {
     super.viewDidLoad()
-
-    updateShadow()
     
     // Do any additional setup after loading the view.
   }
   
-  @IBAction func updateShadow(_ updatedSlider:UISlider)
-  {
-    self.updateShadow()
-  }
+  // MARK: - Options
   
-  func updateShadow()->Void
+  func applyOptions(_ options: Options)
   {
-    subView.layer.shadowColor = UIColor.black.cgColor
-    subView.layer.shadowOpacity = 1.0
-    subView.layer.shadowOffset = CGSize(width: Double(xOffset.value), height: Double(yOffset.value))
-    subView.layer.shadowRadius = 10.0
+    mapView.mapType = options.mapType
   }
   
 }

@@ -23,6 +23,13 @@ class LatLonViewController: UITableViewController, VisualizationView
     // self.navigationItem.rightBarButtonItem = self.editButtonItem()
   }
   
+  // MARK: - Options
+  
+  func applyOptions(_ options: Options)
+  {
+    print("LatLonViewController::applyOptions: \(options)")
+  }
+  
   // MARK: - Table view data source
   
   override func numberOfSections(in tableView: UITableView) -> Int {

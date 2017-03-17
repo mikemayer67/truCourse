@@ -61,8 +61,12 @@ class OptionsViewController: UITableViewController, UITextFieldDelegate
     if hasCompass
     {
       enable(topOfScreenSC,     value:options.topOfScreen.rawValue    )
-      enable(headingAccuracySC, value:options.headingAccuracy.index() )
       enable(northTypeSC,       value:options.northType.rawValue    )
+      switch(options.topOfScreen)
+      {
+      case .North: disable(headingAccuracySC)
+      case .Heading: enable(headingAccuracySC, value: options.headingAccuracy.index())
+      }
     }
     else
     {

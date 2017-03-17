@@ -9,17 +9,12 @@
 import Foundation
 import CoreLocation
 
-protocol LocationServicesDelegate
-{
-  func locationServices(enabled:Bool)->Void
-}
-
 class LocationServices : NSObject, CLLocationManagerDelegate
 {
   let manager    = CLLocationManager()
   let hasCompass = CLLocationManager.headingAvailable()
   
-  var delegate : LocationServicesDelegate?
+  var status     = CLAuthorizationStatus.notDetermined
   
   // MARK: - Singleton methods
   
@@ -47,6 +42,9 @@ class LocationServices : NSObject, CLLocationManagerDelegate
   
   func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus)
   {
-    delegate?.locationServices(enabled: status == .authorizedWhenInUse || status == .authorizedAlways)
+    print("LM: Authorization Changed: \(status.rawValue)")
+
+    self.status = status
+    Notification.enqueue(.locationAuthorizationChanged, postingStyle: .asap)
   }
 }

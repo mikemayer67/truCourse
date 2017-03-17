@@ -10,7 +10,7 @@ import UIKit
 
 class MainController : UINavigationController, UINavigationControllerDelegate
 {
-  weak var pageController : PageController!
+  weak var dataViewController : DataViewController!
   
   override func viewDidLoad()
   {
@@ -43,7 +43,7 @@ class MainController : UINavigationController, UINavigationControllerDelegate
   {
     if let ovc = viewController as? OptionsViewController
     {
-      ovc.delegate = pageController
+      ovc.delegate = dataViewController
       ovc.checkState()
     }
   }
