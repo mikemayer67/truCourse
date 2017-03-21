@@ -15,12 +15,11 @@ class DataViewController :
   OptionViewControllerDelegate
 {
   @IBOutlet var viewTypeControl : UISegmentedControl!
+  @IBOutlet var dataController  : DataController!
   
   var dataControllers = [VisualizationType:UIViewController]()
   var currentViewType = VisualizationType.MapView
-  
-  let dataController = DataController.shared
-  
+    
   private(set) var route : Route?
     
   var options = Options()
@@ -50,9 +49,9 @@ class DataViewController :
     self.delegate = self
     self.setViewControllers([dataControllers[currentViewType]!], direction: .forward, animated: false, completion: nil)
     
-    dataController.dataViewController = self
-    
     applyOptions()
+    
+    dataController.start()
   }
   
   func applyOptions()

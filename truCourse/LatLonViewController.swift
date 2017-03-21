@@ -27,7 +27,8 @@ class LatLonViewController: UITableViewController, VisualizationView
   
   func applyOptions(_ options: Options)
   {
-    print("LatLonViewController::applyOptions: \(options)")
+    print("Don't forget to implement LatLonViewController.applyOptions")
+
   }
   
   // MARK: - Table view data source

@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		2710A2E81E735977004BE462 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2710A2E71E735977004BE462 /* MapKit.framework */; };
+		273D83821E8163B1003F5B49 /* RouteID.swift in Sources */ = {isa = PBXBuildFile; fileRef = 273D83811E8163B1003F5B49 /* RouteID.swift */; };
 		273DCEB11E7AC11D005AE82E /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 273DCEB01E7AC11D005AE82E /* Constants.swift */; };
 		273DCEB31E7ACC11005AE82E /* Route.swift in Sources */ = {isa = PBXBuildFile; fileRef = 273DCEB21E7ACC11005AE82E /* Route.swift */; };
 		273DCEBA1E7C1C06005AE82E /* DataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 273DCEB91E7C1C06005AE82E /* DataController.swift */; };
@@ -31,11 +32,22 @@
 		27C558561E5F8ABB004FF32A /* Options.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27C558551E5F8ABB004FF32A /* Options.swift */; };
 		27C5585B1E5F9578004FF32A /* FactoryDefaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = 27C558591E5F9578004FF32A /* FactoryDefaults.plist */; };
 		27C5585E1E5F97B2004FF32A /* OptionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27C5585D1E5F97B2004FF32A /* OptionsViewController.swift */; };
+		27E775301E7CA95700091C78 /* World Map_ffffff_25.png in Resources */ = {isa = PBXBuildFile; fileRef = 27E7752F1E7CA95700091C78 /* World Map_ffffff_25.png */; };
+		27E7753C1E7CB84700091C78 /* Play_ffffff_25.png in Resources */ = {isa = PBXBuildFile; fileRef = 27E7753B1E7CB84700091C78 /* Play_ffffff_25.png */; };
+		27E7753E1E7CB85600091C78 /* Pause_ffffff_25.png in Resources */ = {isa = PBXBuildFile; fileRef = 27E7753D1E7CB85600091C78 /* Pause_ffffff_25.png */; };
+		27E775401E7CB88300091C78 /* Undo_ffffff_25.png in Resources */ = {isa = PBXBuildFile; fileRef = 27E7753F1E7CB88300091C78 /* Undo_ffffff_25.png */; };
+		27E775441E7CB90F00091C78 /* Upload_ffffff_25.png in Resources */ = {isa = PBXBuildFile; fileRef = 27E775431E7CB90F00091C78 /* Upload_ffffff_25.png */; };
+		27E775461E7CB95300091C78 /* Pin_ffffff_25.png in Resources */ = {isa = PBXBuildFile; fileRef = 27E775451E7CB95300091C78 /* Pin_ffffff_25.png */; };
+		27E775481E7CB99800091C78 /* Pin 2_ffffff_25.png in Resources */ = {isa = PBXBuildFile; fileRef = 27E775471E7CB99800091C78 /* Pin 2_ffffff_25.png */; };
+		27E7754A1E7CB9B500091C78 /* Circled Play_ffffff_25.png in Resources */ = {isa = PBXBuildFile; fileRef = 27E775491E7CB9B500091C78 /* Circled Play_ffffff_25.png */; };
+		27E7754C1E7CB9CE00091C78 /* Circled Pause_ffffff_25.png in Resources */ = {isa = PBXBuildFile; fileRef = 27E7754B1E7CB9CE00091C78 /* Circled Pause_ffffff_25.png */; };
+		27E7754E1E7CC16600091C78 /* Routes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E7754D1E7CC16600091C78 /* Routes.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		2710A2E41E72FA2C004BE462 /* LocationServices.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationServices.swift; sourceTree = "<group>"; };
 		2710A2E71E735977004BE462 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
+		273D83811E8163B1003F5B49 /* RouteID.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteID.swift; sourceTree = "<group>"; };
 		273DCEB01E7AC11D005AE82E /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		273DCEB21E7ACC11005AE82E /* Route.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Route.swift; sourceTree = "<group>"; };
 		273DCEB61E7B38CB005AE82E /* Notification+extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Notification+extension.swift"; sourceTree = "<group>"; };
@@ -62,6 +74,16 @@
 		27C558551E5F8ABB004FF32A /* Options.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Options.swift; sourceTree = "<group>"; };
 		27C558591E5F9578004FF32A /* FactoryDefaults.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = FactoryDefaults.plist; sourceTree = "<group>"; };
 		27C5585D1E5F97B2004FF32A /* OptionsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OptionsViewController.swift; sourceTree = "<group>"; };
+		27E7752F1E7CA95700091C78 /* World Map_ffffff_25.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "World Map_ffffff_25.png"; sourceTree = "<group>"; };
+		27E7753B1E7CB84700091C78 /* Play_ffffff_25.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Play_ffffff_25.png; sourceTree = "<group>"; };
+		27E7753D1E7CB85600091C78 /* Pause_ffffff_25.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Pause_ffffff_25.png; sourceTree = "<group>"; };
+		27E7753F1E7CB88300091C78 /* Undo_ffffff_25.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Undo_ffffff_25.png; sourceTree = "<group>"; };
+		27E775431E7CB90F00091C78 /* Upload_ffffff_25.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Upload_ffffff_25.png; sourceTree = "<group>"; };
+		27E775451E7CB95300091C78 /* Pin_ffffff_25.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Pin_ffffff_25.png; sourceTree = "<group>"; };
+		27E775471E7CB99800091C78 /* Pin 2_ffffff_25.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Pin 2_ffffff_25.png"; sourceTree = "<group>"; };
+		27E775491E7CB9B500091C78 /* Circled Play_ffffff_25.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Circled Play_ffffff_25.png"; sourceTree = "<group>"; };
+		27E7754B1E7CB9CE00091C78 /* Circled Pause_ffffff_25.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Circled Pause_ffffff_25.png"; sourceTree = "<group>"; };
+		27E7754D1E7CC16600091C78 /* Routes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Routes.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -97,8 +119,10 @@
 			isa = PBXGroup;
 			children = (
 				273DCEB91E7C1C06005AE82E /* DataController.swift */,
-				273DCEB21E7ACC11005AE82E /* Route.swift */,
 				278905E31E7961D100F1B40B /* Waypoint.swift */,
+				273DCEB21E7ACC11005AE82E /* Route.swift */,
+				27E7754D1E7CC16600091C78 /* Routes.swift */,
+				273D83811E8163B1003F5B49 /* RouteID.swift */,
 			);
 			name = Data;
 			sourceTree = "<group>";
@@ -127,11 +151,11 @@
 				27C5584C1E5F8790004FF32A /* Types.swift */,
 				273DCEB01E7AC11D005AE82E /* Constants.swift */,
 				27B10CFD1E6060E3005099BD /* MainController.swift */,
-				27C558531E5F885B004FF32A /* Main.storyboard */,
 				27DB65E21E60E2D100498C12 /* DataViews */,
 				278905E21E7961AC00F1B40B /* Data */,
 				27DB65E11E60E2B500498C12 /* Options */,
 				27C558461E5F877E004FF32A /* Icons */,
+				27C558531E5F885B004FF32A /* Main.storyboard */,
 				27C558331E5F872E004FF32A /* LaunchScreen.storyboard */,
 				27C558361E5F872E004FF32A /* Info.plist */,
 				27C558591E5F9578004FF32A /* FactoryDefaults.plist */,
@@ -149,6 +173,15 @@
 				27C5583E1E5F8769004FF32A /* Settings_ffffff_25.png */,
 				27C5583F1E5F8769004FF32A /* Signpost_ffffff_25.png */,
 				27C558401E5F8769004FF32A /* Waypoint Map_ffffff_25.png */,
+				27E7752F1E7CA95700091C78 /* World Map_ffffff_25.png */,
+				27E7753B1E7CB84700091C78 /* Play_ffffff_25.png */,
+				27E7753D1E7CB85600091C78 /* Pause_ffffff_25.png */,
+				27E7753F1E7CB88300091C78 /* Undo_ffffff_25.png */,
+				27E775431E7CB90F00091C78 /* Upload_ffffff_25.png */,
+				27E775451E7CB95300091C78 /* Pin_ffffff_25.png */,
+				27E775491E7CB9B500091C78 /* Circled Play_ffffff_25.png */,
+				27E775471E7CB99800091C78 /* Pin 2_ffffff_25.png */,
+				27E7754B1E7CB9CE00091C78 /* Circled Pause_ffffff_25.png */,
 			);
 			name = Icons;
 			sourceTree = "<group>";
@@ -247,11 +280,20 @@
 				27C558421E5F8769004FF32A /* Near Me_ffffff_25.png in Resources */,
 				27C558411E5F8769004FF32A /* Globe_ffffff_25.png in Resources */,
 				27C558441E5F8769004FF32A /* Signpost_ffffff_25.png in Resources */,
+				27E7753C1E7CB84700091C78 /* Play_ffffff_25.png in Resources */,
+				27E775461E7CB95300091C78 /* Pin_ffffff_25.png in Resources */,
 				27C558351E5F872E004FF32A /* LaunchScreen.storyboard in Resources */,
 				27B10D001E606EC1005099BD /* Back_ffffff_25.png in Resources */,
+				27E775481E7CB99800091C78 /* Pin 2_ffffff_25.png in Resources */,
+				27E775441E7CB90F00091C78 /* Upload_ffffff_25.png in Resources */,
 				27C558431E5F8769004FF32A /* Settings_ffffff_25.png in Resources */,
+				27E775301E7CA95700091C78 /* World Map_ffffff_25.png in Resources */,
+				27E7753E1E7CB85600091C78 /* Pause_ffffff_25.png in Resources */,
+				27E7754A1E7CB9B500091C78 /* Circled Play_ffffff_25.png in Resources */,
 				27C558451E5F8769004FF32A /* Waypoint Map_ffffff_25.png in Resources */,
 				27C5585B1E5F9578004FF32A /* FactoryDefaults.plist in Resources */,
+				27E775401E7CB88300091C78 /* Undo_ffffff_25.png in Resources */,
+				27E7754C1E7CB9CE00091C78 /* Circled Pause_ffffff_25.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -266,9 +308,11 @@
 				27C5584D1E5F8790004FF32A /* AppDelegate.swift in Sources */,
 				27C5584E1E5F8790004FF32A /* BearingViewController.swift in Sources */,
 				27C558521E5F8790004FF32A /* Types.swift in Sources */,
+				273D83821E8163B1003F5B49 /* RouteID.swift in Sources */,
 				273DCEB31E7ACC11005AE82E /* Route.swift in Sources */,
 				277689631E61159C00F25FE3 /* OptionsViewAnimator.swift in Sources */,
 				27B10CFE1E6060E3005099BD /* MainController.swift in Sources */,
+				27E7754E1E7CC16600091C78 /* Routes.swift in Sources */,
 				273DCEB11E7AC11D005AE82E /* Constants.swift in Sources */,
 				27C5585E1E5F97B2004FF32A /* OptionsViewController.swift in Sources */,
 				278905E41E7961D100F1B40B /* Waypoint.swift in Sources */,

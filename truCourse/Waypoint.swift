@@ -41,11 +41,7 @@ class Waypoint
 {
   var location               : CLLocationCoordinate2D
   {
-    didSet
-    {
-      _update()
-      _prev?._update()
-    }
+    didSet { update() ; _prev?.update() }
   }
   
   private(set) var index    : Int?
@@ -56,49 +52,91 @@ class Waypoint
   private      var _prev   : Waypoint?
   private      var _cand   : Waypoint?
   
+  // MARK: - Constructors & Encoders
+  
   init(_ location: CLLocationCoordinate2D)
   {
     self.location = location
   }
   
-  func insertAsCandidate(before nextPoint:Waypoint)
+  init(with data:NSDictionary, after:Waypoint?)
   {
-    guard nextPoint._prev != nil else
-    { fatalError("Attempted to add Waypoint to an unlinked Waypoint") }
+    location = data.value(forKey: "location") as! CLLocationCoordinate2D
+    bearing  = data.value(forKey: "bearing")  as? CLLocationDirection
+    distance = data.value(forKey: "distance") as? CLLocationDistance
     
-    _insert(asCandidate:true, hooks: { self._prev = nextPoint._prev; self._next = nextPoint } )
-  }
-  func insertAsCandidate(after priorPoint:Waypoint)
-  {
-    guard priorPoint._next != nil else
-    { fatalError("Attempted to add Waypoint to an unlinked Waypoint") }
-    
-    _insert(asCandidate:true, hooks: { self._next = priorPoint._next; self._prev = priorPoint } )
-  }
-
-  func _insert(asCandidate:Bool, hooks:()->() )
-  {
-    guard _next == nil else
+    if after == nil
     {
-      let qualifier = (asCandidate ? "as candidate" : "to route")
-      fatalError("Attempted to add linked Waypoint \(qualifier)")
-    }
-    
-    hooks()
-    
-    if asCandidate
-    {
-      _prev!._cand = self
+      _next = self
+      _prev = self
     }
     else
     {
+      _next = after!._next
+      _prev = after
+      _prev!._next = self
+      _next!._prev = self
+    }
+  }
+  
+  func save(into route: NSMutableArray)
+  {
+    let data = NSMutableDictionary()
+    data.setValue(location, forKey: "location")
+    
+    if bearing  != nil { data.setValue(bearing,  forKey: "bearing")  }
+    if distance != nil { data.setValue(distance, forKey: "distance") }
+    
+    route.add(data)
+  }
+  
+  // MARK: - Route linkage
+  
+  enum InsertionType
+  {
+    case Committed
+    case Candidate
+  }
+  
+  func insert(before nextPoint:Waypoint, as type:InsertionType = .Committed)
+  {
+    guard nextPoint._prev != nil else
+    { fatalError("Attempted to insert before an unlinked Waypoint") }
+    
+    _insert(as:type){ self._prev = nextPoint._prev; self._next = nextPoint }
+  }
+  
+  func insert(after priorPoint:Waypoint, as type:InsertionType = .Committed)
+  {
+    guard priorPoint._next != nil else
+    { fatalError("Attempted to insert after an unlinked Waypoint") }
+    
+    _insert(as:type){ self._next = priorPoint._next; self._prev = priorPoint }
+  }
+
+  private func _insert(as type:InsertionType, link:()->() )
+  {
+    guard _next == nil else
+    {
+      let qualifier = (type == .Candidate ? "as candidate" : "to route")
+      fatalError("Attempted to add linked Waypoint \(qualifier)")
+    }
+    
+    link()
+    
+    switch(type)
+    {
+    case .Candidate:
+      _prev!._cand = self
+      
+    case .Committed:
       _prev!._cand = nil
       _prev!._next = self
       _next!._prev = self
     }
     
-    _update()
-    _prev!._update()
+    update()
+    _prev!.update()
     
   }
   
@@ -112,14 +150,16 @@ class Waypoint
     }
     else // add candidate (in-place) to the route
     {
-      guard _next != nil, _prev != nil, _prev!._cand === self
-        else { fatalError("Attempted to commit non-candidate Waypoint") }
+      guard _prev!._cand === self else
+      { fatalError("Attempted to commit non-candidate Waypoint") }
       
       _next!._prev = self
       _prev!._next = self
       _prev!._cand = nil
     }
   }
+  
+  // MARK: - Route iterator and iterated properties
   
   var length : Int
   {
@@ -128,7 +168,7 @@ class Waypoint
     return count
   }
   
-  func reindexAsHead()
+  func reindex()
   {
     var nextIndex = 1
     iterate( { wp in wp.index = nextIndex; nextIndex += 1 } )
@@ -148,7 +188,9 @@ class Waypoint
     }
   }
   
-  private func _update()
+  // MARK: - Waypoint properties
+  
+  func update()
   {
     if _next == nil || _next === self
     {

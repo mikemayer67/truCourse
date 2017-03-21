@@ -26,7 +26,7 @@ class BearingViewController: UITableViewController, VisualizationView
   
   func applyOptions(_ options: Options)
   {
-    print("BearingViewController::applyOptions: \(options)")
+    print("Don't forget to implement BearingViewController.applyOptions")
   }
   
   // MARK: - Table view data source
