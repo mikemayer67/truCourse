@@ -21,7 +21,7 @@ class DataViewController :
   var currentViewType = VisualizationType.MapView
     
   private(set) var route : Route?
-    
+      
   var options = Options()
   {
     didSet

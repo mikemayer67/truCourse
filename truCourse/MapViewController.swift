@@ -9,9 +9,12 @@
 import UIKit
 import MapKit
 
-class MapViewController: UIViewController, VisualizationView
+class MapViewController: UIViewController, VisualizationView, MKMapViewDelegate
 {
-  @IBOutlet weak var mapView: MKMapView!
+  @IBOutlet weak var mapView        : MKMapView!
+  @IBOutlet weak var recenterButton : UIButton!
+  
+  var trackingMode = MKUserTrackingMode.none
   
   var visualizationType : VisualizationType { return .MapView }
   
@@ -26,6 +29,14 @@ class MapViewController: UIViewController, VisualizationView
   func applyOptions(_ options: Options)
   {
     mapView.mapType = options.mapType
+    trackingMode    = options.trackingMode
+  }
+  
+  
+  
+  func mapView(_ mapView: MKMapView, didChange mode: MKUserTrackingMode, animated: Bool)
+  {
+    print("New Tracking Mode: \(trackingMode) -> \(mode)")
   }
   
 }

@@ -31,9 +31,19 @@ class DataController : NSObject, CLLocationManagerDelegate
   
   func start()
   {
-    var locationStatus = CLLocationManager.authorizationStatus()
-      
+    let status = CLLocationManager.authorizationStatus()
     locationManager.requestWhenInUseAuthorization()
+/*
+    switch status
+    {
+    case .authorizedWhenInUse: fallthrough
+    case .authorizedAlways:
+      print("start authorization = true")
+      locationManager.startUpdatingLocation()
+    default:
+      print("start authorization = false")
+    }
+ */
   }
   
   //  private override init()
@@ -50,6 +60,8 @@ class DataController : NSObject, CLLocationManagerDelegate
   
   func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus)
   {
-    print("DC: Authorization Changed: \(status.rawValue)")
+    let enabled = status == .authorizedAlways || status == .authorizedWhenInUse
+    
+    print("DC new status = \(enabled)")
   }
 }

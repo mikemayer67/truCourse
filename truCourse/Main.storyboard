@@ -67,18 +67,45 @@
         <scene sceneID="JAe-KW-yz1">
             <objects>
                 <viewController storyboardIdentifier="mapViewController" automaticallyAdjustsScrollViewInsets="NO" id="Ae4-BT-1L8" customClass="MapViewController" customModule="truCourse" customModuleProvider="target" sceneMemberID="viewController">
-                    <mapView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" id="S9I-Kh-dDZ">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="Efg-Lb-Zou"/>
+                        <viewControllerLayoutGuide type="bottom" id="xXI-cr-kKb"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="Xr0-tc-iCR">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                    </mapView>
+                        <subviews>
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="xl5-Do-0oW">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                            </mapView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Khv-b7-Uu4">
+                                <rect key="frame" x="251" y="499" width="64" height="64"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="64" id="ge7-Wo-C9u"/>
+                                    <constraint firstAttribute="height" constant="64" id="gnh-9M-h1m"/>
+                                </constraints>
+                                <state key="normal" backgroundImage="recenter_64.png"/>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="xl5-Do-0oW" firstAttribute="top" secondItem="Xr0-tc-iCR" secondAttribute="top" id="PPR-pJ-Edn"/>
+                            <constraint firstItem="xXI-cr-kKb" firstAttribute="top" secondItem="Khv-b7-Uu4" secondAttribute="bottom" constant="5" id="dAh-RH-adb"/>
+                            <constraint firstAttribute="trailing" secondItem="xl5-Do-0oW" secondAttribute="trailing" id="fst-Xi-xRd"/>
+                            <constraint firstItem="xXI-cr-kKb" firstAttribute="top" secondItem="xl5-Do-0oW" secondAttribute="bottom" id="hlN-zt-e99"/>
+                            <constraint firstItem="xl5-Do-0oW" firstAttribute="leading" secondItem="Xr0-tc-iCR" secondAttribute="leading" id="mfs-wg-kcQ"/>
+                            <constraint firstItem="Khv-b7-Uu4" firstAttribute="trailing" secondItem="xl5-Do-0oW" secondAttribute="trailing" constant="-5" id="mlU-nc-Xjf"/>
+                        </constraints>
+                    </view>
                     <extendedEdge key="edgesForExtendedLayout"/>
                     <connections>
-                        <outlet property="mapView" destination="S9I-Kh-dDZ" id="rDD-Xg-5xb"/>
+                        <outlet property="mapView" destination="xl5-Do-0oW" id="yJp-MB-3Ij"/>
+                        <outlet property="recenterButton" destination="Khv-b7-Uu4" id="ejA-ea-i3c"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ANC-dY-zeT" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1086" y="-138"/>
+            <point key="canvasLocation" x="1085.625" y="-138.38028169014083"/>
         </scene>
         <!--Bearing View Controller-->
         <scene sceneID="M5h-sb-MN6">
@@ -177,7 +204,7 @@
                             <tableViewSection headerTitle="Map" footerTitle="How the map will be displayed on the screen. " id="rCZ-3W-OVp">
                                 <cells>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="oyx-5X-qqC">
-                                        <rect key="frame" x="0.0" y="56" width="320" height="44"/>
+                                        <rect key="frame" x="0.0" y="55.5" width="320" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="oyx-5X-qqC" id="5XN-Bc-JlG">
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="43.5"/>
@@ -213,7 +240,7 @@
                                         </tableViewCellContentView>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="TvV-Fz-hcX">
-                                        <rect key="frame" x="0.0" y="100" width="320" height="44"/>
+                                        <rect key="frame" x="0.0" y="99.5" width="320" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="TvV-Fz-hcX" id="4AV-00-MIj">
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="43.5"/>
@@ -251,7 +278,7 @@
                                         </tableViewCellContentView>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="qPv-Fi-vzb">
-                                        <rect key="frame" x="0.0" y="144" width="320" height="44"/>
+                                        <rect key="frame" x="0.0" y="143.5" width="320" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="qPv-Fi-vzb" id="ItH-Zc-9fa">
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="43.5"/>
@@ -293,7 +320,7 @@
                                 <string key="footerTitle">How the legs of the route will be reported.  Note that higher accuracy (smaller location uncertainty) puts a higher drain on your battery.</string>
                                 <cells>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="OfE-LR-WKL">
-                                        <rect key="frame" x="0.0" y="264" width="320" height="44"/>
+                                        <rect key="frame" x="0.0" y="263" width="320" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="OfE-LR-WKL" id="q32-06-VwT">
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="43.5"/>
@@ -329,7 +356,7 @@
                                         </tableViewCellContentView>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="p2k-Wp-5FO">
-                                        <rect key="frame" x="0.0" y="308" width="320" height="44"/>
+                                        <rect key="frame" x="0.0" y="307" width="320" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="p2k-Wp-5FO" id="nuD-1p-79g">
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="43.5"/>
@@ -365,7 +392,7 @@
                                         </tableViewCellContentView>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="67" id="atJ-Hi-RL0">
-                                        <rect key="frame" x="0.0" y="352" width="320" height="67"/>
+                                        <rect key="frame" x="0.0" y="351" width="320" height="67"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="atJ-Hi-RL0" id="9gX-8y-DKi">
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="66.5"/>
@@ -406,7 +433,7 @@
                             <tableViewSection headerTitle="EMAIL" footerTitle="Default address to send route by email (optional)" id="ja3-bW-CMX">
                                 <cells>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="OCv-Tn-zv4">
-                                        <rect key="frame" x="0.0" y="527" width="320" height="44"/>
+                                        <rect key="frame" x="0.0" y="525.5" width="320" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="OCv-Tn-zv4" id="4Mf-an-n9Q">
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="43.5"/>
@@ -501,5 +528,6 @@
         <image name="Settings_ffffff_25.png" width="25" height="25"/>
         <image name="Signpost_ffffff_25.png" width="25" height="25"/>
         <image name="World Map_ffffff_25.png" width="25" height="25"/>
+        <image name="recenter_64.png" width="64" height="64"/>
     </resources>
 </document>
