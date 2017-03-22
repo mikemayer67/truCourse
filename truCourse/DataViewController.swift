@@ -129,6 +129,8 @@ class DataViewController :
   func updateOptions(_ newOptions: Options)
   {
     self.options = newOptions
+    
+    dataController.updateOptions()
   }
   
   // MARK: - Toolbar handler

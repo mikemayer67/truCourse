@@ -14,7 +14,7 @@ class MapViewController: UIViewController, VisualizationView, MKMapViewDelegate
   @IBOutlet weak var mapView        : MKMapView!
   @IBOutlet weak var recenterButton : UIButton!
   
-  var trackingMode = MKUserTrackingMode.none
+  private(set) var trackingMode = MKUserTrackingMode.none
   
   var visualizationType : VisualizationType { return .MapView }
   
@@ -22,6 +22,9 @@ class MapViewController: UIViewController, VisualizationView, MKMapViewDelegate
     super.viewDidLoad()
     
     // Do any additional setup after loading the view.
+    
+    mapView.mapType          = .standard
+    mapView.userTrackingMode = .none
   }
   
   // MARK: - Options
@@ -30,13 +33,39 @@ class MapViewController: UIViewController, VisualizationView, MKMapViewDelegate
   {
     mapView.mapType = options.mapType
     trackingMode    = options.trackingMode
+    
+    handleRecenter(recenterButton)
+  }
+  
+  // MARK: - Recenter
+  
+  @IBAction func handleRecenter(_ sender: UIButton)
+  {
+    mapView.setUserTrackingMode(trackingMode, animated: true)
+    recenterButton.isEnabled = false
+
+    UIView.animate(withDuration: 0.35,
+                   animations: { self.recenterButton.alpha = 0.0 })
+    {
+      (finished:Bool) in
+      self.recenterButton.isHidden = true
+    }
   }
   
   
   
+  // MARK: - Map View delegate methods
+  
   func mapView(_ mapView: MKMapView, didChange mode: MKUserTrackingMode, animated: Bool)
-  {
-    print("New Tracking Mode: \(trackingMode) -> \(mode)")
+  {    
+    recenterButton.alpha = 0.0
+    recenterButton.isHidden = false
+    UIView.animate(withDuration: 0.35,
+                   animations: { self.recenterButton.alpha = 1.0 })
+    {
+      (finished:Bool) in
+      self.recenterButton.isEnabled = true
+    }
   }
   
 }

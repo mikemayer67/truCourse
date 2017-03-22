@@ -13,7 +13,8 @@ class DataController : NSObject, CLLocationManagerDelegate
 {
   @IBOutlet var dataViewController : DataViewController?
   
-  let locationManager  = CLLocationManager()
+  let locationManager = CLLocationManager()
+  var trackingEnabled = false
   
   let routes = Routes()
   
@@ -31,19 +32,9 @@ class DataController : NSObject, CLLocationManagerDelegate
   
   func start()
   {
-    let status = CLLocationManager.authorizationStatus()
+    locationManager.delegate = self
+    locationManager.allowsBackgroundLocationUpdates = false
     locationManager.requestWhenInUseAuthorization()
-/*
-    switch status
-    {
-    case .authorizedWhenInUse: fallthrough
-    case .authorizedAlways:
-      print("start authorization = true")
-      locationManager.startUpdatingLocation()
-    default:
-      print("start authorization = false")
-    }
- */
   }
   
   //  private override init()
@@ -53,15 +44,38 @@ class DataController : NSObject, CLLocationManagerDelegate
   //    locationManager.requestWhenInUseAuthorization()
   //  }
   
-  
+  func updateOptions()
+  {
+    let options = dataViewController?.options
+    locationManager.desiredAccuracy = options?.locationAccuracy ??  5.0
+    locationManager.distanceFilter  = options?.locationFilter   ?? 10.0
+  }
   
   
   // MARK: - Location Manager Delegate
   
   func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus)
   {
-    let enabled = status == .authorizedAlways || status == .authorizedWhenInUse
-    
-    print("DC new status = \(enabled)")
+    switch status
+    {
+    case .authorizedWhenInUse: fallthrough
+    case .authorizedAlways:
+      print("DC authorized = true")
+      trackingEnabled = true
+      updateOptions()
+      locationManager.startUpdatingLocation()
+    default:
+      print("DC authorized = false")
+      trackingEnabled = false
+      locationManager.stopUpdatingLocation()
+    }
+  }
+  
+  func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation])
+  {
+    for loc in locations
+    {
+      print("DC new location: \(loc.coordinate.longitude) \(loc.coordinate.latitude)")
+    }
   }
 }

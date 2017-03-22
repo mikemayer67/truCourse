@@ -37,16 +37,15 @@ class OptionsViewController: UITableViewController, UITextFieldDelegate
   
   func enable(_ control: UISegmentedControl, value:Int)
   {
-    control.isMomentary = false
-    control.alpha = 1.0
+    //    control.alpha = 1.0
+
     control.isEnabled = true
     control.selectedSegmentIndex = value
   }
   
   func disable(_ control: UISegmentedControl)
   {
-    if control==headingAccuracySC { control.isMomentary = true }
-    control.alpha = 0.2
+    //   control.alpha = 0.2
     control.isEnabled = false
   }
   
@@ -212,5 +211,12 @@ class OptionsViewController: UITableViewController, UITextFieldDelegate
   {
     let nc = self.navigationController as! MainController
     nc.popViewController(animated: true)
+  }
+  
+  // MARK: - Table View delegate
+  
+  override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath?
+  {
+    return nil
   }
 }
