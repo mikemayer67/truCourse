@@ -17,11 +17,22 @@ class DataViewController :
   @IBOutlet var viewTypeControl : UISegmentedControl!
   @IBOutlet var dataController  : DataController!
   
+  @IBOutlet var onOffBarItem    : UIBarButtonItem!
+  @IBOutlet var startBarItem    : UIBarButtonItem!
+  @IBOutlet var pauseBarItem    : UIBarButtonItem!
+  @IBOutlet var recordBarItem   : UIBarButtonItem!
+  @IBOutlet var saveBarItem     : UIBarButtonItem!
+  @IBOutlet var shareBarItem    : UIBarButtonItem!
+  
   var dataControllers = [VisualizationType:UIViewController]()
   var currentViewType = VisualizationType.MapView
+  
+  private var activeToolbar        = true
+  private var activeToolbarItems   : [UIBarButtonItem]!
+  private var inactiveToolbarItems : [UIBarButtonItem]!
     
   private(set) var route : Route?
-      
+        
   var options = Options()
   {
     didSet
@@ -49,9 +60,18 @@ class DataViewController :
     self.delegate = self
     self.setViewControllers([dataControllers[currentViewType]!], direction: .forward, animated: false, completion: nil)
     
+    activeToolbarItems = self.toolbarItems
+    
+    inactiveToolbarItems = [
+      UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil),
+      UIBarButtonItem(title: "location services diabled", style: .plain, target: nil, action: nil),
+      UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+    ]
+    inactiveToolbarItems[1].tintColor = UIColor.yellow
+    
     applyOptions()
     
-    dataController.start()
+    dataController.updateState(.Start)
   }
   
   func applyOptions()
@@ -135,5 +155,16 @@ class DataViewController :
   
   // MARK: - Toolbar handler
   
-  
+  func updateState(_ state:AppState)
+  {    
+    switch state
+    {
+    case .Disabled:
+      if activeToolbar  { self.setToolbarItems(inactiveToolbarItems, animated: true) }
+      activeToolbar = false
+    default:
+      if !activeToolbar { self.setToolbarItems(activeToolbarItems, animated: true) }
+      activeToolbar = true
+    }
+  }
 }

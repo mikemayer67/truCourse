@@ -15,7 +15,20 @@
                 <pageViewController autoresizesArchivedViewToFullSize="NO" automaticallyAdjustsScrollViewInsets="NO" modalTransitionStyle="flipHorizontal" transitionStyle="scroll" navigationOrientation="horizontal" spineLocation="none" id="BeN-nG-LRN" userLabel="DataViewController" customClass="DataViewController" customModule="truCourse" customModuleProvider="target" sceneMemberID="viewController">
                     <extendedEdge key="edgesForExtendedLayout"/>
                     <toolbarItems>
-                        <barButtonItem style="plain" systemItem="flexibleSpace" id="AvA-5K-e2H"/>
+                        <barButtonItem image="Quick Mode On_ffffff_25.png" id="01v-zH-bJG">
+                            <color key="tintColor" red="1" green="0.91044330630000003" blue="0.4770181201" alpha="1" colorSpace="calibratedRGB"/>
+                        </barButtonItem>
+                        <barButtonItem image="Play_ffffff_25.png" id="ueA-bF-Rhq">
+                            <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        </barButtonItem>
+                        <barButtonItem style="plain" systemItem="flexibleSpace" id="iPM-FD-AX8"/>
+                        <barButtonItem image="Pin_ffffff_25.png" id="XZM-XJ-089">
+                            <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                        </barButtonItem>
+                        <barButtonItem style="plain" systemItem="flexibleSpace" id="3k7-6Q-FVc"/>
+                        <barButtonItem image="Upload_ffffff_25.png" id="BfE-Tg-zLB">
+                            <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                        </barButtonItem>
                     </toolbarItems>
                     <navigationItem key="navigationItem" id="Zyl-tO-Cy2">
                         <nil key="title"/>
@@ -34,6 +47,7 @@
                                 <segment title="" image="Near Me_ffffff_25.png"/>
                                 <segment title="" image="Globe_ffffff_25.png"/>
                             </segments>
+                            <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                             <connections>
                                 <action selector="setCurrentViewType:" destination="BeN-nG-LRN" eventType="valueChanged" id="SQo-cA-u5M"/>
                             </connections>
@@ -51,6 +65,10 @@
                     </navigationItem>
                     <connections>
                         <outlet property="dataController" destination="NzL-O5-K3v" id="1F2-xh-bES"/>
+                        <outlet property="onOffBarItem" destination="01v-zH-bJG" id="A2Y-DQ-yG5"/>
+                        <outlet property="recordBarItem" destination="XZM-XJ-089" id="c96-bu-NSn"/>
+                        <outlet property="shareBarItem" destination="BfE-Tg-zLB" id="ys5-kT-VVw"/>
+                        <outlet property="startBarItem" destination="ueA-bF-Rhq" id="dkg-DV-KnB"/>
                         <outlet property="viewTypeControl" destination="2ee-QR-JKQ" id="ZCJ-Yp-YCY"/>
                     </connections>
                 </pageViewController>
@@ -531,8 +549,12 @@
         <image name="Back_ffffff_25.png" width="25" height="25"/>
         <image name="Globe_ffffff_25.png" width="25" height="25"/>
         <image name="Near Me_ffffff_25.png" width="25" height="25"/>
+        <image name="Pin_ffffff_25.png" width="25" height="25"/>
+        <image name="Play_ffffff_25.png" width="25" height="25"/>
+        <image name="Quick Mode On_ffffff_25.png" width="25" height="25"/>
         <image name="Settings_ffffff_25.png" width="25" height="25"/>
         <image name="Signpost_ffffff_25.png" width="25" height="25"/>
+        <image name="Upload_ffffff_25.png" width="25" height="25"/>
         <image name="World Map_ffffff_25.png" width="25" height="25"/>
         <image name="recenter_64.png" width="64" height="64"/>
     </resources>

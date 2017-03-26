@@ -86,8 +86,8 @@ struct Options
   {
     switch(topOfScreen)
     {
-    case .Heading: return .follow
-    case .North:   return .followWithHeading
+    case .North:   return .follow
+    case .Heading: return .followWithHeading
     }
   }
   

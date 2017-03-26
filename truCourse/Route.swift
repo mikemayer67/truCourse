@@ -22,8 +22,27 @@ class Route
   private(set) var candidatePoint : Waypoint?
   private(set) var declination    : CLLocationDegrees?
   
+  var dirty  : Bool = false
+  var locked : Bool = false
+  
   // MARK: - Route Indexing
   
+  var isEmpty : Bool
+  {
+    guard startPoint != nil else { return true }
+    return startPoint!.length == 0
+  }
+  
+  var count : Int
+  {
+    return startPoint?.length ?? 0
+  }
+  
+  subscript(index: Int) -> Waypoint?
+  {
+    print("Route: Need to implmeent subscript")
+    return nil
+  }
 
   // MARK: - Constructors and Encoding
 
@@ -69,6 +88,11 @@ class Route
   {
     let data = NSMutableDictionary()
     
+    if locked && ( dirty || lastSaved == nil )
+    {
+      lastSaved = Date()
+    }
+    
     data.setValue(routeID, forKey: "routeID")
     data.setValue(created, forKey: "created")
     
@@ -82,5 +106,7 @@ class Route
     if waypoints.count > 0 { data.setValue(waypoints, forKey: "waypoints") }
     
     routes.add(data)
+    
+    dirty = false
   }
 }

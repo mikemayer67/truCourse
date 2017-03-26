@@ -92,3 +92,27 @@ enum BaseUnitType : Int
   case Metric  = 0
   case English = 1
 }
+
+
+
+enum AppState
+{
+  case Uninitialized
+  case Disabled       // Location Service not authorized
+  case Paused         // User disabled location updates
+  case Idle           // Authorized
+  case Inserting(Int) // insertion index (0 = new start point)
+  case Editing(Int)   // editting index
+}
+
+enum AppStateTransition
+{
+  case Authorization(CLAuthorizationStatus)
+  
+  case Start
+  case Enabled(Bool)        // user starting/pausing use of location services
+  case Insert(Int)          // index indicates which post to insert AFTER (0 = before first post)
+  case Edit(Int)            // index indicates which post to begin editing
+  case Save(Bool)           // flag indicating whether to lock the route for futuere edits
+}
+
