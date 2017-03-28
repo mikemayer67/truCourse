@@ -13,6 +13,11 @@ class LatLonViewController: UITableViewController, VisualizationView
   
   var visualizationType : VisualizationType { return .LatLonView }
   
+  var hasSelection: Bool
+  {
+    return self.tableView.indexPathForSelectedRow != nil
+  }
+  
   override func viewDidLoad() {
     super.viewDidLoad()
     

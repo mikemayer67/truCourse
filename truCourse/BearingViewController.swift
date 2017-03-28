@@ -11,6 +11,11 @@ import UIKit
 class BearingViewController: UITableViewController, VisualizationView
 {
   var visualizationType : VisualizationType { return .BearingView }
+
+  var hasSelection: Bool
+  {
+    return self.tableView.indexPathForSelectedRow != nil
+  }
   
   override func viewDidLoad() {
     super.viewDidLoad()

@@ -17,20 +17,20 @@ class DataViewController :
   @IBOutlet var viewTypeControl : UISegmentedControl!
   @IBOutlet var dataController  : DataController!
   
-  @IBOutlet var onOffBarItem    : UIBarButtonItem!
-  @IBOutlet var startBarItem    : UIBarButtonItem!
-  @IBOutlet var pauseBarItem    : UIBarButtonItem!
-  @IBOutlet var recordBarItem   : UIBarButtonItem!
-  @IBOutlet var saveBarItem     : UIBarButtonItem!
-  @IBOutlet var shareBarItem    : UIBarButtonItem!
-  
   var dataControllers = [VisualizationType:UIViewController]()
   var currentViewType = VisualizationType.MapView
   
   private var activeToolbar        = true
   private var activeToolbarItems   : [UIBarButtonItem]!
   private var inactiveToolbarItems : [UIBarButtonItem]!
-    
+  private var onBarItem            : UIBarButtonItem!
+  private var offBarItem           : UIBarButtonItem!
+  private var startBarItem         : UIBarButtonItem!
+  private var stopBarItem          : UIBarButtonItem!
+  private var recordBarItem        : UIBarButtonItem!
+  private var trashBarItem         : UIBarButtonItem!
+  private var shareBarItem         : UIBarButtonItem!
+      
   private(set) var route : Route?
         
   var options = Options()
@@ -62,12 +62,49 @@ class DataViewController :
     
     activeToolbarItems = self.toolbarItems
     
-    inactiveToolbarItems = [
-      UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil),
-      UIBarButtonItem(title: "location services diabled", style: .plain, target: nil, action: nil),
-      UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+    onBarItem     = UIBarButtonItem(image: UIImage(named:"Off_ffffff_25.png"),
+                                    style: .plain, target: self, action: #selector(handleOn(_:)))
+    offBarItem    = UIBarButtonItem(image: UIImage(named:"On_ffffff_25.png"),
+                                    style: .plain, target: self, action: #selector(handleOff(_:)))
+    startBarItem  = UIBarButtonItem(image: UIImage(named:"Play_ffffff_25.png"),
+                                    style: .plain, target: self, action: #selector(handleStart(_:)))
+    stopBarItem   = UIBarButtonItem(image: UIImage(named:"Pause_ffffff_25.png"),
+                                    style: .plain, target: self, action: #selector(handlePause(_:)))
+    recordBarItem = UIBarButtonItem(image: UIImage(named:"Pin_ffffff_25.png"),
+                                    style: .plain, target: self, action: #selector(handleRecord(_:)))
+    trashBarItem  = UIBarButtonItem(image: UIImage(named:"Trash_ffffff_25.png"),
+                                    style: .plain, target: self, action: #selector(handleTrash(_:)))
+    shareBarItem  = UIBarButtonItem(image: UIImage(named:"Upload_ffffff_25.png"),
+                                    style: .plain, target: self, action: #selector(handleShare(_:)))
+    
+    let onOffTint = UIColor(red: 1.0, green: 0.8, blue: 0.4, alpha: 1.0)
+    onBarItem.tintColor  = onOffTint
+    offBarItem.tintColor = onOffTint
+    
+    startBarItem.tintColor  = UIColor.white
+    stopBarItem.tintColor   = UIColor.white
+    recordBarItem.tintColor = UIColor.white
+    trashBarItem.tintColor  = UIColor.white
+    shareBarItem.tintColor  = UIColor.white
+    
+    activeToolbarItems = [
+      /*0*/ onBarItem,
+      /*1*/ startBarItem,
+      /*2*/ UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil),
+      /*3*/ recordBarItem,
+      /*4*/ UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil),
+      /*5*/ shareBarItem
     ]
-    inactiveToolbarItems[1].tintColor = UIColor.yellow
+    
+    let disabledBarItem = UIBarButtonItem(title: "location services diabled", style: .plain, target: nil, action: nil)
+    
+    disabledBarItem.tintColor = UIColor.yellow
+
+    inactiveToolbarItems = [
+      disabledBarItem,
+      UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil),
+      shareBarItem
+    ]
     
     applyOptions()
     
@@ -155,16 +192,86 @@ class DataViewController :
   
   // MARK: - Toolbar handler
   
-  func updateState(_ state:AppState)
-  {    
+  func updateState()
+  {
+    let state = dataController.state
+    let dvc   = dataControllers[currentViewType] as! VisualizationView
+    
     switch state
     {
-    case .Disabled:
-      if activeToolbar  { self.setToolbarItems(inactiveToolbarItems, animated: true) }
-      activeToolbar = false
-    default:
-      if !activeToolbar { self.setToolbarItems(activeToolbarItems, animated: true) }
-      activeToolbar = true
+    case .Uninitialized: break
+    case .Disabled:      break
+      
+    case .Paused:
+      print("Paused state")
+      activeToolbarItems[0] = onBarItem
+      activeToolbarItems[1].isEnabled = false
+      activeToolbarItems[3].isEnabled = false
+      
+    case .Idle:
+      print("Idle state")
+      activeToolbarItems[0]  = offBarItem
+      activeToolbarItems[1]  = startBarItem
+      activeToolbarItems[3]  = trashBarItem
+      trashBarItem.isEnabled = dvc.hasSelection
+      
+    case .Inserting:
+      print("Inserting state")
+      fallthrough
+      
+    case .Editing:
+      print("Editing state (if not inserting)")
+      activeToolbarItems[0]   = offBarItem
+      activeToolbarItems[1]   = stopBarItem
+      activeToolbarItems[3]   = recordBarItem
+      recordBarItem.isEnabled = dataController.okToRecord
+    }
+
+    shareBarItem.isEnabled = ( dataController.currentRoute?.count ?? 0 ) > 1
+    
+    let toolbar = navigationController?.toolbar
+    switch state
+    {
+    case .Disabled: toolbar?.setItems(inactiveToolbarItems, animated: true)
+    default:        toolbar?.setItems(  activeToolbarItems, animated: true)
     }
   }
+  
+  func handleOn(_ sender: UIBarButtonItem)
+  {
+    print("DVC handleOn")
+    dataController.updateState(.Enabled(true))
+  }
+  
+  func handleOff(_ sender: UIBarButtonItem)
+  {
+    print("DVC handleOff")
+    dataController.updateState(.Enabled(false))
+  }
+  
+  func handleStart(_ sender: UIBarButtonItem)
+  {
+    print("DVC handleStart")
+  }
+  
+  func handlePause(_ sender: UIBarButtonItem)
+  {
+    print("DVC handlePause")
+  }
+  
+  func handleRecord(_ sender: UIBarButtonItem)
+  {
+    print("DVC handleRecord")
+  }
+  
+  func handleTrash(_ sender: UIBarButtonItem)
+  {
+    print("DVC handleTrash")
+  }
+  
+  func handleShare(_ sender: UIBarButtonItem)
+  {
+    print("DVC handleShare")
+  }
+  
 }

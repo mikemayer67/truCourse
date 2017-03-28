@@ -42,6 +42,8 @@ protocol VisualizationView : class
   var visualizationType : VisualizationType { get }
   
   func applyOptions(_ options:Options)
+  
+  var hasSelection : Bool { get }
 }
 
 enum MapOrientation : Int

@@ -25,6 +25,8 @@ class DataController : NSObject, CLLocationManagerDelegate
 
   private(set) var state : AppState = .Uninitialized
   
+  private(set) var okToRecord = false
+  
   //  private override init()
   //  {
   //    super.init()
@@ -68,34 +70,24 @@ class DataController : NSObject, CLLocationManagerDelegate
       {
         if !trackingAuthorized
         {
-          trackingAuthorized = true
-          if trackingEnabled
-          {
-            state = .Paused
-          }
-          else if currentRoute == nil
-          {
-            state = .Idle
-          }
-          else if currentRoute!.isEmpty
-          {
-            state = .Inserting(currentRoute!.count)
-          }
-          else if insertionPoint != nil,
-            let index = insertionPoint!.index
-          {
-            state = .Inserting(index)
-          }
-          else
-          {
-            state = .Idle
-          }
+          let index = insertionPoint?.index
+          
+          //          trackingAuthorized = true
+          if trackingEnabled == false    { state = .Paused                         }
+          else if currentRoute == nil    { state = .Idle                           }
+          else if currentRoute!.isEmpty  { state = .Inserting(currentRoute!.count) }
+          else if index != nil           { state = .Inserting(index!)              }
+          else                           { state = .Idle                           }
         }
       }
       else
       {
         state = .Disabled
       }
+      
+    case .Enabled(let userEnabled):
+      if userEnabled { state = .Idle   }
+      else           { state = .Paused }
       
     default:
       print("DC need to implment transition \(transition)")
@@ -130,7 +122,7 @@ class DataController : NSObject, CLLocationManagerDelegate
       currentRoute!.locked = false
     }
     
-    dataViewController?.updateState(state)
+    dataViewController?.updateState()
   }
   
   func updateTrackingState(authorized:Bool?, enabled:Bool?)

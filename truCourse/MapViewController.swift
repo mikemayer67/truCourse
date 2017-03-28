@@ -17,6 +17,7 @@ class MapViewController: UIViewController, VisualizationView, MKMapViewDelegate
   private(set) var trackingMode = MKUserTrackingMode.none
   
   var visualizationType : VisualizationType { return .MapView }
+  var hasSelection      : Bool              { return false    }
   
   override func viewDidLoad() {
     super.viewDidLoad()
