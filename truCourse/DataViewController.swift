@@ -17,8 +17,8 @@ class DataViewController :
   @IBOutlet var viewTypeControl : UISegmentedControl!
   @IBOutlet var dataController  : DataController!
   
-  var dataControllers = [VisualizationType:UIViewController]()
-  var currentViewType = VisualizationType.MapView
+  var visualizationControllers = [VisualizationType:UIViewController]()
+  var currentView : UIViewController!
   
   private var activeToolbar        = true
   private var activeToolbarItems   : [UIBarButtonItem]!
@@ -49,16 +49,18 @@ class DataViewController :
         
     let sb = self.storyboard!
     
-    dataControllers[.MapView]     = sb.instantiateViewController(withIdentifier: "mapViewController")
-    dataControllers[.BearingView] = sb.instantiateViewController(withIdentifier: "bearingViewController")
-    dataControllers[.LatLonView]  = sb.instantiateViewController(withIdentifier: "latLonViewController")
+    visualizationControllers[.MapView]     = sb.instantiateViewController(withIdentifier: "mapViewController")
+    visualizationControllers[.BearingView] = sb.instantiateViewController(withIdentifier: "bearingViewController")
+    visualizationControllers[.LatLonView]  = sb.instantiateViewController(withIdentifier: "latLonViewController")
+    
+    currentView = visualizationControllers[VisualizationType.MapView]
     
     self.navigationController!.navigationBar.tintColor = UIColor.white
     (self.navigationController as! MainController).dataViewController = self
     
     self.dataSource = self
     self.delegate = self
-    self.setViewControllers([dataControllers[currentViewType]!], direction: .forward, animated: false, completion: nil)
+    self.setViewControllers([currentView], direction: .forward, animated: false, completion: nil)
     
     activeToolbarItems = self.toolbarItems
     
@@ -111,9 +113,21 @@ class DataViewController :
     dataController.updateState(.Start)
   }
   
+  override func viewDidAppear(_ animated: Bool)
+  {
+    super.viewDidAppear(animated)
+    
+    let toolbar = navigationController?.toolbar
+    switch dataController.state
+    {
+    case .Disabled: toolbar?.setItems(inactiveToolbarItems, animated: true)
+    default:        toolbar?.setItems(  activeToolbarItems, animated: true)
+    }
+  }
+  
   func applyOptions()
   {
-    for (_,controller) in dataControllers { (controller as! VisualizationView).applyOptions(options) }
+    for (_,controller) in visualizationControllers { controller.applyOptions(options) }
   }
 
   // MARK: - Page View Data Source
@@ -121,15 +135,17 @@ class DataViewController :
   @IBAction func setCurrentViewType(_ sender: UISegmentedControl)
   {
     let nextType = VisualizationType(rawValue: sender.selectedSegmentIndex)!
-    let delta = nextType.rawValue - currentViewType.rawValue
-
-    if delta != 0
+    let nextVC   = visualizationControllers[nextType]!
+    
+    if( nextVC !== currentView)
     {
-      self.setViewControllers([dataControllers[nextType]!],
+      let delta = nextType.rawValue - currentView.visualizationType.rawValue
+
+      self.setViewControllers([nextVC],
                               direction: ( (delta == 1)||(delta == -2) ? .forward : .reverse),
                               animated: true)
       
-      self.setCurrentView(nextType)
+      currentView = nextVC
     }
   }
   
@@ -137,22 +153,13 @@ class DataViewController :
   func pageViewController(_ pageViewController: UIPageViewController,
                           viewControllerAfter viewController: UIViewController ) -> UIViewController?
   {
-    let visType = viewController as! VisualizationView
-    return dataControllers[visType.visualizationType.next()]
+    return visualizationControllers[viewController.visualizationType.next()]
   }
   
   func pageViewController(_ pageViewController: UIPageViewController,
                           viewControllerBefore viewController: UIViewController ) -> UIViewController?
   {
-    let visType = viewController as! VisualizationView
-    return dataControllers[visType.visualizationType.prev()]
-  }
-  
-  @discardableResult func setCurrentView(_ type : VisualizationType) -> Bool
-  {
-    guard currentViewType != type else { return false }
-    currentViewType = type
-    return true
+    return visualizationControllers[viewController.visualizationType.prev()]
   }
   
   // MARK: - Page View Delegate
@@ -165,14 +172,8 @@ class DataViewController :
   {
     if finished && completed
     {
-      let newVC   = self.viewControllers![0]
-      let visType = newVC as! VisualizationView
-      let newType = visType.visualizationType
-      
-      if self.setCurrentView(newType)
-      {
-        self.viewTypeControl.selectedSegmentIndex = newType.rawValue
-      }
+      currentView  = viewControllers![0]
+      viewTypeControl.selectedSegmentIndex = currentView.visualizationType.rawValue
     }
   }
   
@@ -192,10 +193,9 @@ class DataViewController :
   
   // MARK: - Toolbar handler
   
-  func updateState()
+  func applyState()
   {
     let state = dataController.state
-    let dvc   = dataControllers[currentViewType] as! VisualizationView
     
     switch state
     {
@@ -213,7 +213,7 @@ class DataViewController :
       activeToolbarItems[0]  = offBarItem
       activeToolbarItems[1]  = startBarItem
       activeToolbarItems[3]  = trashBarItem
-      trashBarItem.isEnabled = dvc.hasSelection
+      trashBarItem.isEnabled = currentView.hasSelection
       
     case .Inserting:
       print("Inserting state")
@@ -235,6 +235,8 @@ class DataViewController :
     case .Disabled: toolbar?.setItems(inactiveToolbarItems, animated: true)
     default:        toolbar?.setItems(  activeToolbarItems, animated: true)
     }
+    
+    currentView.applyState(state)
   }
   
   func handleOn(_ sender: UIBarButtonItem)

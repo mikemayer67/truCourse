@@ -10,9 +10,9 @@ import UIKit
 
 class BearingViewController: UITableViewController, VisualizationView
 {
-  var visualizationType : VisualizationType { return .BearingView }
+  var _visualizationType : VisualizationType { return .BearingView }
 
-  var hasSelection: Bool
+  var _hasSelection: Bool
   {
     return self.tableView.indexPathForSelectedRow != nil
   }
@@ -29,9 +29,16 @@ class BearingViewController: UITableViewController, VisualizationView
   
   // MARK: - Options
   
-  func applyOptions(_ options: Options)
+  func _applyOptions(_ options: Options)
   {
     print("Don't forget to implement BearingViewController.applyOptions")
+  }
+  
+  // MARK: - State
+  
+  func _applyState(_ state: AppState)
+  {
+    print("Don't forget to implement BearingViewController.applyState \(state)")
   }
   
   // MARK: - Table view data source

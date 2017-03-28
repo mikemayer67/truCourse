@@ -23,6 +23,7 @@ class OptionsViewController: UITableViewController, UITextFieldDelegate
   @IBOutlet weak var topOfScreenSC       : UISegmentedControl!
   @IBOutlet weak var headingAccuracySC   : UISegmentedControl!
   @IBOutlet weak var mapTypeSC           : UISegmentedControl!
+  @IBOutlet weak var showScaleSwitch     : UISwitch!
   @IBOutlet weak var northTypeSC         : UISegmentedControl!
   @IBOutlet weak var baseUnitSC          : UISegmentedControl!
   @IBOutlet weak var locAccuracySlider   : UISlider!
@@ -86,6 +87,8 @@ class OptionsViewController: UITableViewController, UITextFieldDelegate
       mapTypeSC.selectedSegmentIndex = 0
     }
     
+    showScaleSwitch.isOn = options.showScale
+    
     baseUnitSC.selectedSegmentIndex  = options.baseUnit.rawValue
     
     locAccuracySlider.value = Float(options.locAccFrac)
@@ -127,6 +130,13 @@ class OptionsViewController: UITableViewController, UITextFieldDelegate
     default: options.mapType = .standard
     }
     
+    checkState()
+  }
+  
+  @IBAction func handleShowScale(_ sender : UISwitch)
+  {
+    options.showScale = sender.isOn
+    print("Handle Scale: \(options.showScale)")
     checkState()
   }
   

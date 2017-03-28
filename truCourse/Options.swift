@@ -43,6 +43,7 @@ struct Options
   var topOfScreen     : MapOrientation
   var headingAccuracy : HeadingAccuracy  // map orientation update frequency
   var mapType         : MKMapType
+  var showScale       : Bool
   var northType       : NorthType
   var baseUnit        : BaseUnitType
   var locAccFrac      : Double         // used with baseUnit to determine location accuracy
@@ -101,6 +102,7 @@ struct Options
     let dv = Options.defaults
     topOfScreen     = MapOrientation(    rawValue: dv.integer(forKey: "topOfScreen"   ))!
     mapType         = MKMapType(         rawValue: UInt(dv.integer(forKey: "mapType" )))!
+    showScale       = dv.bool(forKey: "showScale")
     northType       = NorthType(         rawValue: dv.integer(forKey: "northType"     ))!
     baseUnit        = BaseUnitType(      rawValue: dv.integer(forKey: "baseUnit"      ))!
     locAccFrac      = dv.double(forKey: "locationAccuracyFrac")
@@ -117,6 +119,7 @@ struct Options
     
     dv.set( topOfScreen.rawValue,    forKey: "topOfScreen"          )
     dv.set( mapType.rawValue,        forKey: "mapType"              )
+    dv.set( showScale,               forKey: "showScale"            )
     dv.set( northType.rawValue,      forKey: "northType"            )
     dv.set( baseUnit.rawValue,       forKey: "baseUnit"             )
     dv.set( locAccFrac,              forKey: "locationAccuracyFrac" )
@@ -154,6 +157,7 @@ struct Options
   {
     if topOfScreen != x.topOfScreen { return true }
     if mapType     != x.mapType     { return true }
+    if showScale   != x.showScale   { return true }
     if northType   != x.northType   { return true }
     if baseUnit    != x.baseUnit    { return true }
     if locAccFrac  != x.locAccFrac  { return true }

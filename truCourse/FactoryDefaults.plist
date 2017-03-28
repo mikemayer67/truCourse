@@ -6,6 +6,8 @@
 	<integer>0</integer>
 	<key>mapType</key>
 	<integer>0</integer>
+	<key>showScale</key>
+	<false/>
 	<key>northType</key>
 	<integer>0</integer>
 	<key>baseUnit</key>

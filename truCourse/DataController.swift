@@ -122,7 +122,7 @@ class DataController : NSObject, CLLocationManagerDelegate
       currentRoute!.locked = false
     }
     
-    dataViewController?.updateState()
+    dataViewController?.applyState()
   }
   
   func updateTrackingState(authorized:Bool?, enabled:Bool?)

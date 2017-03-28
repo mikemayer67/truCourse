@@ -11,9 +11,9 @@ import UIKit
 class LatLonViewController: UITableViewController, VisualizationView
 {
   
-  var visualizationType : VisualizationType { return .LatLonView }
+  var _visualizationType : VisualizationType { return .LatLonView }
   
-  var hasSelection: Bool
+  var _hasSelection: Bool
   {
     return self.tableView.indexPathForSelectedRow != nil
   }
@@ -30,10 +30,16 @@ class LatLonViewController: UITableViewController, VisualizationView
   
   // MARK: - Options
   
-  func applyOptions(_ options: Options)
+  func _applyOptions(_ options: Options)
   {
     print("Don't forget to implement LatLonViewController.applyOptions")
-
+  }
+  
+  // MARK: - State
+  
+  func _applyState(_ state: AppState)
+  {
+    print("Don't forget to implement LatLonViewController.applyState \(state)")
   }
   
   // MARK: - Table view data source
