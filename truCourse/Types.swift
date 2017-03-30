@@ -10,36 +10,6 @@ import Foundation
 import UIKit
 import CoreLocation
 
-enum VisualizationType : Int
-{
-  case None = -1
-  case MapView = 0
-  case BearingView = 1
-  case LatLonView = 2
-  
-  func next() -> VisualizationType
-  {
-    switch self
-    {
-    case .None:        return .None
-    case .MapView:     return .BearingView
-    case .BearingView: return .LatLonView
-    case .LatLonView:  return .MapView
-    }
-  }
-  
-  func prev() -> VisualizationType
-  {
-    switch self
-    {
-    case .None:        return .None
-    case .MapView:     return .LatLonView
-    case .BearingView: return .MapView
-    case .LatLonView:  return .BearingView
-    }
-  }
-}
-
 enum MapOrientation : Int
 {
   case North     = 0
@@ -90,14 +60,13 @@ enum BaseUnitType : Int
 }
 
 
-
 enum AppState
 {
   case Uninitialized
   case Disabled       // Location Service not authorized
   case Paused         // User disabled location updates
-  case Idle           // Authorized
-  case Inserting(Int) // insertion index (0 = new start point)
+  case Idle           // Authorized and user enabled
+  case Inserting      // Inserting new candidate
   case Editing(Int)   // editting index
 }
 
@@ -106,9 +75,9 @@ enum AppStateTransition
   case Authorization(CLAuthorizationStatus)
   
   case Start
-  case Enabled(Bool)        // user starting/pausing use of location services
-  case Insert(Int)          // index indicates which post to insert AFTER (0 = before first post)
-  case Edit(Int)            // index indicates which post to begin editing
-  case Save(Bool)           // flag indicating whether to lock the route for futuere edits
+  case Enabled(Bool)  // user starting/pausing use of location services
+  case Insert(Int?)   // location to begin insertion (nil inserts at end)
+  case Edit(Int)      // index indicates which post to begin editing
+  case Save(Bool)     // flag indicating whether to lock the route for futuere edits
 }
 

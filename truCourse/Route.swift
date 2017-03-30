@@ -18,8 +18,7 @@ class Route
   private(set) var created        : Date
   private(set) var lastSaved      : Date?
   
-  private(set) var startPoint     : Waypoint?
-  private(set) var candidatePoint : Waypoint?
+  private(set) var head           : Waypoint?
   private(set) var declination    : CLLocationDegrees?
   
   var dirty  : Bool = false
@@ -29,19 +28,22 @@ class Route
   
   var isEmpty : Bool
   {
-    guard startPoint != nil else { return true }
-    return startPoint!.length == 0
+    return head == nil
   }
   
   var count : Int
   {
-    return startPoint?.length ?? 0
+    return head?.length ?? 0
   }
   
   subscript(index: Int) -> Waypoint?
   {
-    print("Route: Need to implmeent subscript")
-    return nil
+    return head?.find(index:index)
+  }
+  
+  var tail : Waypoint?
+  {
+    return head?.prev
   }
 
   // MARK: - Constructors and Encoding
@@ -68,27 +70,27 @@ class Route
     
     declination = routeData.value(forKey: "declination") as? CLLocationDegrees
     
-    var waypoints : [NSDictionary]?
-    waypoints = routeData.value(forKey: "waypoints") as? [NSDictionary]
-    
-    if waypoints != nil
+    if let waypoints = routeData.value(forKey: "waypoints") as? [NSDictionary]
     {
       var tail : Waypoint?
-      for waypointData in waypoints!
+      for wp in waypoints
       {
-        tail = Waypoint(with: waypointData, after: tail)
-        if startPoint == nil { startPoint = tail }
+        tail = Waypoint(with: wp, after: tail)
+        if head == nil { head = tail }
       }
     }
     
-    startPoint?.reindex()
+    dirty  = false
+    locked = lastSaved != nil
+    
+    head?.reindex()
   }
     
   func save(into routes:NSMutableArray)
   {
     let data = NSMutableDictionary()
     
-    if locked && ( dirty || lastSaved == nil )
+    if (locked && ( dirty || lastSaved == nil ) )
     {
       lastSaved = Date()
     }
@@ -102,11 +104,11 @@ class Route
     if declination != nil { data.setValue(declination, forKey: "declination") }
     
     let waypoints = NSMutableArray()
-    startPoint?.iterate() { (wp:Waypoint) in wp.save(into:waypoints) }
+    head?.iterate() { (wp:Waypoint) in wp.save(into:waypoints) }
     if waypoints.count > 0 { data.setValue(waypoints, forKey: "waypoints") }
     
     routes.add(data)
     
-    dirty = false
+    dirty  = false
   }
 }

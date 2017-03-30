@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		270A77721E8CC570001E605B /* InsertionPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 270A77711E8CC570001E605B /* InsertionPoint.swift */; };
 		2710A2E81E735977004BE462 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2710A2E71E735977004BE462 /* MapKit.framework */; };
 		273D83821E8163B1003F5B49 /* RouteID.swift in Sources */ = {isa = PBXBuildFile; fileRef = 273D83811E8163B1003F5B49 /* RouteID.swift */; };
 		273DCEB11E7AC11D005AE82E /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 273DCEB01E7AC11D005AE82E /* Constants.swift */; };
@@ -51,6 +52,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		270A77711E8CC570001E605B /* InsertionPoint.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InsertionPoint.swift; sourceTree = "<group>"; };
 		2710A2E41E72FA2C004BE462 /* LocationServices.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationServices.swift; sourceTree = "<group>"; };
 		2710A2E71E735977004BE462 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		273D83811E8163B1003F5B49 /* RouteID.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteID.swift; sourceTree = "<group>"; };
@@ -131,6 +133,7 @@
 			isa = PBXGroup;
 			children = (
 				273DCEB91E7C1C06005AE82E /* DataController.swift */,
+				270A77711E8CC570001E605B /* InsertionPoint.swift */,
 				278905E31E7961D100F1B40B /* Waypoint.swift */,
 				273DCEB21E7ACC11005AE82E /* Route.swift */,
 				27E7754D1E7CC16600091C78 /* Routes.swift */,
@@ -327,6 +330,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				270A77721E8CC570001E605B /* InsertionPoint.swift in Sources */,
 				2793480C1E8A829E00594B0D /* VisualizationView.swift in Sources */,
 				27C5584F1E5F8790004FF32A /* LatLonViewController.swift in Sources */,
 				27C5584D1E5F8790004FF32A /* AppDelegate.swift in Sources */,

@@ -14,6 +14,8 @@
 	<integer>1</integer>
 	<key>locationAccuracyFrac</key>
 	<real>1</real>
+	<key>postSeparationFrac</key>
+	<real>0.2</real>
 	<key>headingAccuracy</key>
 	<integer>1</integer>
 </dict>

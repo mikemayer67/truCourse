@@ -41,16 +41,16 @@ class Waypoint
 {
   var location               : CLLocationCoordinate2D
   {
-    didSet { update() ; _prev?.update() }
+    didSet { update() ; prev?.update() }
   }
   
   private(set) var index    : Int?
   private(set) var bearing  : CLLocationDirection?  // rel. true north
   private(set) var distance : CLLocationDistance?
   
-  private      var _next   : Waypoint?
-  private      var _prev   : Waypoint?
-  private      var _cand   : Waypoint?
+  private(set) var next   : Waypoint?
+  private(set) var prev   : Waypoint?
+  private(set) var cand   : Waypoint?
   
   // MARK: - Constructors & Encoders
   
@@ -67,15 +67,15 @@ class Waypoint
     
     if after == nil
     {
-      _next = self
-      _prev = self
+      next = self
+      prev = self
     }
     else
     {
-      _next = after!._next
-      _prev = after
-      _prev!._next = self
-      _next!._prev = self
+      next = after!.next
+      prev = after
+      prev!.next = self
+      next!.prev = self
     }
   }
   
@@ -100,23 +100,23 @@ class Waypoint
   
   func insert(before nextPoint:Waypoint, as type:InsertionType = .Committed)
   {
-    guard nextPoint._prev != nil else
+    guard nextPoint.prev != nil else
     { fatalError("Attempted to insert before an unlinked Waypoint") }
     
-    _insert(as:type){ self._prev = nextPoint._prev; self._next = nextPoint }
+    _insert(as:type){ self.prev = nextPoint.prev; self.next = nextPoint }
   }
   
   func insert(after priorPoint:Waypoint, as type:InsertionType = .Committed)
   {
-    guard priorPoint._next != nil else
+    guard priorPoint.next != nil else
     { fatalError("Attempted to insert after an unlinked Waypoint") }
     
-    _insert(as:type){ self._next = priorPoint._next; self._prev = priorPoint }
+    _insert(as:type){ self.next = priorPoint.next; self.prev = priorPoint }
   }
 
   private func _insert(as type:InsertionType, link:()->() )
   {
-    guard _next == nil else
+    guard next == nil else
     {
       let qualifier = (type == .Candidate ? "as candidate" : "to route")
       fatalError("Attempted to add linked Waypoint \(qualifier)")
@@ -127,36 +127,65 @@ class Waypoint
     switch(type)
     {
     case .Candidate:
-      _prev!._cand = self
+      prev!.cand = self
       
     case .Committed:
-      _prev!._cand = nil
-      _prev!._next = self
-      _next!._prev = self
+      prev!.cand = nil
+      prev!.next = self
+      next!.prev = self
     }
     
     update()
-    _prev!.update()
+    prev!.update()
     
   }
   
   func commit()
   {
-    if _next == nil, _prev == nil  // first waypoint in a new route
+    if next == nil, prev == nil  // first waypoint in a new route
     {
-      _next = self
-      _prev = self
+      next = self
+      prev = self
       index = 1
     }
     else // add candidate (in-place) to the route
     {
-      guard _prev!._cand === self else
+      guard prev!.cand === self else
       { fatalError("Attempted to commit non-candidate Waypoint") }
       
-      _next!._prev = self
-      _prev!._next = self
-      _prev!._cand = nil
+      next!.prev = self
+      prev!.next = self
+      prev!.cand = nil
     }
+  }
+  
+  func unlink()
+  {
+    if prev == nil { return }
+    
+    if prev!.cand === self
+    {
+      prev!.cand = nil
+    }
+    else if prev!.next === self
+    {
+      if prev!.cand != nil
+      {
+        guard prev!.cand!.next === self else
+        { fatalError("Improperly linked candidate encountered") }
+        
+        prev!.cand!.next = next
+        prev!.cand!.update()
+      }
+      
+      prev!.next = next
+      next!.prev = prev
+    }
+    
+    prev!.update()
+
+    prev = nil
+    next = nil
   }
   
   // MARK: - Route iterator and iterated properties
@@ -166,6 +195,13 @@ class Waypoint
     var count = 0
     iterate( { _ in count += 1 } )
     return count
+  }
+  
+  func find(index:Int) -> Waypoint?
+  {
+    var rval : Waypoint?
+    iterate( { wp in if wp.index == index { rval = wp } } )
+    return rval
   }
   
   func reindex()
@@ -178,13 +214,13 @@ class Waypoint
   {
     task(self)
 
-    if _next == nil || _next === self { return }
+    if next == nil || next === self { return }
     
-    var cur = _next!
+    var cur = next!
     while( cur !== self )
     {
       task(cur)
-      cur = cur._next!
+      cur = cur.next!
     }
   }
   
@@ -192,7 +228,7 @@ class Waypoint
   
   func update()
   {
-    if _next == nil || _next === self
+    if next == nil || next === self
     {
       distance = nil
       bearing  = nil
@@ -211,7 +247,7 @@ class Waypoint
     let lat = location.latitude  * Constants.deg  // radians
     let lon = location.longitude * Constants.deg  // radians
     
-    let dst = ( _cand == nil ? _next : _cand )!
+    let dst = ( cand == nil ? next : cand )!
     
     let nextLat = dst.location.latitude  * Constants.deg  // radians
     let nextLon = dst.location.longitude * Constants.deg  // radians

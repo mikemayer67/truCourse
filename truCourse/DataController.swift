@@ -9,6 +9,13 @@
 import Foundation
 import CoreLocation
 
+func dms(_ deg:Int, _ min:Int = 0, _ sec:Int = 0) -> Double
+{
+  let ms = Double(min) + Double(sec)/60.0
+  return ( deg < 0 ? Double(deg) - ms : Double(deg) + ms )
+}
+
+
 class DataController : NSObject, CLLocationManagerDelegate
 {
   @IBOutlet var dataViewController : DataViewController?
@@ -19,20 +26,36 @@ class DataController : NSObject, CLLocationManagerDelegate
   private(set) var trackingAuthorized = false  // phone security settings
   
   let routes = Routes()
+  private var candidate      : Waypoint?
+  private var insertionPoint : InsertionPoint?
   
-  private(set) var currentRoute   : Route?
-  private(set) var insertionPoint : Waypoint?
-
   private(set) var state : AppState = .Uninitialized
   
-  private(set) var okToRecord = false
+  private(set) var currentLocation  : CLLocation?
+  private      var lastRecordedPost : CLLocation?
   
-  //  private override init()
-  //  {
-  //    super.init()
-  //    locationManager.delegate = self
-  //    locationManager.requestWhenInUseAuthorization()
-  //  }
+  private var mostRecentLocation : CLLocationCoordinate2D
+  {
+    let loc = currentLocation ?? locationManager.location
+    let coord = loc?.coordinate ?? CLLocationCoordinate2D(latitude: dms(39,9,8), longitude: dms(-77,12,60))
+    return coord
+  }
+  
+  var okToRecord : Bool
+  {
+    if lastRecordedPost == nil { return true  }
+    if currentLocation  == nil { return false }
+
+    let options   = dataViewController?.options
+    let threshold = options?.minPostSeparation ?? 10.0
+    let distance  = currentLocation!.distance(from: lastRecordedPost!)
+    
+    print("okToRecord(\(distance)>\(threshold)): \(distance>threshold)")
+    
+    return distance > threshold
+  }
+  
+  // MARK: - Options
   
   func updateOptions()
   {
@@ -70,14 +93,14 @@ class DataController : NSObject, CLLocationManagerDelegate
       {
         if !trackingAuthorized
         {
-          let index = insertionPoint?.index
+          let currentRoute   = routes.working!
           
-          //          trackingAuthorized = true
-          if trackingEnabled == false    { state = .Paused                         }
-          else if currentRoute == nil    { state = .Idle                           }
-          else if currentRoute!.isEmpty  { state = .Inserting(currentRoute!.count) }
-          else if index != nil           { state = .Inserting(index!)              }
-          else                           { state = .Idle                           }
+          trackingAuthorized = true
+          if trackingEnabled == false    { state = .Paused    }
+          else if currentRoute.locked    { state = .Idle      }
+          else if insertionPoint != nil  { state = .Inserting }
+          else if currentRoute.isEmpty   { state = .Inserting }
+          else                           { state = .Idle      }
         }
       }
       else
@@ -89,10 +112,25 @@ class DataController : NSObject, CLLocationManagerDelegate
       if userEnabled { state = .Idle   }
       else           { state = .Paused }
       
+    case .Insert(let index):
+      if index != nil
+      {
+        insertionPoint?.candidate.unlink()
+        
+        if index == 0 && routes.working.head != nil
+        {
+          insertionPoint = InsertionPoint( self.mostRecentLocation )
+        }
+        else
+        {
+          insertionPoint = InsertionPoint( self.mostRecentLocation, before: routes.working.head! )
+        }
+      }
+      state = .Inserting
+      
     default:
       print("DC need to implment transition \(transition)")
     }
-    
     
     switch state
     {
@@ -109,20 +147,35 @@ class DataController : NSObject, CLLocationManagerDelegate
     case .Idle:
       updateTrackingState(authorized: true, enabled: true)
       insertionPoint  = nil
-
   
-    case .Inserting(let index):
+    case .Inserting:
       updateTrackingState(authorized: true, enabled: true)
-      currentRoute!.locked = false
-      insertionPoint = currentRoute![index]
+      routes.working.locked = false
 
+      if insertionPoint == nil
+      {
+        if routes.working.head != nil
+        {
+          insertionPoint = InsertionPoint(self.mostRecentLocation, after:routes.working.tail!)
+        }
+        else
+        {
+          insertionPoint = InsertionPoint(self.mostRecentLocation)
+        }
+      }
   
     case .Editing:
       updateTrackingState(authorized: true, enabled: true)
-      currentRoute!.locked = false
+      routes.working.locked = false
     }
     
     dataViewController?.applyState()
+  }
+  
+  func dropInsertionPoint()
+  {
+    if insertionPoint == nil { return }
+    insertionPoint = nil
   }
   
   func updateTrackingState(authorized:Bool?, enabled:Bool?)
@@ -166,9 +219,18 @@ class DataController : NSObject, CLLocationManagerDelegate
   
   func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation])
   {
+    if locations.isEmpty { return }
+    
+    currentLocation = locations[locations.endIndex-1]
+    
     for loc in locations
     {
       print("DC new location: \(loc.coordinate.longitude) \(loc.coordinate.latitude)")
     }
+    
+    print("new Location: \(currentLocation)  okToRecord: \(self.okToRecord)")
+    print("Add check to activate record button")
+    
+    //    dataViewController?.applyState()
   }
 }

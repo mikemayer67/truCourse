@@ -213,6 +213,7 @@ class DataViewController :
       activeToolbarItems[0]  = offBarItem
       activeToolbarItems[1]  = startBarItem
       activeToolbarItems[3]  = trashBarItem
+      startBarItem.isEnabled = true
       trashBarItem.isEnabled = currentView.hasSelection
       
     case .Inserting:
@@ -224,10 +225,11 @@ class DataViewController :
       activeToolbarItems[0]   = offBarItem
       activeToolbarItems[1]   = stopBarItem
       activeToolbarItems[3]   = recordBarItem
+      stopBarItem.isEnabled   = true
       recordBarItem.isEnabled = dataController.okToRecord
     }
 
-    shareBarItem.isEnabled = ( dataController.currentRoute?.count ?? 0 ) > 1
+    shareBarItem.isEnabled = ( dataController.routes.working.isEmpty == false )
     
     let toolbar = navigationController?.toolbar
     switch state
@@ -241,19 +243,17 @@ class DataViewController :
   
   func handleOn(_ sender: UIBarButtonItem)
   {
-    print("DVC handleOn")
     dataController.updateState(.Enabled(true))
   }
   
   func handleOff(_ sender: UIBarButtonItem)
   {
-    print("DVC handleOff")
     dataController.updateState(.Enabled(false))
   }
   
   func handleStart(_ sender: UIBarButtonItem)
   {
-    print("DVC handleStart")
+    dataController.updateState(.Insert(nil))
   }
   
   func handlePause(_ sender: UIBarButtonItem)

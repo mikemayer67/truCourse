@@ -17,8 +17,8 @@ fileprivate func routeDataFilename() throws -> URL
 
 class Routes
 {
-  var routes  = [Route]()
-  var working : Route?
+  private(set) var routes  = [Route]()
+  private(set) var working : Route!
   
   init()
   {
@@ -36,7 +36,7 @@ class Routes
             guard working == nil else { fatalError("Saved data contains multiple routes in progress") }
             working = route
           }
-          if route.lastSaved != nil
+          else
           {
             routes.append(route)
           }
@@ -45,7 +45,7 @@ class Routes
     }
     catch {}
     
-    if working==nil && routes.isEmpty
+    if working==nil
     {
       working = Route()
     }

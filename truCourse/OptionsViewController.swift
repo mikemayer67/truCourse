@@ -28,6 +28,9 @@ class OptionsViewController: UITableViewController, UITextFieldDelegate
   @IBOutlet weak var baseUnitSC          : UISegmentedControl!
   @IBOutlet weak var locAccuracySlider   : UISlider!
   @IBOutlet weak var locAccuracyText     : UILabel!
+  @IBOutlet weak var minPostSepSlider    : UISlider!
+  @IBOutlet weak var minPostSepText      : UILabel!
+
   
   @IBOutlet weak var emailCell           : UITableViewCell!
   @IBOutlet weak var emailField          : UITextField!
@@ -94,6 +97,9 @@ class OptionsViewController: UITableViewController, UITextFieldDelegate
     locAccuracySlider.value = Float(options.locAccFrac)
     locAccuracyText.text    = options.locationAccuracyString
     
+    minPostSepSlider.value  = Float(options.postSepFrac)
+    minPostSepText.text     = options.minPostSeparationString
+    
     emailField.text         = options.emailAddress
     
     updateEmailAddressColor(valid:true)
@@ -150,6 +156,7 @@ class OptionsViewController: UITableViewController, UITextFieldDelegate
   {
     self.options.baseUnit = BaseUnitType(rawValue: sender.selectedSegmentIndex)!
     locAccuracyText.text = options.locationAccuracyString
+    minPostSepText.text  = options.minPostSeparationString
     checkState()
   }
   
@@ -157,6 +164,13 @@ class OptionsViewController: UITableViewController, UITextFieldDelegate
   {
     options.locAccFrac = Double(sender.value)
     locAccuracyText.text = options.locationAccuracyString
+    checkState()
+  }
+  
+  @IBAction func handleMinPostSeparation(_ sender : UISlider)
+  {
+    options.postSepFrac = Double(sender.value)
+    minPostSepText.text  = options.minPostSeparationString
     checkState()
   }
   

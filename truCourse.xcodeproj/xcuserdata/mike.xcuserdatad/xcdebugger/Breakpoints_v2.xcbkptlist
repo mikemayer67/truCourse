@@ -42,11 +42,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "truCourse/Options.swift"
-            timestampString = "512402757.00579"
+            timestampString = "512486718.869942"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "55"
-            endingLineNumber = "55"
+            startingLineNumber = "56"
+            endingLineNumber = "56"
             landmarkName = "Options"
             landmarkType = "14">
          </BreakpointContent>
@@ -54,16 +54,16 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "No"
+            shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "truCourse/DataController.swift"
-            timestampString = "512371692.31457"
+            filePath = "truCourse/DataViewController.swift"
+            timestampString = "512569310.036659"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "130"
-            endingLineNumber = "130"
-            landmarkName = "updateTrackingState(authorized:enabled:)"
+            startingLineNumber = "200"
+            endingLineNumber = "200"
+            landmarkName = "applyState()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

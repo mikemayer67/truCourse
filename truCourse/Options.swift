@@ -47,6 +47,7 @@ struct Options
   var northType       : NorthType
   var baseUnit        : BaseUnitType
   var locAccFrac      : Double         // used with baseUnit to determine location accuracy
+  var postSepFrac     : Double
   
   var emailAddress    : String?
   
@@ -67,7 +68,35 @@ struct Options
     return min * exp((1.0-locAccFrac)*log(max/min))
   }
   
+  
+  var minPostSeparation : CLLocationDistance
+  {
+    var min : Double!
+    var max : Double!
+    switch baseUnit
+    {
+    case .English:
+      min =      5.0 * 0.3048 //  5 feet
+      max =  52800.0 * 0.3048 // 10 miles
+    case .Metric:
+      min = 1.0
+      max = 5000.0
+    }
+    
+    return min * exp((postSepFrac)*log(max/min))
+  }
+  
   var locationAccuracyString : String
+  {
+    return distanceString(for:self.locationAccuracy)
+  }
+  
+  var minPostSeparationString : String
+  {
+    return distanceString(for:self.minPostSeparation)
+  }
+  
+  func distanceString(for distance:Double) -> String
   {
     let formatter = MKDistanceFormatter()
     switch baseUnit
@@ -75,7 +104,7 @@ struct Options
     case .English: formatter.units = .imperial
     case .Metric:  formatter.units = .metric
     }
-    return formatter.string(fromDistance: self.locationAccuracy)
+    return formatter.string(fromDistance: distance)
   }
 
   var locationFilter : CLLocationDistance
@@ -106,6 +135,7 @@ struct Options
     northType       = NorthType(         rawValue: dv.integer(forKey: "northType"     ))!
     baseUnit        = BaseUnitType(      rawValue: dv.integer(forKey: "baseUnit"      ))!
     locAccFrac      = dv.double(forKey: "locationAccuracyFrac")
+    postSepFrac     = dv.double(forKey: "postSeparationFrac")
     
     headingAccuracy = .Good
     headingAccuracy.set(byIndex: dv.integer(forKey: "headingAccuracy"))
@@ -123,6 +153,7 @@ struct Options
     dv.set( northType.rawValue,      forKey: "northType"            )
     dv.set( baseUnit.rawValue,       forKey: "baseUnit"             )
     dv.set( locAccFrac,              forKey: "locationAccuracyFrac" )
+    dv.set( postSepFrac,             forKey: "postSeparationFrac"   )
     
     dv.set( headingAccuracy.index(), forKey: "headingAccuracy"      )
     
@@ -161,6 +192,7 @@ struct Options
     if northType   != x.northType   { return true }
     if baseUnit    != x.baseUnit    { return true }
     if locAccFrac  != x.locAccFrac  { return true }
+    if postSepFrac != x.postSepFrac { return true }
     
     if headingAccuracy != x.headingAccuracy { return true }
     
