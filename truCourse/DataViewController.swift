@@ -203,13 +203,11 @@ class DataViewController :
     case .Disabled:      break
       
     case .Paused:
-      print("Paused state")
       activeToolbarItems[0] = onBarItem
       activeToolbarItems[1].isEnabled = false
       activeToolbarItems[3].isEnabled = false
       
     case .Idle:
-      print("Idle state")
       activeToolbarItems[0]  = offBarItem
       activeToolbarItems[1]  = startBarItem
       activeToolbarItems[3]  = trashBarItem
@@ -217,11 +215,9 @@ class DataViewController :
       trashBarItem.isEnabled = currentView.hasSelection
       
     case .Inserting:
-      print("Inserting state")
       fallthrough
       
     case .Editing:
-      print("Editing state (if not inserting)")
       activeToolbarItems[0]   = offBarItem
       activeToolbarItems[1]   = stopBarItem
       activeToolbarItems[3]   = recordBarItem
@@ -253,12 +249,28 @@ class DataViewController :
   
   func handleStart(_ sender: UIBarButtonItem)
   {
-    dataController.updateState(.Insert(nil))
+    let doStart = { self.dataController.updateState(.Insert(nil)) }
+
+    if dataController.routes.working.locked == false
+    {
+      let alert = UIAlertController(title: "Unlock Route",
+                                    message: "Please confirm updating the route (you will not be able to undo changes)",
+                                    preferredStyle: .alert)
+      
+      alert.addAction( UIAlertAction(title: "OK", style: .destructive) { (_:UIAlertAction) in doStart() } )
+      alert.addAction( UIAlertAction(title: "Cancel", style: .cancel) )
+      
+      self.present(alert, animated: true)
+    }
+    else
+    {
+      doStart()
+    }
   }
   
   func handlePause(_ sender: UIBarButtonItem)
   {
-    print("DVC handlePause")
+    dataController.updateState(.Cancel)
   }
   
   func handleRecord(_ sender: UIBarButtonItem)

@@ -76,6 +76,7 @@ class DataController : NSObject, CLLocationManagerDelegate
     switch transition
     {
     case .Start:
+      print("Transition = start")
       switch self.state
       {
       case .Uninitialized:
@@ -89,13 +90,15 @@ class DataController : NSObject, CLLocationManagerDelegate
       }
       
     case .Authorization(let status):
+      print("Transition = authorization(\(status))")
       if status == .authorizedAlways || status == .authorizedWhenInUse
       {
         if !trackingAuthorized
         {
           let currentRoute   = routes.working!
           
-          trackingAuthorized = true
+          updateTrackingState(authorized: true, enabled: nil)
+          
           if trackingEnabled == false    { state = .Paused    }
           else if currentRoute.locked    { state = .Idle      }
           else if insertionPoint != nil  { state = .Inserting }
@@ -109,10 +112,12 @@ class DataController : NSObject, CLLocationManagerDelegate
       }
       
     case .Enabled(let userEnabled):
+      print("Transition = enabled(\(userEnabled))")
       if userEnabled { state = .Idle   }
       else           { state = .Paused }
       
     case .Insert(let index):
+      print("Transition = insert(\(index))")
       if index != nil
       {
         insertionPoint?.candidate.unlink()
@@ -128,27 +133,47 @@ class DataController : NSObject, CLLocationManagerDelegate
       }
       state = .Inserting
       
+    case .Cancel:
+      print("Transition = cancel");
+      
+      switch state
+      {
+      case .Inserting(_):
+        state = .Idle
+      case .Editing(_):
+        if insertionPoint == nil { state = .Idle }
+        else                     { state = .Inserting }
+      default:
+        fatalError("Pause button should not be visible unless in .Insert or .Edit state")
+      }
+      
     default:
+      print("Transition = ???")
       print("DC need to implment transition \(transition)")
     }
     
     switch state
     {
     case .Uninitialized:
+      print("State = uninitialized")
       break
       
     case .Disabled:
+      print("State = disabled")
       updateTrackingState(authorized:false, enabled:nil)
   
     case .Paused:
+      print("State = paused")
       updateTrackingState(authorized:true, enabled:false)
       insertionPoint  = nil
 
     case .Idle:
+      print("State = idle")
       updateTrackingState(authorized: true, enabled: true)
       insertionPoint  = nil
   
     case .Inserting:
+      print("State = inserting")
       updateTrackingState(authorized: true, enabled: true)
       routes.working.locked = false
 
@@ -165,11 +190,14 @@ class DataController : NSObject, CLLocationManagerDelegate
       }
   
     case .Editing:
+      print("State = editing")
       updateTrackingState(authorized: true, enabled: true)
       routes.working.locked = false
     }
     
     dataViewController?.applyState()
+    
+    print("insertion = \(insertionPoint)")
   }
   
   func dropInsertionPoint()
@@ -225,11 +253,11 @@ class DataController : NSObject, CLLocationManagerDelegate
     
     for loc in locations
     {
-      print("DC new location: \(loc.coordinate.longitude) \(loc.coordinate.latitude)")
+      //      print("DC new location: \(loc.coordinate.longitude) \(loc.coordinate.latitude)")
     }
     
-    print("new Location: \(currentLocation)  okToRecord: \(self.okToRecord)")
-    print("Add check to activate record button")
+    //print("new Location: \(currentLocation?.coordinate)  okToRecord: \(self.okToRecord)")
+    //print("Add check to activate record button")
     
     //    dataViewController?.applyState()
   }

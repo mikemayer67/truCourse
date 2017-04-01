@@ -78,6 +78,7 @@ enum AppStateTransition
   case Enabled(Bool)  // user starting/pausing use of location services
   case Insert(Int?)   // location to begin insertion (nil inserts at end)
   case Edit(Int)      // index indicates which post to begin editing
+  case Cancel         // stop inserting or editing candidate waypoint
   case Save(Bool)     // flag indicating whether to lock the route for futuere edits
 }
 
