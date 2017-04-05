@@ -122,13 +122,20 @@ class DataController : NSObject, CLLocationManagerDelegate
       {
         insertionPoint?.candidate.unlink()
         
-        if index == 0 && routes.working.head != nil
+        guard routes.working.head != nil else
+        { fatalError("Non-nil waypoint index without a working head") }
+        
+        if index == 0
         {
-          insertionPoint = InsertionPoint( self.mostRecentLocation )
+          insertionPoint = InsertionPoint( self.mostRecentLocation, before: routes.working.head! )
+        }
+        else if let wp = routes.working.head!.find(index: index!)
+        {
+          insertionPoint = InsertionPoint( self.mostRecentLocation, after: wp)
         }
         else
         {
-          insertionPoint = InsertionPoint( self.mostRecentLocation, before: routes.working.head! )
+          fatalError("Could not find waypoint \(index)")
         }
       }
       state = .Inserting
@@ -200,11 +207,6 @@ class DataController : NSObject, CLLocationManagerDelegate
     print("insertion = \(insertionPoint)")
   }
   
-  func dropInsertionPoint()
-  {
-    if insertionPoint == nil { return }
-    insertionPoint = nil
-  }
   
   func updateTrackingState(authorized:Bool?, enabled:Bool?)
   {
@@ -237,6 +239,24 @@ class DataController : NSObject, CLLocationManagerDelegate
     }
   }
   
+  // MARK: - Data methods
+  
+  func record()
+  {
+    switch state
+    {
+    case .Inserting(_):
+      let cand = insertionPoint!.candidate
+      routes.working.insert(insertionPoint!)
+      insertionPoint = InsertionPoint(self.mostRecentLocation, after:cand)
+      
+    case .Editing(let index):
+      print("Need to handle record during editing")
+    default:
+      fatalError("Recording should only be called in insert or edit mode")
+    }
+  }
+  
   
   // MARK: - Location Manager Delegate
   
@@ -251,10 +271,10 @@ class DataController : NSObject, CLLocationManagerDelegate
     
     currentLocation = locations[locations.endIndex-1]
     
-    for loc in locations
-    {
+      //for loc in locations
+    //{
       //      print("DC new location: \(loc.coordinate.longitude) \(loc.coordinate.latitude)")
-    }
+    //}
     
     //print("new Location: \(currentLocation?.coordinate)  okToRecord: \(self.okToRecord)")
     //print("Add check to activate record button")

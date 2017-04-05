@@ -16,7 +16,10 @@ class InsertionPoint
   private(set) var after: Waypoint?
   private(set) var before: Waypoint?
   
-  init(_ loc:CLLocationCoordinate2D) { candidate = Waypoint(loc) }
+  init(_ loc:CLLocationCoordinate2D)
+  {
+    candidate = Waypoint(loc)
+  }
   
   init(_ loc:CLLocationCoordinate2D, after waypoint: Waypoint)
   {
@@ -24,6 +27,7 @@ class InsertionPoint
     { fatalError("Attempted to create insertion point to unlinked waypoint") }
     
     self.candidate = Waypoint(loc)
+    self.candidate.insert(after: waypoint, as: .Candidate)
     self.after = waypoint
   }
   
@@ -33,6 +37,15 @@ class InsertionPoint
     { fatalError("Attempted to create insertion point to unlinked waypoint") }
     
     self.candidate = Waypoint(loc)
+    self.candidate.insert(before: waypoint, as: .Candidate)
     self.before = waypoint
+  }
+  
+  var string : String
+  {
+    var rval = "Candidate:\(candidate.index) "
+    if after != nil { rval = rval + "After:\(after!.index)" }
+    if before != nil { rval = rval + "Before:\(before!.index)" }
+    return rval
   }
 }

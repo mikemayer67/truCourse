@@ -111,4 +111,16 @@ class Route
     
     dirty  = false
   }
+  
+  func insert(_ ip : InsertionPoint)
+  {
+    ip.candidate.commit()
+    
+    if head == nil || (ip.before != nil && ip.before! === head)
+    {
+      head = ip.candidate
+    }
+    
+    head!.reindex()
+  }
 }

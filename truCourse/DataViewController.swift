@@ -251,7 +251,7 @@ class DataViewController :
   {
     let doStart = { self.dataController.updateState(.Insert(nil)) }
 
-    if dataController.routes.working.locked == false
+    if dataController.routes.working.locked
     {
       let alert = UIAlertController(title: "Unlock Route",
                                     message: "Please confirm updating the route (you will not be able to undo changes)",
@@ -275,7 +275,7 @@ class DataViewController :
   
   func handleRecord(_ sender: UIBarButtonItem)
   {
-    print("DVC handleRecord")
+    dataController.record()
   }
   
   func handleTrash(_ sender: UIBarButtonItem)

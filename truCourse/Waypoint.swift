@@ -228,7 +228,9 @@ class Waypoint
   
   func update()
   {
-    if next == nil || next === self
+    let dst = cand ?? next
+    
+    if dst == nil || dst === self
     {
       distance = nil
       bearing  = nil
@@ -247,10 +249,8 @@ class Waypoint
     let lat = location.latitude  * Constants.deg  // radians
     let lon = location.longitude * Constants.deg  // radians
     
-    let dst = ( cand == nil ? next : cand )!
-    
-    let nextLat = dst.location.latitude  * Constants.deg  // radians
-    let nextLon = dst.location.longitude * Constants.deg  // radians
+    let nextLat = dst!.location.latitude  * Constants.deg  // radians
+    let nextLon = dst!.location.longitude * Constants.deg  // radians
     
     let cosLat = cos(lat)
     let sinLat = sin(lat)
