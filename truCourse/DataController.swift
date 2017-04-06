@@ -34,6 +34,8 @@ class DataController : NSObject, CLLocationManagerDelegate
   private(set) var currentLocation  : CLLocation?
   private      var lastRecordedPost : CLLocation?
   
+  let hasCompass = CLLocationManager.headingAvailable()
+  
   private var mostRecentLocation : CLLocationCoordinate2D
   {
     let loc = currentLocation ?? locationManager.location
@@ -104,6 +106,11 @@ class DataController : NSObject, CLLocationManagerDelegate
           else if insertionPoint != nil  { state = .Inserting }
           else if currentRoute.isEmpty   { state = .Inserting }
           else                           { state = .Idle      }
+        }
+        
+        if routes.working.declination == nil && hasCompass
+        {
+          locationManager.startUpdatingHeading()
         }
       }
       else
@@ -280,5 +287,14 @@ class DataController : NSObject, CLLocationManagerDelegate
     //print("Add check to activate record button")
     
     //    dataViewController?.applyState()
+  }
+  
+  func locationManager(_ manager: CLLocationManager, didUpdateHeading newHeading: CLHeading)
+  {
+    if routes.working.declination == nil
+    {
+      routes.working.setDeclination(newHeading)
+    }
+    locationManager.stopUpdatingHeading()
   }
 }

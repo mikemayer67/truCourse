@@ -17,9 +17,10 @@ class Route
   private(set) var routeID        : Int
   private(set) var created        : Date
   private(set) var lastSaved      : Date?
+  private(set) var declination    : CLLocationDegrees?
   
   private(set) var head           : Waypoint?
-  private(set) var declination    : CLLocationDegrees?
+ 
   
   var dirty  : Bool = false
   var locked : Bool = false
@@ -122,5 +123,14 @@ class Route
     }
     
     head!.reindex()
+  }
+  
+  //MARK: - Route info
+  
+  func setDeclination(_ heading : CLHeading)
+  {
+    let mag = heading.magneticHeading
+    let tru = heading.trueHeading
+    self.declination = mag - tru
   }
 }
