@@ -45,9 +45,7 @@ class DataController : NSObject, CLLocationManagerDelegate
     let options   = dataViewController?.options
     let threshold = options?.minPostSeparation ?? 10.0
     let distance  = currentLocation!.distance(from: lastRecordedPost!)
-    
-    print("okToRecord(\(distance)>\(threshold)): \(distance>threshold)")
-    
+        
     return distance > threshold
   }
   
@@ -80,6 +78,7 @@ class DataController : NSObject, CLLocationManagerDelegate
         locationManager.allowsBackgroundLocationUpdates = false
         locationManager.requestWhenInUseAuthorization()
         let status = CLLocationManager.authorizationStatus()
+        lastRecordedPost = nil
         updateState(.Authorization(status))
       default:
         print("DC start transition sent multiple times")
@@ -174,11 +173,13 @@ class DataController : NSObject, CLLocationManagerDelegate
       print("State = paused")
       updateTrackingState(authorized:true, enabled:false)
       insertionPoint  = nil
+      dataViewController?.currentView.updateCandidate(nil)
 
     case .Idle:
       print("State = idle")
       updateTrackingState(authorized: true, enabled: true)
       insertionPoint  = nil
+      dataViewController?.currentView.updateCandidate(nil)
   
     case .Inserting:
       print("State = inserting")
@@ -251,6 +252,9 @@ class DataController : NSObject, CLLocationManagerDelegate
       routes.working.insert(insertionPoint!)
       insertionPoint = InsertionPoint(self.mostRecentLocation, after:cand)
       dataViewController?.currentView.updateRoute(routes.working)
+
+      lastRecordedPost = currentLocation
+      dataViewController?.applyState()
       
     case .Editing(let index):
       print("Need to handle record during editing")
@@ -272,7 +276,13 @@ class DataController : NSObject, CLLocationManagerDelegate
     if locations.isEmpty { return }
     currentLocation = locations[locations.endIndex-1]
     
-      //for loc in locations
+    if let cand = insertionPoint?.candidate
+    {
+      cand.location = currentLocation!.coordinate
+      dataViewController?.currentView.updateCandidate(cand)
+    }
+    
+    //for loc in locations
     //{
       //      print("DC new location: \(loc.coordinate.longitude) \(loc.coordinate.latitude)")
     //}
@@ -280,7 +290,7 @@ class DataController : NSObject, CLLocationManagerDelegate
     //print("new Location: \(currentLocation?.coordinate)  okToRecord: \(self.okToRecord)")
     //print("Add check to activate record button")
     
-    //    dataViewController?.applyState()
+    dataViewController?.applyState()
   }
   
   func locationManager(_ manager: CLLocationManager, didUpdateHeading newHeading: CLHeading)

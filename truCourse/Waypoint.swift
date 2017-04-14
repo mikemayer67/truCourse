@@ -279,8 +279,5 @@ class Waypoint
     
     distance = sqrt( dx*dx + dy*dy )
     bearing  = atan2( dx, dy ) / Constants.deg
-    
-    
-    print("\(location.latitude.dms),\(location.longitude.dms) -> \(dst!.location.latitude.dms),\(dst!.location.longitude.dms)  ==> \(distance)")
   }
 }

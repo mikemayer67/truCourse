@@ -61,6 +61,11 @@ class LatLonViewController: UITableViewController, VisualizationView
     print("LatLonView::updateRoute(\(route))")
   }
   
+  func _updateCandidate(_ cand: Waypoint?)
+  {
+    print("LatLonView::updateCandidate(\(cand))")
+  }
+  
   /*
    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
    let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)

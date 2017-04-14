@@ -46,6 +46,7 @@ protocol VisualizationView : class
   func _applyOptions(_ options:Options)
   func _applyState(_ state:AppState)
   func _updateRoute(_ route:Route)
+  func _updateCandidate(_ cand:Waypoint?)
 }
 
 extension UIViewController
@@ -101,6 +102,14 @@ extension UIViewController
     if let vv = self as? VisualizationView
     {
       vv._updateRoute(route)
+    }
+  }
+  
+  func updateCandidate(_ cand:Waypoint?)
+  {
+    if let vv = self as? VisualizationView
+    {
+      vv._updateCandidate(cand)
     }
   }
 }

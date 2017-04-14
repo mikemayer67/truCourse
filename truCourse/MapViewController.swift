@@ -20,6 +20,7 @@ class MapViewController: UIViewController, VisualizationView, MKMapViewDelegate
   private      var recenterButtonEnabled = true
   
   private var routeOverlay : MKOverlay?
+  private var candOverlay  : MKOverlay?
   
   var trackingMode : MKUserTrackingMode
   {
@@ -57,7 +58,6 @@ class MapViewController: UIViewController, VisualizationView, MKMapViewDelegate
   
   func _applyState(_ state: AppState)
   {
-    print("applyState")
     switch state
     {
     case .Uninitialized: fallthrough
@@ -114,7 +114,6 @@ class MapViewController: UIViewController, VisualizationView, MKMapViewDelegate
   
   func _updateRoute(_ route: Route)
   {
-    print("MapView::updateRoute(\(route))")
     let head = route.head
     var cand : Waypoint?
     
@@ -123,35 +122,54 @@ class MapViewController: UIViewController, VisualizationView, MKMapViewDelegate
     head?.iterate( { (wp:Waypoint) in
       print("waypoint \(wp.string())")
       coords.append(wp.location)
-      if wp.cand != nil
-      {
-        cand = wp.cand
-      }
-    } )
-    if cand != nil
-    {
-      print("candidate \(cand!.string())")
-    }
+      if wp.cand != nil { cand = wp.cand } } )
     
     if routeOverlay != nil { self.mapView.remove(routeOverlay!) }
-    if coords.count > 0
+    
+    if coords.count > 1
     {
-      routeOverlay = MKPolygon(coordinates:&coords, count: coords.count)
+      if coords.count > 2 { coords.append(coords[0]) }
+      routeOverlay = MKPolyline(coordinates:&coords, count: coords.count)
       self.mapView.add(routeOverlay!)
     }
     else
     {
       routeOverlay = nil
     }
+    
+    if cand != nil { _updateCandidate(cand!) }
+  }
+  
+  func _updateCandidate(_ candidate: Waypoint?)
+  {
+    if candOverlay != nil { self.mapView.remove(candOverlay!) }
+    candOverlay = nil
+    
+    guard let cand = candidate else { return }
+    guard let prev = cand.prev else { return }
+    guard let next = cand.next else { return }
+    
+    var coords = [ prev.location, cand.location, next.location ]
+    
+    candOverlay = MKPolyline(coordinates:&coords, count:3)
+    self.mapView.add(candOverlay!)
   }
   
   func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer
   {
     if routeOverlay === overlay
     {
-      let path = MKPolygonRenderer(overlay: overlay)
+      let path = MKPolylineRenderer(overlay: overlay)
       path.strokeColor = UIColor.purple
       path.lineWidth = 2.0
+      return path
+    }
+    else if candOverlay === overlay
+    {
+      let path = MKPolylineRenderer(overlay: overlay)
+      path.strokeColor = UIColor.purple
+      path.lineWidth = 1.0
+      path.lineDashPattern = [4,4]
       return path
     }
     else

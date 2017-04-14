@@ -60,6 +60,11 @@ class BearingViewController: UITableViewController, VisualizationView
     print("BearingView::updateRoute(\(route))")
   }
   
+  func _updateCandidate(_ cand: Waypoint?)
+  {
+    print("BearingView::updateCandidate(\(cand))")
+  }
+  
   /*
    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
    let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
