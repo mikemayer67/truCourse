@@ -82,3 +82,27 @@ enum AppStateTransition
   case Save(Bool)     // flag indicating whether to lock the route for futuere edits
 }
 
+extension CLLocationDegrees
+{
+  init(_ deg:Int, _ min:Int = 0, _ sec:Int = 0)
+  {
+    let ms = Double(min) + Double(sec)/60.0
+    if deg < 0 { self = Double(deg) - ms }
+    else       { self = Double(deg) + ms }
+  }
+  
+  var dms : String
+  {
+    let neg = self < 0.0
+    var sec   = Int(3600.0 * (neg ? -self : self) + 0.5)
+    var min = Int(sec/60)
+    sec %= 60
+    var deg = Int(min/60)
+    min %= 60
+    if neg { deg = -deg }
+    let rval = String(format: "%4dº%02d'%02d\"", deg, min, sec)
+    return rval
+  }
+}
+
+

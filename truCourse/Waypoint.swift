@@ -52,6 +52,14 @@ class Waypoint
   private(set) var prev   : Waypoint?
   private(set) var cand   : Waypoint?
   
+  func string() -> String
+  {
+    let index = self.index ?? 0
+    return String(format: "%2d: (%@, %@) [ %f @ %@",
+                  index, location.latitude.dms, location.longitude.dms,
+                  distance!, bearing!.dms)
+  }
+  
   // MARK: - Constructors & Encoders
   
   init(_ location: CLLocationCoordinate2D)
@@ -271,5 +279,8 @@ class Waypoint
     
     distance = sqrt( dx*dx + dy*dy )
     bearing  = atan2( dx, dy ) / Constants.deg
+    
+    
+    print("\(location.latitude.dms),\(location.longitude.dms) -> \(dst!.location.latitude.dms),\(dst!.location.longitude.dms)  ==> \(distance)")
   }
 }

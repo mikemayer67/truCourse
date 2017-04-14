@@ -287,5 +287,4 @@ class DataViewController :
   {
     print("DVC handleShare")
   }
-  
 }

@@ -19,6 +19,8 @@ class MapViewController: UIViewController, VisualizationView, MKMapViewDelegate
   
   private      var recenterButtonEnabled = true
   
+  private var routeOverlay : MKOverlay?
+  
   var trackingMode : MKUserTrackingMode
   {
     return trackingEnabled ? trackingOption : .none
@@ -108,4 +110,53 @@ class MapViewController: UIViewController, VisualizationView, MKMapViewDelegate
     }
   }
   
+  // MARK: - Route update
+  
+  func _updateRoute(_ route: Route)
+  {
+    print("MapView::updateRoute(\(route))")
+    let head = route.head
+    var cand : Waypoint?
+    
+    var coords = [CLLocationCoordinate2D]()
+    
+    head?.iterate( { (wp:Waypoint) in
+      print("waypoint \(wp.string())")
+      coords.append(wp.location)
+      if wp.cand != nil
+      {
+        cand = wp.cand
+      }
+    } )
+    if cand != nil
+    {
+      print("candidate \(cand!.string())")
+    }
+    
+    if routeOverlay != nil { self.mapView.remove(routeOverlay!) }
+    if coords.count > 0
+    {
+      routeOverlay = MKPolygon(coordinates:&coords, count: coords.count)
+      self.mapView.add(routeOverlay!)
+    }
+    else
+    {
+      routeOverlay = nil
+    }
+  }
+  
+  func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer
+  {
+    if routeOverlay === overlay
+    {
+      let path = MKPolygonRenderer(overlay: overlay)
+      path.strokeColor = UIColor.purple
+      path.lineWidth = 2.0
+      return path
+    }
+    else
+    {
+      fatalError("request for renderer for unknown overlay")
+    }
+  }
 }

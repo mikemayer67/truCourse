@@ -9,13 +9,6 @@
 import Foundation
 import CoreLocation
 
-func dms(_ deg:Int, _ min:Int = 0, _ sec:Int = 0) -> Double
-{
-  let ms = Double(min) + Double(sec)/60.0
-  return ( deg < 0 ? Double(deg) - ms : Double(deg) + ms )
-}
-
-
 class DataController : NSObject, CLLocationManagerDelegate
 {
   @IBOutlet var dataViewController : DataViewController?
@@ -39,7 +32,8 @@ class DataController : NSObject, CLLocationManagerDelegate
   private var mostRecentLocation : CLLocationCoordinate2D
   {
     let loc = currentLocation ?? locationManager.location
-    let coord = loc?.coordinate ?? CLLocationCoordinate2D(latitude: dms(39,9,8), longitude: dms(-77,12,60))
+    let coord = loc?.coordinate ?? CLLocationCoordinate2D(latitude:  CLLocationDegrees(39,9,8),
+                                                          longitude: CLLocationDegrees(-77,12,60))
     return coord
   }
   
@@ -256,6 +250,7 @@ class DataController : NSObject, CLLocationManagerDelegate
       let cand = insertionPoint!.candidate
       routes.working.insert(insertionPoint!)
       insertionPoint = InsertionPoint(self.mostRecentLocation, after:cand)
+      dataViewController?.currentView.updateRoute(routes.working)
       
     case .Editing(let index):
       print("Need to handle record during editing")
@@ -275,7 +270,6 @@ class DataController : NSObject, CLLocationManagerDelegate
   func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation])
   {
     if locations.isEmpty { return }
-    
     currentLocation = locations[locations.endIndex-1]
     
       //for loc in locations

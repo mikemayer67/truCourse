@@ -221,8 +221,8 @@
 			children = (
 				27C5584B1E5F8790004FF32A /* DataViewController.swift */,
 				2793480B1E8A829E00594B0D /* VisualizationView.swift */,
-				27C558481E5F8790004FF32A /* BearingViewController.swift */,
 				27C558491E5F8790004FF32A /* LatLonViewController.swift */,
+				27C558481E5F8790004FF32A /* BearingViewController.swift */,
 				27C5584A1E5F8790004FF32A /* MapViewController.swift */,
 			);
 			name = DataViews;
@@ -266,6 +266,9 @@
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
 								enabled = 0;
+							};
+							com.apple.BackgroundModes = {
+								enabled = 1;
 							};
 							com.apple.Maps.iOS = {
 								enabled = 1;
