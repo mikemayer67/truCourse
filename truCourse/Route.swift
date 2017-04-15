@@ -20,6 +20,8 @@ class Route
   private(set) var declination    : CLLocationDegrees?
   
   private(set) var head           : Waypoint?
+  
+  private(set) var insertionHistory = [Waypoint]()
  
   
   var dirty  : Bool = false
@@ -115,14 +117,34 @@ class Route
   
   func insert(_ ip : InsertionPoint)
   {
-    ip.candidate.commit()
+    let cand = ip.candidate
+    cand.commit()
     
     if head == nil || (ip.before != nil && ip.before! === head)
     {
-      head = ip.candidate
+      head = cand
     }
     
+    insertionHistory.append(cand)
+    
     head!.reindex()
+  }
+  
+  func undoInsertion()
+  {
+    if insertionHistory.isEmpty { return }
+
+    let wp = insertionHistory.removeLast()
+    
+    if head === wp
+    {
+      head = wp.next
+      if head === wp { head = nil } // head is only waypoint left in route
+    }
+    
+    wp.unlink()
+    
+    head?.reindex()
   }
   
   //MARK: - Route info

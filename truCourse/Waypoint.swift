@@ -55,9 +55,11 @@ class Waypoint
   func string() -> String
   {
     let index = self.index ?? 0
+    let dist = self.distance ?? 0.0
+    let bearing = self.bearing?.dms ?? "n/a"
     return String(format: "%2d: (%@, %@) [ %f @ %@",
                   index, location.latitude.dms, location.longitude.dms,
-                  distance!, bearing!.dms)
+                  dist, bearing)
   }
   
   // MARK: - Constructors & Encoders

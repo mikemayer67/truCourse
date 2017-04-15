@@ -30,10 +30,14 @@ class OptionsViewController: UITableViewController, UITextFieldDelegate
   @IBOutlet weak var locAccuracyText     : UILabel!
   @IBOutlet weak var minPostSepSlider    : UISlider!
   @IBOutlet weak var minPostSepText      : UILabel!
-
+  @IBOutlet weak var shakeUndoSwitch     : UISwitch!
+  @IBOutlet weak var shakeUndoSlider     : UISlider!
+  @IBOutlet weak var shakeUndoText       : UILabel!
   
   @IBOutlet weak var emailCell           : UITableViewCell!
   @IBOutlet weak var emailField          : UITextField!
+  
+  let undoTimeoutValues : [Double?] = [ 1.0, 2.0, 3.0, 5.0, 10.0, 15.0, 30.0, 60.0, 120.0, 300.0, nil ]
   
   var delegate : OptionViewControllerDelegate?
   
@@ -94,16 +98,60 @@ class OptionsViewController: UITableViewController, UITextFieldDelegate
     
     baseUnitSC.selectedSegmentIndex  = options.baseUnit.rawValue
     
-    locAccuracySlider.value = Float(options.locAccFrac)
-    locAccuracyText.text    = options.locationAccuracyString
+    locAccuracySlider.value      = Float(options.locAccFrac)
+    locAccuracyText.text         = options.locationAccuracyString
     
-    minPostSepSlider.value  = Float(options.postSepFrac)
-    minPostSepText.text     = options.minPostSeparationString
+    minPostSepSlider.value       = Float(options.postSepFrac)
+    minPostSepText.text          = options.minPostSeparationString
     
-    emailField.text         = options.emailAddress
+    shakeUndoSwitch.isOn         = options.canShakeUndo
+    shakeUndoSlider.isEnabled    = options.canShakeUndo
+    shakeUndoSlider.minimumValue = 0.0
+    shakeUndoSlider.maximumValue = Float(undoTimeoutValues.count - 1)
+    shakeUndoText.isHidden       = options.canShakeUndo == false
+    
+    self.shakeUndoTimeout        = options.shakeUndoTimeout
+    
+    emailField.text              = options.emailAddress
     
     updateEmailAddressColor(valid:true)
     checkState()
+  }
+  
+  var shakeUndoTimeout : Double?
+  {
+    get {
+      let i = Int( shakeUndoSlider.value + 0.5 )
+      let t = undoTimeoutValues[i]
+      return t
+    }
+    set {
+      let n = undoTimeoutValues.count - 1
+      if let t = newValue
+      {
+        var i  = n-1
+        while(i>0 && t < undoTimeoutValues[i]!) { i = i - 1 }
+        shakeUndoSlider.value = Float(i)
+        setUndoText(i)
+      }
+      else
+      {
+        setUndoText(n)
+      }
+    }
+  }
+  
+  func setUndoText(_ index : Int)
+  {
+    if let tt = undoTimeoutValues[index]
+    {
+      if( tt >= 60.0 ) { shakeUndoText.text = String(format: "%d min", Int(tt / 60.0 + 0.5 ) ) }
+      else             { shakeUndoText.text = String(format: "%d sec", Int(tt)) }
+    }
+    else
+    {
+      shakeUndoText.text = "never"
+    }
   }
   
   // MARK: - Actions
@@ -171,6 +219,32 @@ class OptionsViewController: UITableViewController, UITextFieldDelegate
   {
     options.postSepFrac = Double(sender.value)
     minPostSepText.text  = options.minPostSeparationString
+    checkState()
+  }
+  
+  @IBAction func handleUndoEnable(_ sender : UISwitch)
+  {
+    options.canShakeUndo      = sender.isOn
+    shakeUndoSlider.isEnabled = sender.isOn
+    shakeUndoText.isHidden    = sender.isOn == false
+    checkState()
+  }
+  
+  @IBAction func handleUndoTimeout(_ sender : UISlider)
+  {
+    let index = Int(sender.value + 0.5)
+    options.shakeUndoTimeout = undoTimeoutValues[index]
+    setUndoText(index)
+    checkState()
+
+  }
+  
+  @IBAction func handleUndoTimeoutDone(_ sender : UISlider)
+  {
+    let index = Int(sender.value + 0.5)
+    sender.value = Float(index)
+    options.shakeUndoTimeout = undoTimeoutValues[index]
+    setUndoText(index)
     checkState()
   }
   

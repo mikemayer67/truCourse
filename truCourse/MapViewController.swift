@@ -120,9 +120,13 @@ class MapViewController: UIViewController, VisualizationView, MKMapViewDelegate
     var coords = [CLLocationCoordinate2D]()
     
     head?.iterate( { (wp:Waypoint) in
-      print("waypoint \(wp.string())")
+      print("waypoint  \(wp.string())")
       coords.append(wp.location)
       if wp.cand != nil { cand = wp.cand } } )
+    if cand != nil
+    {
+      print("candidate \(cand!.string())")
+    }
     
     if routeOverlay != nil { self.mapView.remove(routeOverlay!) }
     

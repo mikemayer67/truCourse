@@ -18,5 +18,9 @@
 	<real>0.2</real>
 	<key>headingAccuracy</key>
 	<integer>1</integer>
+	<key>shakeUndo</key>
+	<true/>
+	<key>shakeUndoTimeout</key>
+	<integer>5</integer>
 </dict>
 </plist>

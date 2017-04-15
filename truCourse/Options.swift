@@ -32,7 +32,7 @@ struct Options
       ud.synchronize()
       return ud
   }()
-  
+    
   static func commit()
   {
     defaults.synchronize()
@@ -40,16 +40,18 @@ struct Options
   
   // MARK: - Options Data
   
-  var topOfScreen     : MapOrientation
-  var headingAccuracy : HeadingAccuracy  // map orientation update frequency
-  var mapType         : MKMapType
-  var showScale       : Bool
-  var northType       : NorthType
-  var baseUnit        : BaseUnitType
-  var locAccFrac      : Double         // used with baseUnit to determine location accuracy
-  var postSepFrac     : Double
+  var topOfScreen      : MapOrientation
+  var headingAccuracy  : HeadingAccuracy  // map orientation update frequency
+  var mapType          : MKMapType
+  var showScale        : Bool
+  var northType        : NorthType
+  var baseUnit         : BaseUnitType
+  var locAccFrac       : Double         // used with baseUnit to determine location accuracy
+  var postSepFrac      : Double
+  var canShakeUndo     : Bool
+  var shakeUndoTimeout : Double?
   
-  var emailAddress    : String?
+  var emailAddress     : String?
   
   var locationAccuracy : CLLocationAccuracy
   {
@@ -129,13 +131,15 @@ struct Options
   init()
   {
     let dv = Options.defaults
-    topOfScreen     = MapOrientation(    rawValue: dv.integer(forKey: "topOfScreen"   ))!
-    mapType         = MKMapType(         rawValue: UInt(dv.integer(forKey: "mapType" )))!
-    showScale       = dv.bool(forKey: "showScale")
-    northType       = NorthType(         rawValue: dv.integer(forKey: "northType"     ))!
-    baseUnit        = BaseUnitType(      rawValue: dv.integer(forKey: "baseUnit"      ))!
-    locAccFrac      = dv.double(forKey: "locationAccuracyFrac")
-    postSepFrac     = dv.double(forKey: "postSeparationFrac")
+    topOfScreen      = MapOrientation(    rawValue: dv.integer(forKey: "topOfScreen"   ))!
+    mapType          = MKMapType(         rawValue: UInt(dv.integer(forKey: "mapType" )))!
+    showScale        = dv.bool(forKey: "  showScale")
+    northType        = NorthType(         rawValue: dv.integer(forKey: "northType"     ))!
+    baseUnit         = BaseUnitType(      rawValue: dv.integer(forKey: "baseUnit"      ))!
+    locAccFrac       = dv.double(forKey: "locationAccuracyFrac")
+    postSepFrac      = dv.double(forKey: "postSeparationFrac")
+    canShakeUndo     = dv.bool(forKey:   "shakeUndo")
+    shakeUndoTimeout = dv.double(forKey: "shakeUndoTimeout")
     
     headingAccuracy = .Good
     headingAccuracy.set(byIndex: dv.integer(forKey: "headingAccuracy"))
@@ -154,8 +158,18 @@ struct Options
     dv.set( baseUnit.rawValue,       forKey: "baseUnit"             )
     dv.set( locAccFrac,              forKey: "locationAccuracyFrac" )
     dv.set( postSepFrac,             forKey: "postSeparationFrac"   )
+    dv.set( canShakeUndo,            forKey: "shakeUndo"            )
     
-    dv.set( headingAccuracy.index(), forKey: "headingAccuracy"      )
+    if shakeUndoTimeout == nil
+    {
+      dv.removeObject(forKey: "shakeUndoTimeout")
+    }
+    else
+    {
+      dv.set( shakeUndoTimeout!, forKey: "shakeUndoTimeout" )
+    }
+    
+    dv.set( headingAccuracy.index(), forKey: "headingAccuracy" )
     
     if emailAddress == nil
     {
@@ -186,13 +200,15 @@ struct Options
   
   func differ(from x:Options) -> Bool
   {
-    if topOfScreen != x.topOfScreen { return true }
-    if mapType     != x.mapType     { return true }
-    if showScale   != x.showScale   { return true }
-    if northType   != x.northType   { return true }
-    if baseUnit    != x.baseUnit    { return true }
-    if locAccFrac  != x.locAccFrac  { return true }
-    if postSepFrac != x.postSepFrac { return true }
+    if topOfScreen      != x.topOfScreen  { return true }
+    if mapType          != x.mapType      { return true }
+    if showScale        != x.showScale    { return true }
+    if northType        != x.northType    { return true }
+    if baseUnit         != x.baseUnit     { return true }
+    if locAccFrac       != x.locAccFrac   { return true }
+    if postSepFrac      != x.postSepFrac  { return true }
+    if canShakeUndo     != x.canShakeUndo { return true }
+    if shakeUndoTimeout != x.shakeUndoTimeout { return true }
     
     if headingAccuracy != x.headingAccuracy { return true }
     

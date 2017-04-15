@@ -18,7 +18,7 @@ class DataController : NSObject, CLLocationManagerDelegate
   private(set) var trackingEnabled    = true   // user sets this via toolbar
   private(set) var trackingAuthorized = false  // phone security settings
   
-  let routes = Routes()
+  private let routes = Routes()
   private var candidate      : Waypoint?
   private var insertionPoint : InsertionPoint?
   
@@ -47,6 +47,21 @@ class DataController : NSObject, CLLocationManagerDelegate
     let distance  = currentLocation!.distance(from: lastRecordedPost!)
         
     return distance > threshold
+  }
+  
+  var locked : Bool
+  {
+    return routes.working.locked
+  }
+  
+  var canShare : Bool
+  {
+    return routes.working.isEmpty == false
+  }
+  
+  var canUndo : Bool
+  {
+    return routes.working.insertionHistory.isEmpty == false
   }
   
   // MARK: - Options
@@ -264,6 +279,13 @@ class DataController : NSObject, CLLocationManagerDelegate
     }
   }
   
+  func undoRecord()
+  {
+    routes.working.undoInsertion()
+    dataViewController?.currentView.updateRoute(routes.working)
+    lastRecordedPost = nil
+    dataViewController?.applyState()
+  }
   
   // MARK: - Location Manager Delegate
   
@@ -283,15 +305,7 @@ class DataController : NSObject, CLLocationManagerDelegate
       dataViewController?.currentView.updateCandidate(cand)
     }
     
-    //for loc in locations
-    //{
-      //      print("DC new location: \(loc.coordinate.longitude) \(loc.coordinate.latitude)")
-    //}
-    
-    //print("new Location: \(currentLocation?.coordinate)  okToRecord: \(self.okToRecord)")
-    //print("Add check to activate record button")
-    
-    dataViewController?.applyState()
+    dataViewController?.handleLocationUpdate()
   }
   
   func locationManager(_ manager: CLLocationManager, didUpdateHeading newHeading: CLHeading)

@@ -28,8 +28,10 @@ class DataViewController :
   private var startBarItem         : UIBarButtonItem!
   private var stopBarItem          : UIBarButtonItem!
   private var recordBarItem        : UIBarButtonItem!
-  private var trashBarItem         : UIBarButtonItem!
+  private var undoBarItem          : UIBarButtonItem!
   private var shareBarItem         : UIBarButtonItem!
+  
+  private var lastRecordTime       : Date?
       
   private(set) var route : Route?
         
@@ -74,8 +76,8 @@ class DataViewController :
                                     style: .plain, target: self, action: #selector(handlePause(_:)))
     recordBarItem = UIBarButtonItem(image: UIImage(named:"Pin_ffffff_25.png"),
                                     style: .plain, target: self, action: #selector(handleRecord(_:)))
-    trashBarItem  = UIBarButtonItem(image: UIImage(named:"Trash_ffffff_25.png"),
-                                    style: .plain, target: self, action: #selector(handleTrash(_:)))
+    undoBarItem   = UIBarButtonItem(image: UIImage(named:"Undo_ffffff_25.png"),
+                                    style: .plain, target: self, action: #selector(handleUndo(_:)))
     shareBarItem  = UIBarButtonItem(image: UIImage(named:"Upload_ffffff_25.png"),
                                     style: .plain, target: self, action: #selector(handleShare(_:)))
     
@@ -86,7 +88,7 @@ class DataViewController :
     startBarItem.tintColor  = UIColor.white
     stopBarItem.tintColor   = UIColor.white
     recordBarItem.tintColor = UIColor.white
-    trashBarItem.tintColor  = UIColor.white
+    undoBarItem.tintColor   = UIColor.white
     shareBarItem.tintColor  = UIColor.white
     
     activeToolbarItems = [
@@ -176,6 +178,28 @@ class DataViewController :
       viewTypeControl.selectedSegmentIndex = currentView.visualizationType.rawValue
     }
   }
+
+  // MARK: - Motion Handlers
+  
+  override func motionEnded(_ motion: UIEventSubtype, with event: UIEvent?)
+  {
+    switch motion
+    {
+    case .motionShake:
+      if options.canShakeUndo
+      {
+        if let t = lastRecordTime, let maxTime = options.shakeUndoTimeout
+        {
+          if Date().timeIntervalSince(t) <= maxTime
+          {
+            dataController.undoRecord()
+          }
+        }
+      }
+    default:
+      break
+    }
+  }
   
   // MARK: - OptionViewController Delegate
   
@@ -210,9 +234,9 @@ class DataViewController :
     case .Idle:
       activeToolbarItems[0]  = offBarItem
       activeToolbarItems[1]  = startBarItem
-      activeToolbarItems[3]  = trashBarItem
+      activeToolbarItems[3]  = undoBarItem
       startBarItem.isEnabled = true
-      trashBarItem.isEnabled = currentView.hasSelection
+      undoBarItem.isEnabled  = dataController.canUndo
       
     case .Inserting:
       fallthrough
@@ -225,7 +249,7 @@ class DataViewController :
       recordBarItem.isEnabled = dataController.okToRecord
     }
 
-    shareBarItem.isEnabled = ( dataController.routes.working.isEmpty == false )
+    shareBarItem.isEnabled = dataController.canShare
     
     let toolbar = navigationController?.toolbar
     switch state
@@ -235,6 +259,18 @@ class DataViewController :
     }
     
     currentView.applyState(state)
+  }
+  
+  func handleLocationUpdate()
+  {
+    switch dataController.state
+    {
+    case .Inserting: fallthrough
+    case .Editing:
+      recordBarItem.isEnabled = dataController.okToRecord
+    default:
+      break;
+    }
   }
   
   func handleOn(_ sender: UIBarButtonItem)
@@ -251,7 +287,7 @@ class DataViewController :
   {
     let doStart = { self.dataController.updateState(.Insert(nil)) }
 
-    if dataController.routes.working.locked
+    if dataController.locked
     {
       let alert = UIAlertController(title: "Unlock Route",
                                     message: "Please confirm updating the route (you will not be able to undo changes)",
@@ -276,11 +312,12 @@ class DataViewController :
   func handleRecord(_ sender: UIBarButtonItem)
   {
     dataController.record()
+    lastRecordTime = Date()
   }
   
-  func handleTrash(_ sender: UIBarButtonItem)
+  func handleUndo(_ sender: UIBarButtonItem)
   {
-    print("DVC handleTrash")
+    dataController.undoRecord()
   }
   
   func handleShare(_ sender: UIBarButtonItem)
