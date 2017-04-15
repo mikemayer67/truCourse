@@ -197,6 +197,7 @@ class DataController : NSObject, CLLocationManagerDelegate
           insertionPoint = InsertionPoint(self.mostRecentLocation)
         }
       }
+      dataViewController?.currentView.updateCandidate(insertionPoint?.candidate)
   
     case .Editing:
       print("State = editing")
