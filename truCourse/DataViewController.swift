@@ -188,10 +188,11 @@ class DataViewController :
     case .motionShake:
       if options.canShakeUndo
       {
-        if let t = lastRecordTime, let maxTime = options.shakeUndoTimeout
+        if lastRecordTime != nil && options.shakeUndoTimeout != nil
         {
-          if Date().timeIntervalSince(t) <= maxTime
+          if Date().timeIntervalSince(lastRecordTime!) <= options.shakeUndoTimeout!
           {
+            lastRecordTime = nil
             dataController.undoRecord()
           }
         }

@@ -130,16 +130,21 @@ class Route
     head!.reindex()
   }
   
-  func undoInsertion()
+  func undoInsertion(update insertionPoint:InsertionPoint?)
   {
     if insertionHistory.isEmpty { return }
-
+        
     let wp = insertionHistory.removeLast()
+    
+    insertionPoint?.relink(dropping:wp)
     
     if head === wp
     {
       head = wp.next
-      if head === wp { head = nil } // head is only waypoint left in route
+      if head === wp
+      {
+        head = nil
+      } // head is only waypoint left in route
     }
     
     wp.unlink()

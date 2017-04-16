@@ -6,6 +6,7 @@
 //  Copyright © 2017 VMWishes. All rights reserved.
 //
 
+import UIKit
 import Foundation
 import CoreLocation
 
@@ -19,7 +20,6 @@ class DataController : NSObject, CLLocationManagerDelegate
   private(set) var trackingAuthorized = false  // phone security settings
   
   private let routes = Routes()
-  private var candidate      : Waypoint?
   private var insertionPoint : InsertionPoint?
   
   private(set) var state : AppState = .Uninitialized
@@ -281,10 +281,34 @@ class DataController : NSObject, CLLocationManagerDelegate
   
   func undoRecord()
   {
-    routes.working.undoInsertion()
-    dataViewController?.currentView.updateRoute(routes.working)
-    lastRecordedPost = nil
-    dataViewController?.applyState()
+    let doUndo = {
+      self.routes.working.undoInsertion(update:self.insertionPoint)
+      self.dataViewController?.currentView.updateRoute(self.routes.working)
+      
+      self.lastRecordedPost = nil
+      self.dataViewController?.applyState()
+      
+      if self.routes.working.head == nil { self.insertionPoint = nil }
+    }
+    
+    if dataViewController == nil
+    {
+      doUndo()
+    }
+    else
+    {
+      let post = routes.working.insertionHistory.last?.index
+      var title = "Remove post"
+      if post != nil { title = "\(title) \(post!)" }
+      let alert = UIAlertController(title: title,
+                                    message: "Please confirm deleting the most recent post (you will not be able to undo changes)",
+                                    preferredStyle: .alert)
+      
+      alert.addAction( UIAlertAction(title: "OK", style: .destructive) { (_:UIAlertAction) in doUndo() } )
+      alert.addAction( UIAlertAction(title: "Cancel", style: .cancel) )
+      
+      dataViewController!.present(alert, animated: true)
+    }
   }
   
   // MARK: - Location Manager Delegate

@@ -13,8 +13,8 @@ class InsertionPoint
 {
   private(set) var candidate: Waypoint
   
-  private(set) var after: Waypoint?
-  private(set) var before: Waypoint?
+  private(set) weak var after: Waypoint?
+  private(set) weak var before: Waypoint?
   
   init(_ loc:CLLocationCoordinate2D)
   {
@@ -39,6 +39,24 @@ class InsertionPoint
     self.candidate = Waypoint(loc)
     self.candidate.insert(before: waypoint, as: .Candidate)
     self.before = waypoint
+  }
+  
+  func relink(dropping wp : Waypoint)
+  {
+    
+    if after === wp, wp.prev !== wp
+    {
+      candidate.unlink()
+      candidate.insert(after: wp.prev!, as: .Candidate)
+      after = wp.prev
+    }
+  
+    if before === wp, wp.next !== wp
+    {
+      candidate.unlink()
+      candidate.insert(before: wp.next!, as: .Candidate)
+      before = wp.next
+    }
   }
   
   var string : String
