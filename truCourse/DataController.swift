@@ -187,12 +187,14 @@ class DataController : NSObject, CLLocationManagerDelegate
     case .Paused:
       print("State = paused")
       updateTrackingState(authorized:true, enabled:false)
+      insertionPoint?.unlink()
       insertionPoint  = nil
       dataViewController?.currentView.updateCandidate(nil)
 
     case .Idle:
       print("State = idle")
       updateTrackingState(authorized: true, enabled: true)
+      insertionPoint?.unlink()
       insertionPoint  = nil
       dataViewController?.currentView.updateCandidate(nil)
   

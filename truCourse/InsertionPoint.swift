@@ -41,6 +41,11 @@ class InsertionPoint
     self.before = waypoint
   }
   
+  func unlink()
+  {
+    candidate.unlink()
+  }
+  
   func relink(dropping wp : Waypoint)
   {
     

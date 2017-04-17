@@ -19,8 +19,13 @@ class MapViewController: UIViewController, VisualizationView, MKMapViewDelegate
   
   private      var recenterButtonEnabled = true
   
-  private var routeOverlay : MKOverlay?
-  private var candOverlay  : MKOverlay?
+  private var routeOverlay    : MKOverlay?
+  private var candOverlay     : MKOverlay?
+  private var postAnnotations = [Int:PostAnnotation]()
+  private var postNorth       : NorthType = .True
+  private var postUnits       : BaseUnitType = .English
+  
+  private var candPrevWaypoint : Waypoint?
   
   var trackingMode : MKUserTrackingMode
   {
@@ -52,6 +57,8 @@ class MapViewController: UIViewController, VisualizationView, MKMapViewDelegate
     mapView.showsScale = options.showScale
     
     handleRecenter(nil)
+    
+    for (_,post) in postAnnotations { post.applyOptions(options) }
   }
   
   // MARK: - State
@@ -110,6 +117,26 @@ class MapViewController: UIViewController, VisualizationView, MKMapViewDelegate
     }
   }
   
+  func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView?
+  {
+    var rval : MKAnnotationView?
+    
+    if annotation is PostAnnotation
+    {
+      var pin = mapView.dequeueReusableAnnotationView(withIdentifier: "PostAnnotationView") as! MKPinAnnotationView?
+      if pin == nil
+      {
+        pin = MKPinAnnotationView(annotation: annotation, reuseIdentifier: "PostAnnotationView")
+        pin?.canShowCallout = true
+        pin?.pinTintColor = MKPinAnnotationView.redPinColor()
+        pin?.animatesDrop = true
+      }
+      rval = pin
+    }
+    
+    return rval
+  }
+  
   // MARK: - Route update
   
   func _updateRoute(_ route: Route)
@@ -119,13 +146,31 @@ class MapViewController: UIViewController, VisualizationView, MKMapViewDelegate
     
     var coords = [CLLocationCoordinate2D]()
     
-    head?.iterate( { (wp:Waypoint) in
-      print("waypoint  \(wp.string())")
-      coords.append(wp.location)
-      if wp.cand != nil { cand = wp.cand } } )
-    if cand != nil
+    var existingPosts = postAnnotations
+    postAnnotations.removeAll()
+    
+    head?.iterate(
+      { (wp:Waypoint) in
+        coords.append(wp.location)
+        if wp.cand != nil { cand = wp.cand }
+        
+        if let post = existingPosts.removeValue(forKey: wp.index!)
+        {
+          post.update(wp)
+          postAnnotations[wp.index!] = post
+        }
+        else
+        {
+          let post = PostAnnotation(wp, north:postNorth, units:postUnits)
+          mapView.addAnnotation( post )
+          postAnnotations[wp.index!] = post
+        }
+      }
+    )
+    
+    for (_,post) in existingPosts
     {
-      print("candidate \(cand!.string())")
+      mapView.removeAnnotation(post)
     }
     
     if routeOverlay != nil { self.mapView.remove(routeOverlay!) }
@@ -146,10 +191,22 @@ class MapViewController: UIViewController, VisualizationView, MKMapViewDelegate
   
   func _updateCandidate(_ candidate: Waypoint?)
   {
-    if candOverlay != nil { self.mapView.remove(candOverlay!) }
-    candOverlay = nil
+    if candOverlay != nil
+    {
+      self.mapView.remove(candOverlay!)
+      candOverlay = nil
+    }
     
-    guard let cand = candidate else { return }
+    guard let cand = candidate else
+    {
+      if candPrevWaypoint != nil
+      {
+        postAnnotations[candPrevWaypoint!.index!]?.update(candPrevWaypoint!)
+        candPrevWaypoint = nil
+      }
+      return
+    }
+    
     guard let prev = cand.prev else { return }
     guard let next = cand.next else { return }
     
@@ -157,6 +214,9 @@ class MapViewController: UIViewController, VisualizationView, MKMapViewDelegate
     
     candOverlay = MKPolyline(coordinates:&coords, count:3)
     self.mapView.add(candOverlay!)
+    
+    postAnnotations[prev.index!]?.update(prev)
+    candPrevWaypoint = prev
   }
   
   func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer

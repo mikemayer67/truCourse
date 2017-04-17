@@ -229,8 +229,9 @@ class DataViewController :
       
     case .Paused:
       activeToolbarItems[0] = onBarItem
+      activeToolbarItems[3] = undoBarItem
       activeToolbarItems[1].isEnabled = false
-      activeToolbarItems[3].isEnabled = false
+      undoBarItem.isEnabled = dataController.canUndo
       
     case .Idle:
       activeToolbarItems[0]  = offBarItem
