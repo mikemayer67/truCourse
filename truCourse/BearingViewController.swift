@@ -29,7 +29,7 @@ class BearingViewController: UITableViewController, VisualizationView
   
   // MARK: - Options
   
-  func _applyOptions(_ options: Options)
+  func _applyOptions()
   {
     print("Don't forget to implement BearingViewController.applyOptions")
   }

@@ -34,17 +34,7 @@ class DataViewController :
   private var lastRecordTime       : Date?
       
   private(set) var route : Route?
-        
-  var options = Options()
-  {
-    didSet
-    {
-      options.updateDefaults()
-      Options.commit()
-      applyOptions()
-    }
-  }
-    
+  
   override func viewDidLoad()
   {
     super.viewDidLoad()
@@ -127,9 +117,9 @@ class DataViewController :
     }
   }
   
-  func applyOptions()
+  override func applyOptions()
   {
-    for (_,controller) in visualizationControllers { controller.applyOptions(options) }
+    for (_,controller) in visualizationControllers { controller.applyOptions() }
   }
 
   // MARK: - Page View Data Source
@@ -183,6 +173,8 @@ class DataViewController :
   
   override func motionEnded(_ motion: UIEventSubtype, with event: UIEvent?)
   {
+    let options = Options.shared
+    
     switch motion
     {
     case .motionShake:
@@ -204,15 +196,11 @@ class DataViewController :
   
   // MARK: - OptionViewController Delegate
   
-  func optionsDiffer(from candidateOptions: Options) -> Bool
+  func optionViewController(updatedOptions: Options)
   {
-    return candidateOptions.differ(from: self.options)
-  }
-  
-  func updateOptions(_ newOptions: Options)
-  {
-    self.options = newOptions
+    Options.shared = updatedOptions
     
+    applyOptions()
     dataController.updateOptions()
   }
   

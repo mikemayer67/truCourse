@@ -35,6 +35,7 @@ class Routes
           {
             guard working == nil else { fatalError("Saved data contains multiple routes in progress") }
             working = route
+            Options.shared.declination = route.declination
           }
           else
           {
@@ -48,6 +49,7 @@ class Routes
     if working==nil
     {
       working = Route()
+      Options.shared.declination = working.declination
     }
   }
   

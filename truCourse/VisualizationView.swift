@@ -43,7 +43,7 @@ protocol VisualizationView : class
   var _visualizationType : VisualizationType { get }
   var _hasSelection      : Bool              { get }
   
-  func _applyOptions(_ options:Options)
+  func _applyOptions()
   func _applyState(_ state:AppState)
   func _updateRoute(_ route:Route)
   func _updateCandidate(_ cand:Waypoint?)
@@ -81,11 +81,11 @@ extension UIViewController
 
   }
   
-  func applyOptions(_ options:Options)
+  func applyOptions()
   {
     if let vv = self as? VisualizationView
     {
-      vv._applyOptions(options)
+      vv._applyOptions()
     }
   }
   

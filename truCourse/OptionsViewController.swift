@@ -11,8 +11,7 @@ import MapKit
 
 protocol OptionViewControllerDelegate : NSObjectProtocol
 {
-  func updateOptions(_ newOptions:Options) -> Void
-  func optionsDiffer(from candidateOptions:Options) -> Bool
+  func optionViewController(updatedOptions:Options)
 }
 
 class OptionsViewController: UITableViewController, UITextFieldDelegate
@@ -291,14 +290,14 @@ class OptionsViewController: UITableViewController, UITextFieldDelegate
   
   @IBAction func handleUpdate(_ sender : UIButton)
   {
-    if hasUpdates { delegate?.updateOptions(options) }
+    if hasUpdates { delegate?.optionViewController(updatedOptions: options) }
     close()
   }
   
   func checkState()
   {
-    if delegate == nil { hasUpdates = false                                  }
-    else               { hasUpdates = delegate!.optionsDiffer(from: options) }
+    if delegate == nil { hasUpdates = false                                }
+    else               { hasUpdates = options.differ(from: Options.shared) }
     
     updateButton.setTitle((hasUpdates ? "Apply" : "Back"), for: .normal)
     cancelButton.isEnabled = hasUpdates
@@ -316,5 +315,30 @@ class OptionsViewController: UITableViewController, UITextFieldDelegate
   override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath?
   {
     return nil
+  }
+  
+  override func numberOfSections(in tableView: UITableView) -> Int
+  {
+    return 4
+  }
+  
+  override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String?
+  {
+    switch(section)
+    {
+    case 0: return "Map"
+    case 1:
+      if CLLocationManager.headingAvailable() && Options.shared.declination != nil
+      {
+        return "Route (declination: \(Options.shared.declination!.dms))"
+      }
+      else
+      {
+        return "Route (declination not available)"
+      }
+    case 2: return "Undo"
+    case 3: return "Email"
+    default: return nil
+    }
   }
 }

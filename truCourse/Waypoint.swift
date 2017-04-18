@@ -44,9 +44,11 @@ class Waypoint
     didSet { update() ; prev?.update() }
   }
   
-  private(set) var index    : Int?
-  private(set) var bearing  : CLLocationDirection?  // rel. true north
-  private(set) var distance : CLLocationDistance?
+  private(set) var index        : Int?
+  private(set) var bearing      : CLLocationDirection?  // rel. true north
+  private(set) var distance     : CLLocationDistance?
+  private(set) var candBearing  : CLLocationDirection?
+  private(set) var candDistance : CLLocationDistance?
   
   private(set) var next   : Waypoint?
   private(set) var prev   : Waypoint?
@@ -72,8 +74,6 @@ class Waypoint
   init(with data:NSDictionary, after:Waypoint?)
   {
     location = data.value(forKey: "location") as! CLLocationCoordinate2D
-    bearing  = data.value(forKey: "bearing")  as? CLLocationDirection
-    distance = data.value(forKey: "distance") as? CLLocationDistance
     
     if after == nil
     {
@@ -87,15 +87,15 @@ class Waypoint
       prev!.next = self
       next!.prev = self
     }
+    
+    update()
+    prev!.update()
   }
   
   func save(into route: NSMutableArray)
   {
     let data = NSMutableDictionary()
     data.setValue(location, forKey: "location")
-    
-    if bearing  != nil { data.setValue(bearing,  forKey: "bearing")  }
-    if distance != nil { data.setValue(distance, forKey: "distance") }
     
     route.add(data)
   }
@@ -166,6 +166,9 @@ class Waypoint
       next!.prev = self
       prev!.next = self
       prev!.cand = nil
+      
+      update()
+      prev!.update()
     }
   }
   
@@ -177,7 +180,7 @@ class Waypoint
     {
       prev!.cand = nil
     }
-    else if prev!.next === self
+    else
     {
       if prev!.cand != nil
       {
@@ -238,14 +241,13 @@ class Waypoint
   
   func update()
   {
-    let dst = cand ?? next
-    
-    if dst == nil || dst === self
-    {
-      distance = nil
-      bearing  = nil
-      return
-    }
+    (    bearing,    distance) = calcBearing(to: self.next)
+    (candBearing,candDistance) = calcBearing(to: self.cand)
+  }
+  
+  func calcBearing(to dst:Waypoint?) -> (CLLocationDirection?,CLLocationDistance?)
+  {
+    if dst == nil || dst === self { return(nil,nil) }
     
     // The following assumes constant local radii of curvature of the earth along the
     // entire length of the path connecting two waypoints.  It also assumes that the
@@ -279,7 +281,76 @@ class Waypoint
     let dx = Rew * dLon
     let dy = Rns * dLat
     
-    distance = sqrt( dx*dx + dy*dy )
-    bearing  = atan2( dx, dy ) / Constants.deg
+    return( atan2( dx, dy ) / Constants.deg, sqrt( dx*dx + dy*dy ) )
+  }
+  
+  var annotationTitle : String?
+  {
+    var rval : String?
+    if candBearing != nil && candDistance != nil
+    {
+      rval = _genTitle(candBearing,candDistance)
+    }
+    else if bearing != nil && distance != nil
+    {
+      rval = _genTitle(bearing,distance)
+    }
+    return rval
+  }
+  
+  var annotationSubtitle : String?
+  {
+    if candBearing  == nil { return nil }
+    if candDistance == nil { return nil }
+    if bearing      == nil { return nil }
+    if distance     == nil { return nil }
+
+    return _genTitle(bearing,distance)
+  }
+  
+  private func _genTitle(_ bearing : CLLocationDirection?, _ distance : CLLocationDistance?) -> String?
+  {
+    if bearing == nil || distance == nil { return nil }
+    
+    let options = Options.shared
+    
+    var decl = 0.0
+    if options.northType == .Magnetic
+    {
+      decl = options.declination ?? 0.0
+    }
+    
+    let deg = Int( bearing! + decl + 360.5 ) % 360  // 360.5 = 360 for mod + 0.5 for rounding to nearest integer
+    
+    var dist = ""
+    switch options.baseUnit
+    {
+    case .English:
+      let ft = Int(distance!/0.3048 + 0.5)
+      if ft >= 10560
+      {
+        dist = String(format:"%d miles %d ft", ft/5280, ft%5280)
+      }
+      else if ft >= 5280
+      {
+        dist = String(format:"1 mile %d ft",ft%5280)
+      }
+      else
+      {
+        dist = String(format:"%d ft",ft)
+      }
+      
+    case .Metric:
+      if distance! > 1000.0
+      {
+        dist = String(format:"%.2f km", 0.001 * distance!)
+      }
+      else
+      {
+        dist = String(format:"%d m", Int(distance! + 0.5) )
+      }
+    }
+    
+    return "\(dist) @ \(deg)°"
   }
 }

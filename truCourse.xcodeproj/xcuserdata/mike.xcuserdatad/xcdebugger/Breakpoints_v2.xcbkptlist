@@ -58,11 +58,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "truCourse/Options.swift"
-            timestampString = "514010000.237629"
+            timestampString = "514213557.189217"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "186"
-            endingLineNumber = "186"
+            startingLineNumber = "192"
+            endingLineNumber = "192"
             landmarkName = "setEmailAddress(_:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -73,14 +73,46 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "truCourse/OptionsViewController.swift"
-            timestampString = "514010044.293791"
+            filePath = "truCourse/Options.swift"
+            timestampString = "514213502.004206"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "259"
-            endingLineNumber = "259"
-            landmarkName = "textFieldShouldReturn(_:)"
-            landmarkType = "7">
+            startingLineNumber = "12"
+            endingLineNumber = "12"
+            landmarkName = "Options"
+            landmarkType = "3">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "truCourse.Options.__deallocating_deinit"
+                  moduleName = "truCourse"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/mike/Desktop/IOS%20Projects/truCourse/truCourse/Options.swift"
+                  timestampString = "514215578.824379"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "0"
+                  endingLineNumber = "0"
+                  offsetFromSymbolStart = "12">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "truCourse.Options.deinit"
+                  moduleName = "truCourse"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/mike/Desktop/IOS%20Projects/truCourse/truCourse/Options.swift"
+                  timestampString = "514215578.826273"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "0"
+                  endingLineNumber = "0"
+                  offsetFromSymbolStart = "12">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

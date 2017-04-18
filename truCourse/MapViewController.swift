@@ -48,9 +48,10 @@ class MapViewController: UIViewController, VisualizationView, MKMapViewDelegate
   
   // MARK: - Options
   
-  func _applyOptions(_ options: Options)
+  func _applyOptions()
   {
-    print("applyOptions")
+    let options = Options.shared
+    
     mapView.mapType = options.mapType
     trackingOption  = options.trackingMode
     
@@ -58,7 +59,7 @@ class MapViewController: UIViewController, VisualizationView, MKMapViewDelegate
     
     handleRecenter(nil)
     
-    for (_,post) in postAnnotations { post.applyOptions(options) }
+    for (_,post) in postAnnotations { post.applyOptions() }
   }
   
   // MARK: - State
@@ -156,7 +157,7 @@ class MapViewController: UIViewController, VisualizationView, MKMapViewDelegate
         
         if let post = existingPosts.removeValue(forKey: wp.index!)
         {
-          post.update(wp)
+          post.waypoint = wp
           postAnnotations[wp.index!] = post
         }
         else
@@ -197,15 +198,21 @@ class MapViewController: UIViewController, VisualizationView, MKMapViewDelegate
       candOverlay = nil
     }
     
+    mapView.userLocation.title = "(me)"
+    mapView.userLocation.subtitle = nil
+    
     guard let cand = candidate else
     {
       if candPrevWaypoint != nil
       {
-        postAnnotations[candPrevWaypoint!.index!]?.update(candPrevWaypoint!)
+        postAnnotations[candPrevWaypoint!.index!]?.updateTitle()
         candPrevWaypoint = nil
       }
       return
     }
+
+    mapView.userLocation.title    = cand.annotationTitle ?? "(me)"
+    mapView.userLocation.subtitle = cand.annotationSubtitle
     
     guard let prev = cand.prev else { return }
     guard let next = cand.next else { return }
@@ -215,7 +222,7 @@ class MapViewController: UIViewController, VisualizationView, MKMapViewDelegate
     candOverlay = MKPolyline(coordinates:&coords, count:3)
     self.mapView.add(candOverlay!)
     
-    postAnnotations[prev.index!]?.update(prev)
+    postAnnotations[prev.index!]?.updateTitle()
     candPrevWaypoint = prev
   }
   

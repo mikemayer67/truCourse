@@ -9,7 +9,7 @@
 import Foundation
 import MapKit
 
-struct Options
+class Options
 {
   // MARK: - Class data
   
@@ -32,13 +32,20 @@ struct Options
       ud.synchronize()
       return ud
   }()
-    
-  static func commit()
+  
+  static var shared = Options()
   {
-    defaults.synchronize()
+    didSet
+    {
+      shared.declination = oldValue.declination
+      shared.updateDefaults()
+      defaults.synchronize()
+    }
   }
   
   // MARK: - Options Data
+  
+  var declination      : CLLocationDegrees?
   
   var topOfScreen      : MapOrientation
   var headingAccuracy  : HeadingAccuracy  // map orientation update frequency
@@ -69,7 +76,6 @@ struct Options
     
     return min * exp((1.0-locAccFrac)*log(max/min))
   }
-  
   
   var minPostSeparation : CLLocationDistance
   {
@@ -181,7 +187,7 @@ struct Options
     }
   }
   
-  mutating func setEmailAddress(_ address:String?)
+  func setEmailAddress(_ address:String?)
   {
     let regex_pattern = "^[a-z0-9._%+-]+@[a-z0-9.-]+[.][a-z]{2,4}$"
     let regex = try! NSRegularExpression(pattern: regex_pattern, options: [.caseInsensitive])

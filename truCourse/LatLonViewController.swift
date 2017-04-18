@@ -30,7 +30,7 @@ class LatLonViewController: UITableViewController, VisualizationView
   
   // MARK: - Options
   
-  func _applyOptions(_ options: Options)
+  func _applyOptions()
   {
     print("Don't forget to implement LatLonViewController.applyOptions")
   }

@@ -42,8 +42,7 @@ class DataController : NSObject, CLLocationManagerDelegate
     if lastRecordedPost == nil { return true  }
     if currentLocation  == nil { return false }
 
-    let options   = dataViewController?.options
-    let threshold = options?.minPostSeparation ?? 10.0
+    let threshold = Options.shared.minPostSeparation
     let distance  = currentLocation!.distance(from: lastRecordedPost!)
         
     return distance > threshold
@@ -73,9 +72,8 @@ class DataController : NSObject, CLLocationManagerDelegate
   
   func updateTrackingOptions()
   {
-    let options = dataViewController?.options
-    locationManager.desiredAccuracy = options?.locationAccuracy ??  5.0
-    locationManager.distanceFilter  = options?.locationFilter   ?? 10.0
+    locationManager.desiredAccuracy = Options.shared.locationAccuracy
+    locationManager.distanceFilter  = Options.shared.locationFilter
   }
   
   // MARK: - App State
@@ -339,6 +337,7 @@ class DataController : NSObject, CLLocationManagerDelegate
     if routes.working.declination == nil
     {
       routes.working.setDeclination(newHeading)
+      Options.shared.declination = routes.working.declination
     }
     locationManager.stopUpdatingHeading()
   }
