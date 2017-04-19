@@ -158,6 +158,6 @@ class Route
   {
     let mag = heading.magneticHeading
     let tru = heading.trueHeading
-    self.declination = mag - tru
+    self.declination = tru-mag
   }
 }

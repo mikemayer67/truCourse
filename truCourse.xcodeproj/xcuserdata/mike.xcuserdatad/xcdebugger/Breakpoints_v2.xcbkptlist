@@ -90,12 +90,12 @@
                   moduleName = "truCourse"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/mike/Desktop/IOS%20Projects/truCourse/truCourse/Options.swift"
-                  timestampString = "514215578.824379"
+                  timestampString = "514299038.879805"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "0"
                   endingLineNumber = "0"
-                  offsetFromSymbolStart = "12">
+                  offsetFromSymbolStart = "4">
                </Location>
                <Location
                   shouldBeEnabled = "Yes"
@@ -105,12 +105,12 @@
                   moduleName = "truCourse"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/mike/Desktop/IOS%20Projects/truCourse/truCourse/Options.swift"
-                  timestampString = "514215578.826273"
+                  timestampString = "514299038.881807"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "0"
                   endingLineNumber = "0"
-                  offsetFromSymbolStart = "12">
+                  offsetFromSymbolStart = "4">
                </Location>
             </Locations>
          </BreakpointContent>

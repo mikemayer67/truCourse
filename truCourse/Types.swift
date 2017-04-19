@@ -105,4 +105,18 @@ extension CLLocationDegrees
   }
 }
 
+extension UIColor
+{
+  convenience init(rgb:[Int], alpha:CGFloat = 1.0)
+  {
+    guard rgb.count == 3 else { fatalError("UIColor(rgb:[Int]) requires an array of 3 values") }
+    
+    let r = CGFloat(rgb[0]) / 255.0
+    let g = CGFloat(rgb[1]) / 255.0
+    let b = CGFloat(rgb[2]) / 255.0
+    
+    self.init(red:r, green:g, blue:b, alpha:alpha)
+  }
+}
+
 

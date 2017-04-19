@@ -122,16 +122,16 @@ class MapViewController: UIViewController, VisualizationView, MKMapViewDelegate
   {
     var rval : MKAnnotationView?
     
-    if annotation is PostAnnotation
+    if let pa = annotation as? PostAnnotation
     {
-      var pin = mapView.dequeueReusableAnnotationView(withIdentifier: "PostAnnotationView") as! MKPinAnnotationView?
+      var pin = mapView.dequeueReusableAnnotationView(withIdentifier: "PostAnnotationView")
       if pin == nil
       {
-        pin = MKPinAnnotationView(annotation: annotation, reuseIdentifier: "PostAnnotationView")
+        pin = MKAnnotationView(annotation: pa, reuseIdentifier: "PostAnnotationView")
         pin?.canShowCallout = true
-        pin?.pinTintColor = MKPinAnnotationView.redPinColor()
-        pin?.animatesDrop = true
       }
+      pin?.image        = pa.image
+      pin?.centerOffset = pa.centerOffset
       rval = pin
     }
     
