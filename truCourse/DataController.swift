@@ -67,11 +67,6 @@ class DataController : NSObject, CLLocationManagerDelegate
   
   func updateOptions()
   {
-    updateTrackingOptions()
-  }
-  
-  func updateTrackingOptions()
-  {
     locationManager.desiredAccuracy = Options.shared.locationAccuracy
     locationManager.distanceFilter  = Options.shared.locationFilter
   }
@@ -248,7 +243,6 @@ class DataController : NSObject, CLLocationManagerDelegate
     
     if trackingAuthorized && trackingEnabled
     {
-      updateTrackingOptions()
       locationManager.startUpdatingLocation()
     }
     else

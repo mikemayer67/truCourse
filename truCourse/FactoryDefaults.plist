@@ -2,8 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>topOfScreen</key>
-	<integer>0</integer>
 	<key>mapType</key>
 	<integer>0</integer>
 	<key>showScale</key>
@@ -16,8 +14,6 @@
 	<real>1</real>
 	<key>postSeparationFrac</key>
 	<real>0.2</real>
-	<key>headingAccuracy</key>
-	<integer>1</integer>
 	<key>shakeUndo</key>
 	<true/>
 	<key>shakeUndoTimeout</key>

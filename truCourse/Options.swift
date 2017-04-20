@@ -47,8 +47,6 @@ class Options
   
   var declination      : CLLocationDegrees?
   
-  var topOfScreen      : MapOrientation
-  var headingAccuracy  : HeadingAccuracy  // map orientation update frequency
   var mapType          : MKMapType
   var showScale        : Bool
   var northType        : NorthType
@@ -120,24 +118,9 @@ class Options
     return 2.0 * locationAccuracy
   }
   
-  var trackingMode : MKUserTrackingMode
-  {
-    switch(topOfScreen)
-    {
-    case .North:   return .follow
-    case .Heading: return .followWithHeading
-    }
-  }
-  
-  var headingFilter : CLLocationDegrees
-  {
-    return headingAccuracy.rawValue
-  }
-  
   init()
   {
     let dv = Options.defaults
-    topOfScreen      = MapOrientation(    rawValue: dv.integer(forKey: "topOfScreen"   ))!
     mapType          = MKMapType(         rawValue: UInt(dv.integer(forKey: "mapType" )))!
     showScale        = dv.bool(forKey: "  showScale")
     northType        = NorthType(         rawValue: dv.integer(forKey: "northType"     ))!
@@ -147,9 +130,6 @@ class Options
     canShakeUndo     = dv.bool(forKey:   "shakeUndo")
     shakeUndoTimeout = dv.double(forKey: "shakeUndoTimeout")
     
-    headingAccuracy = .Good
-    headingAccuracy.set(byIndex: dv.integer(forKey: "headingAccuracy"))
-    
     emailAddress = Options.defaults.string(forKey: "emailAddress")
   }
   
@@ -157,7 +137,6 @@ class Options
   {
     let dv = Options.defaults
     
-    dv.set( topOfScreen.rawValue,    forKey: "topOfScreen"          )
     dv.set( mapType.rawValue,        forKey: "mapType"              )
     dv.set( showScale,               forKey: "showScale"            )
     dv.set( northType.rawValue,      forKey: "northType"            )
@@ -174,8 +153,6 @@ class Options
     {
       dv.set( shakeUndoTimeout!, forKey: "shakeUndoTimeout" )
     }
-    
-    dv.set( headingAccuracy.index(), forKey: "headingAccuracy" )
     
     if emailAddress == nil
     {
@@ -206,7 +183,6 @@ class Options
   
   func differ(from x:Options) -> Bool
   {
-    if topOfScreen      != x.topOfScreen  { return true }
     if mapType          != x.mapType      { return true }
     if showScale        != x.showScale    { return true }
     if northType        != x.northType    { return true }
@@ -215,8 +191,6 @@ class Options
     if postSepFrac      != x.postSepFrac  { return true }
     if canShakeUndo     != x.canShakeUndo { return true }
     if shakeUndoTimeout != x.shakeUndoTimeout { return true }
-    
-    if headingAccuracy != x.headingAccuracy { return true }
     
     if (emailAddress != nil || x.emailAddress != nil) && (emailAddress != x.emailAddress) { return true }
     

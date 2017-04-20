@@ -19,8 +19,6 @@ class OptionsViewController: UITableViewController, UITextFieldDelegate
   @IBOutlet weak var updateButton        : UIButton!
   @IBOutlet weak var cancelButton        : UIButton!
   
-  @IBOutlet weak var topOfScreenSC       : UISegmentedControl!
-  @IBOutlet weak var headingAccuracySC   : UISegmentedControl!
   @IBOutlet weak var mapTypeSC           : UISegmentedControl!
   @IBOutlet weak var showScaleSwitch     : UISwitch!
   @IBOutlet weak var northTypeSC         : UISegmentedControl!
@@ -66,18 +64,10 @@ class OptionsViewController: UITableViewController, UITextFieldDelegate
 
     if hasCompass
     {
-      enable(topOfScreenSC,     value:options.topOfScreen.rawValue    )
-      enable(northTypeSC,       value:options.northType.rawValue    )
-      switch(options.topOfScreen)
-      {
-      case .North: disable(headingAccuracySC)
-      case .Heading: enable(headingAccuracySC, value: options.headingAccuracy.index())
-      }
+      enable(northTypeSC, value:options.northType.rawValue )
     }
     else
     {
-      disable(topOfScreenSC)
-      disable(headingAccuracySC)
       disable(northTypeSC)
     }
     
@@ -154,24 +144,6 @@ class OptionsViewController: UITableViewController, UITextFieldDelegate
   }
   
   // MARK: - Actions
-  
-  @IBAction func handleTopOfScreen(_ sender : UISegmentedControl)
-  {
-    options.topOfScreen = MapOrientation(rawValue: sender.selectedSegmentIndex)!
-    
-    switch options.topOfScreen
-    {
-    case .North:   disable(headingAccuracySC)
-    case .Heading: enable(headingAccuracySC, value:options.headingAccuracy.index())
-    }
-    checkState()
-  }
-  
-  @IBAction func handleHeadingAccuracy(_ sender : UISegmentedControl)
-  {
-    options.headingAccuracy.set(byIndex: sender.selectedSegmentIndex)
-    checkState()
-  }
   
   @IBAction func handleMapType(_ sender : UISegmentedControl)
   {
