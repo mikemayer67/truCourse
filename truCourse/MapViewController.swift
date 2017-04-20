@@ -37,8 +37,29 @@ class MapViewController: UIViewController, VisualizationView, MKMapViewDelegate,
     mapView.showsUserLocation = true
     mapView.setUserTrackingMode(trackingView.mode, animated: true)
     mapView.showsScale        = true
+    
+    removeLongPressGestureRecognizers(mapView)
   }
   
+  func removeLongPressGestureRecognizers(_ v:UIView)
+  {
+    if let grs = v.gestureRecognizers
+    {
+      for gr in grs
+      {
+        if gr is UILongPressGestureRecognizer
+        {
+          v.removeGestureRecognizer(gr)
+        }
+      }
+    }
+    
+    for sv in v.subviews
+    {
+      removeLongPressGestureRecognizers(sv)
+    }
+  }
+
   // MARK: - Options
   
   func _applyOptions()
@@ -97,9 +118,17 @@ class MapViewController: UIViewController, VisualizationView, MKMapViewDelegate,
       pin?.image        = pa.image
       pin?.centerOffset = pa.centerOffset
       rval = pin
+      
+      let popup = UILongPressGestureRecognizer(target: self, action: #selector(handlePopup(_:)))
+      pin?.addGestureRecognizer(popup)
     }
     
     return rval
+  }
+  
+  func handlePopup(_ sender:UILongPressGestureRecognizer)
+  {
+    print("handlePopup: \(sender)")
   }
   
   // MARK: - Route update

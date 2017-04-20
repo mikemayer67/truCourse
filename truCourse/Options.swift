@@ -122,7 +122,7 @@ class Options
   {
     let dv = Options.defaults
     mapType          = MKMapType(         rawValue: UInt(dv.integer(forKey: "mapType" )))!
-    showScale        = dv.bool(forKey: "  showScale")
+    showScale        = dv.bool(forKey:   "showScale")
     northType        = NorthType(         rawValue: dv.integer(forKey: "northType"     ))!
     baseUnit         = BaseUnitType(      rawValue: dv.integer(forKey: "baseUnit"      ))!
     locAccFrac       = dv.double(forKey: "locationAccuracyFrac")

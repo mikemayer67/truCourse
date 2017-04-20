@@ -58,6 +58,11 @@ class DataController : NSObject, CLLocationManagerDelegate
     return routes.working.isEmpty == false
   }
   
+  var canSave : Bool
+  {
+    return routes.working.isEmpty == false && routes.working.dirty == false
+  }
+  
   var canUndo : Bool
   {
     return routes.working.insertionHistory.isEmpty == false

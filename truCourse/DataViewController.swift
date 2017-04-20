@@ -30,6 +30,7 @@ class DataViewController :
   private var recordBarItem        : UIBarButtonItem!
   private var undoBarItem          : UIBarButtonItem!
   private var shareBarItem         : UIBarButtonItem!
+  private var saveBarItem          : UIBarButtonItem!
   
   private var lastRecordTime       : Date?
       
@@ -70,6 +71,8 @@ class DataViewController :
                                     style: .plain, target: self, action: #selector(handleUndo(_:)))
     shareBarItem  = UIBarButtonItem(image: UIImage(named:"Upload_ffffff_25.png"),
                                     style: .plain, target: self, action: #selector(handleShare(_:)))
+    saveBarItem   = UIBarButtonItem(image: UIImage(named:"Add_file_ffffff_25.png"),
+                                    style: .plain, target: self, action: #selector(handleSave(_:)))
     
     let onOffTint = UIColor(red: 1.0, green: 0.8, blue: 0.4, alpha: 1.0)
     onBarItem.tintColor  = onOffTint
@@ -80,6 +83,7 @@ class DataViewController :
     recordBarItem.tintColor = UIColor.white
     undoBarItem.tintColor   = UIColor.white
     shareBarItem.tintColor  = UIColor.white
+    saveBarItem.tintColor   = UIColor.white
     
     activeToolbarItems = [
       /*0*/ onBarItem,
@@ -87,7 +91,8 @@ class DataViewController :
       /*2*/ UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil),
       /*3*/ recordBarItem,
       /*4*/ UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil),
-      /*5*/ shareBarItem
+      /*5*/ shareBarItem,
+      /*6*/ saveBarItem
     ]
     
     let disabledBarItem = UIBarButtonItem(title: "location services diabled", style: .plain, target: nil, action: nil)
@@ -97,7 +102,8 @@ class DataViewController :
     inactiveToolbarItems = [
       disabledBarItem,
       UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil),
-      shareBarItem
+      shareBarItem,
+      saveBarItem
     ]
     
     applyOptions()
@@ -210,6 +216,9 @@ class DataViewController :
   {
     let state = dataController.state
     
+    shareBarItem.isEnabled = dataController.canShare
+    saveBarItem.isEnabled  = dataController.canSave
+    
     switch state
     {
     case .Uninitialized: break
@@ -238,8 +247,6 @@ class DataViewController :
       stopBarItem.isEnabled   = true
       recordBarItem.isEnabled = dataController.okToRecord
     }
-
-    shareBarItem.isEnabled = dataController.canShare
     
     let toolbar = navigationController?.toolbar
     switch state
@@ -313,5 +320,10 @@ class DataViewController :
   func handleShare(_ sender: UIBarButtonItem)
   {
     print("DVC handleShare")
+  }
+  
+  func handleSave(_ sender: UIBarButtonItem)
+  {
+    print("DVC handleSave")
   }
 }

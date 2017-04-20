@@ -83,7 +83,7 @@ class OptionsViewController: UITableViewController, UITextFieldDelegate
       mapTypeSC.selectedSegmentIndex = 0
     }
     
-    showScaleSwitch.isOn = options.showScale
+    showScaleSwitch.isOn         = options.showScale
     
     baseUnitSC.selectedSegmentIndex  = options.baseUnit.rawValue
     
@@ -161,7 +161,6 @@ class OptionsViewController: UITableViewController, UITextFieldDelegate
   @IBAction func handleShowScale(_ sender : UISwitch)
   {
     options.showScale = sender.isOn
-    print("Handle Scale: \(options.showScale)")
     checkState()
   }
   
