@@ -110,8 +110,6 @@ fileprivate class PostImages
       UIGraphicsEndImageContext()
       
       PostImages.images[index] = im
-      
-      print("Generating post image \(index)")
     }
     
     return im!

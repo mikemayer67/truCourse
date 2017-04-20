@@ -80,18 +80,47 @@
                                     <outlet property="delegate" destination="Ae4-BT-1L8" id="99V-cb-utM"/>
                                 </connections>
                             </mapView>
+                            <view autoresizesSubviews="NO" opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="e1T-bw-FZE" customClass="TrackingView" customModule="truCourse" customModuleProvider="target">
+                                <rect key="frame" x="283" y="531" width="32" height="32"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tN3-Gk-fNZ">
+                                        <rect key="frame" x="4" y="4" width="25" height="25"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="25" id="15c-SH-mWo"/>
+                                            <constraint firstAttribute="width" constant="25" id="T2O-Xf-RXG"/>
+                                        </constraints>
+                                        <color key="tintColor" red="0.1176470588" green="0.23529411759999999" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                        <state key="normal" image="TrackOff_000000_25.png"/>
+                                        <connections>
+                                            <action selector="updateTrackingMode:" destination="e1T-bw-FZE" eventType="touchUpInside" id="gxW-pK-drz"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="32" id="7oT-m5-nCp"/>
+                                    <constraint firstAttribute="width" constant="32" id="E2C-pc-n6G"/>
+                                    <constraint firstItem="tN3-Gk-fNZ" firstAttribute="centerY" secondItem="e1T-bw-FZE" secondAttribute="centerY" id="JzO-Wp-SHo"/>
+                                    <constraint firstItem="tN3-Gk-fNZ" firstAttribute="centerX" secondItem="e1T-bw-FZE" secondAttribute="centerX" id="QKp-Bd-pXf"/>
+                                </constraints>
+                                <connections>
+                                    <outlet property="button" destination="tN3-Gk-fNZ" id="JcN-Aa-L1V"/>
+                                </connections>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstAttribute="trailing" secondItem="e1T-bw-FZE" secondAttribute="trailing" constant="5" id="2Jt-78-LbI"/>
                             <constraint firstItem="xl5-Do-0oW" firstAttribute="top" secondItem="Xr0-tc-iCR" secondAttribute="top" id="PPR-pJ-Edn"/>
                             <constraint firstAttribute="trailing" secondItem="xl5-Do-0oW" secondAttribute="trailing" id="fst-Xi-xRd"/>
                             <constraint firstItem="xXI-cr-kKb" firstAttribute="top" secondItem="xl5-Do-0oW" secondAttribute="bottom" id="hlN-zt-e99"/>
                             <constraint firstItem="xl5-Do-0oW" firstAttribute="leading" secondItem="Xr0-tc-iCR" secondAttribute="leading" id="mfs-wg-kcQ"/>
+                            <constraint firstItem="xXI-cr-kKb" firstAttribute="top" secondItem="e1T-bw-FZE" secondAttribute="bottom" constant="5" id="xY9-8q-5uo"/>
                         </constraints>
                     </view>
                     <extendedEdge key="edgesForExtendedLayout"/>
                     <connections>
                         <outlet property="mapView" destination="xl5-Do-0oW" id="yJp-MB-3Ij"/>
+                        <outlet property="trackingView" destination="e1T-bw-FZE" id="ETN-jQ-KX4"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ANC-dY-zeT" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -195,7 +224,7 @@
                             <tableViewSection headerTitle="Map" footerTitle="How the map will be displayed on the screen. " id="rCZ-3W-OVp">
                                 <cells>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="qPv-Fi-vzb">
-                                        <rect key="frame" x="0.0" y="56" width="320" height="44"/>
+                                        <rect key="frame" x="0.0" y="55.5" width="320" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="qPv-Fi-vzb" id="ItH-Zc-9fa">
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="43.5"/>
@@ -232,7 +261,7 @@
                                         </tableViewCellContentView>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="alh-9I-CLt">
-                                        <rect key="frame" x="0.0" y="100" width="320" height="44"/>
+                                        <rect key="frame" x="0.0" y="99.5" width="320" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="alh-9I-CLt" id="8dU-Rx-LJu">
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="43.5"/>
@@ -271,7 +300,7 @@
                                 <string key="footerTitle">How the legs of the route will be reported.  Note that higher accuracy (smaller location uncertainty) puts a higher drain on your battery.</string>
                                 <cells>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="OfE-LR-WKL">
-                                        <rect key="frame" x="0.0" y="220" width="320" height="44"/>
+                                        <rect key="frame" x="0.0" y="219" width="320" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="OfE-LR-WKL" id="q32-06-VwT">
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="43.5"/>
@@ -307,7 +336,7 @@
                                         </tableViewCellContentView>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="p2k-Wp-5FO">
-                                        <rect key="frame" x="0.0" y="264" width="320" height="44"/>
+                                        <rect key="frame" x="0.0" y="263" width="320" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="p2k-Wp-5FO" id="nuD-1p-79g">
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="43.5"/>
@@ -343,7 +372,7 @@
                                         </tableViewCellContentView>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="67" id="atJ-Hi-RL0">
-                                        <rect key="frame" x="0.0" y="308" width="320" height="67"/>
+                                        <rect key="frame" x="0.0" y="307" width="320" height="67"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="atJ-Hi-RL0" id="9gX-8y-DKi">
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="66.5"/>
@@ -382,7 +411,7 @@
                                         </tableViewCellContentView>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="67" id="hkn-kW-7d9">
-                                        <rect key="frame" x="0.0" y="375" width="320" height="67"/>
+                                        <rect key="frame" x="0.0" y="374" width="320" height="67"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="hkn-kW-7d9" id="3Nv-B5-MMB">
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="66.5"/>
@@ -426,7 +455,7 @@
                                 <string key="footerTitle">Enables (disables) shaking the devices to undo an errant post placement.  Optionally set a timeout period in which the shake must occur.</string>
                                 <cells>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="b9R-qT-gIk">
-                                        <rect key="frame" x="0.0" y="550" width="320" height="44"/>
+                                        <rect key="frame" x="0.0" y="548.5" width="320" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="b9R-qT-gIk" id="MBv-5V-dWF">
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="43.5"/>
@@ -460,7 +489,7 @@
                                         </tableViewCellContentView>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="67" id="lse-mB-ydT">
-                                        <rect key="frame" x="0.0" y="594" width="320" height="67"/>
+                                        <rect key="frame" x="0.0" y="592.5" width="320" height="67"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="lse-mB-ydT" id="1Us-Pv-4zY">
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="66.5"/>
@@ -506,7 +535,7 @@
                             <tableViewSection headerTitle="EMAIL" footerTitle="Default address to send route by email (optional)" id="ja3-bW-CMX">
                                 <cells>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="OCv-Tn-zv4">
-                                        <rect key="frame" x="0.0" y="769" width="320" height="44"/>
+                                        <rect key="frame" x="0.0" y="767" width="320" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="OCv-Tn-zv4" id="4Mf-an-n9Q">
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="43.5"/>
@@ -604,6 +633,7 @@
         <image name="Near Me_ffffff_25.png" width="25" height="25"/>
         <image name="Settings_ffffff_25.png" width="25" height="25"/>
         <image name="Signpost_ffffff_25.png" width="25" height="25"/>
+        <image name="TrackOff_000000_25.png" width="25" height="25"/>
         <image name="World Map_ffffff_25.png" width="25" height="25"/>
     </resources>
 </document>

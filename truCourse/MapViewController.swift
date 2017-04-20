@@ -9,12 +9,10 @@
 import UIKit
 import MapKit
 
-class MapViewController: UIViewController, VisualizationView, MKMapViewDelegate
+class MapViewController: UIViewController, VisualizationView, MKMapViewDelegate, TrackingViewDelegate
 {
   @IBOutlet weak var mapView        : MKMapView!
-  
-  private(set) var trackingOption  = MKUserTrackingMode.none
-  private(set) var trackingEnabled = false
+  @IBOutlet weak var trackingView   : TrackingView!
   
   private var routeOverlay    : MKOverlay?
   private var candOverlay     : MKOverlay?
@@ -32,9 +30,12 @@ class MapViewController: UIViewController, VisualizationView, MKMapViewDelegate
     
     // Do any additional setup after loading the view.
     
+    trackingView.delegate = self
+    trackingView.mode = .follow
+    
     mapView.mapType           = .standard
-    mapView.userTrackingMode  = .follow
     mapView.showsUserLocation = true
+    mapView.setUserTrackingMode(trackingView.mode, animated: true)
     mapView.showsScale        = true
   }
   
@@ -59,17 +60,26 @@ class MapViewController: UIViewController, VisualizationView, MKMapViewDelegate
     case .Uninitialized: fallthrough
     case .Disabled:      fallthrough
     case .Paused:
-      trackingEnabled = false
+      trackingView.pause()
+      mapView.showsUserLocation = false
+      mapView.setUserTrackingMode(.none, animated: false)
     default:
-      trackingEnabled = true
+      trackingView.resume()
+      mapView.showsUserLocation = true
+      mapView.setUserTrackingMode(trackingView.mode, animated: true)
     }
+  }
+  
+  func trackingView(_ tv: TrackingView, modeDidChange mode: MKUserTrackingMode)
+  {
+    mapView.setUserTrackingMode(trackingView.mode, animated: true)
   }
   
   // MARK: - Map View delegate methods
   
   func mapView(_ mapView: MKMapView, didChange mode: MKUserTrackingMode, animated: Bool)
   {
-    print("New tracking mode: \(mode.rawValue)")
+    trackingView.mode = mode
   }
   
   func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView?
