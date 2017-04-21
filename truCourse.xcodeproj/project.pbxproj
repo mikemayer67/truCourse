@@ -13,6 +13,7 @@
 		273DCEB11E7AC11D005AE82E /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 273DCEB01E7AC11D005AE82E /* Constants.swift */; };
 		273DCEB31E7ACC11005AE82E /* Route.swift in Sources */ = {isa = PBXBuildFile; fileRef = 273DCEB21E7ACC11005AE82E /* Route.swift */; };
 		273DCEBA1E7C1C06005AE82E /* DataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 273DCEB91E7C1C06005AE82E /* DataController.swift */; };
+		274B508F1EA9A7C7000A1527 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 274B508E1EA9A7C7000A1527 /* Extensions.swift */; };
 		2755C5DB1E84E6CC000800F5 /* Trash_ffffff_25.png in Resources */ = {isa = PBXBuildFile; fileRef = 2755C5DA1E84E6CC000800F5 /* Trash_ffffff_25.png */; };
 		277689631E61159C00F25FE3 /* OptionsViewAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 277689621E61159C00F25FE3 /* OptionsViewAnimator.swift */; };
 		278905E41E7961D100F1B40B /* Waypoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278905E31E7961D100F1B40B /* Waypoint.swift */; };
@@ -65,6 +66,7 @@
 		273DCEB21E7ACC11005AE82E /* Route.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Route.swift; sourceTree = "<group>"; };
 		273DCEB61E7B38CB005AE82E /* Notification+extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Notification+extension.swift"; sourceTree = "<group>"; };
 		273DCEB91E7C1C06005AE82E /* DataController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataController.swift; sourceTree = "<group>"; };
+		274B508E1EA9A7C7000A1527 /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		2755C5DA1E84E6CC000800F5 /* Trash_ffffff_25.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Trash_ffffff_25.png; sourceTree = "<group>"; };
 		277689621E61159C00F25FE3 /* OptionsViewAnimator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OptionsViewAnimator.swift; sourceTree = "<group>"; };
 		278905E31E7961D100F1B40B /* Waypoint.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Waypoint.swift; sourceTree = "<group>"; };
@@ -175,6 +177,7 @@
 				27C558471E5F8790004FF32A /* AppDelegate.swift */,
 				27C5584C1E5F8790004FF32A /* Types.swift */,
 				273DCEB01E7AC11D005AE82E /* Constants.swift */,
+				274B508E1EA9A7C7000A1527 /* Extensions.swift */,
 				27B10CFD1E6060E3005099BD /* MainController.swift */,
 				27DB65E21E60E2D100498C12 /* DataViews */,
 				278905E21E7961AC00F1B40B /* Data */,
@@ -364,6 +367,7 @@
 				27E7754E1E7CC16600091C78 /* Routes.swift in Sources */,
 				273DCEB11E7AC11D005AE82E /* Constants.swift in Sources */,
 				27C5585E1E5F97B2004FF32A /* OptionsViewController.swift in Sources */,
+				274B508F1EA9A7C7000A1527 /* Extensions.swift in Sources */,
 				27F74D7A1EA4E7AA008D172A /* PostAnnotation.swift in Sources */,
 				278905E41E7961D100F1B40B /* Waypoint.swift in Sources */,
 				27C558511E5F8790004FF32A /* DataViewController.swift in Sources */,

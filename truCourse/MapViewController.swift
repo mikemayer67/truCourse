@@ -38,26 +38,7 @@ class MapViewController: UIViewController, VisualizationView, MKMapViewDelegate,
     mapView.setUserTrackingMode(trackingView.mode, animated: true)
     mapView.showsScale        = true
     
-    removeLongPressGestureRecognizers(mapView)
-  }
-  
-  func removeLongPressGestureRecognizers(_ v:UIView)
-  {
-    if let grs = v.gestureRecognizers
-    {
-      for gr in grs
-      {
-        if gr is UILongPressGestureRecognizer
-        {
-          v.removeGestureRecognizer(gr)
-        }
-      }
-    }
-    
-    for sv in v.subviews
-    {
-      removeLongPressGestureRecognizers(sv)
-    }
+    mapView.remove { (gr:UIGestureRecognizer)->Bool in return gr is UILongPressGestureRecognizer }
   }
 
   // MARK: - Options
