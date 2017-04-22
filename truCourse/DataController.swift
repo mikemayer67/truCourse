@@ -50,7 +50,8 @@ class DataController : NSObject, CLLocationManagerDelegate
   
   var locked : Bool
   {
-    return routes.working.locked
+    get { return routes.working.locked   }
+    set { routes.working.locked = locked }
   }
   
   var canShare : Bool
@@ -131,6 +132,7 @@ class DataController : NSObject, CLLocationManagerDelegate
       
     case .Insert(let index):
       print("Transition = insert(\(index))")
+      
       if index != nil
       {
         insertionPoint?.candidate.unlink()
@@ -199,7 +201,7 @@ class DataController : NSObject, CLLocationManagerDelegate
     case .Inserting:
       print("State = inserting")
       updateTrackingState(authorized: true, enabled: true)
-      routes.working.locked = false
+      locked = false
 
       if insertionPoint == nil
       {
@@ -217,7 +219,7 @@ class DataController : NSObject, CLLocationManagerDelegate
     case .Editing:
       print("State = editing")
       updateTrackingState(authorized: true, enabled: true)
-      routes.working.locked = false
+      locked = false
     }
     
     dataViewController?.applyState()
@@ -272,16 +274,18 @@ class DataController : NSObject, CLLocationManagerDelegate
     
     if insertAfter
     {
+      let insertion = { self.updateState(.Insert(index)) }
       actions.append( UIAlertAction(title: "Insert New Post \(index+1)",
                                     style: .default,
-                                    handler: { (action:UIAlertAction) in print("insert after \(index)") } ) )
+                                    handler: { _ in self.dataViewController?.confirmUnlock(insertion) } ) )
     }
     
     if insertBefore
     {
+      let insertion = { self.updateState(.Insert(index-1)) }
       actions.append( UIAlertAction(title: "Insert New Post \(index)",
                                     style: .default,
-                                    handler: { (action:UIAlertAction) in print("insert before \(index)") } ) )
+                                    handler: { _ in self.dataViewController?.confirmUnlock(insertion) } ) )
     }
     
     if update

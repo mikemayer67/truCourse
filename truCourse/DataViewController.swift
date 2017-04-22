@@ -291,23 +291,7 @@ class DataViewController :
   
   func handleStart(_ sender: UIBarButtonItem)
   {
-    let doStart = { self.dataController.updateState(.Insert(nil)) }
-
-    if dataController.locked
-    {
-      let alert = UIAlertController(title: "Unlock Route",
-                                    message: "Please confirm updating the route (you will not be able to undo changes)",
-                                    preferredStyle: .alert)
-      
-      alert.addAction( UIAlertAction(title: "OK", style: .destructive) { (_:UIAlertAction) in doStart() } )
-      alert.addAction( UIAlertAction(title: "Cancel", style: .cancel) )
-      
-      self.present(alert, animated: true)
-    }
-    else
-    {
-      doStart()
-    }
+    self.confirmUnlock { self.dataController.updateState(.Insert(nil)) }
   }
   
   func handlePause(_ sender: UIBarButtonItem)
@@ -334,5 +318,27 @@ class DataViewController :
   func handleSave(_ sender: UIBarButtonItem)
   {
     print("DVC handleSave")
+  }
+  
+  // MARK: - Unlock Confirmation
+  
+  func confirmUnlock( _ action : @escaping ()->Void )
+  {
+    if dataController.locked
+    {
+      let alert = UIAlertController(title: "Unlock Route",
+                                    message: "Please confirm updating the saved route",
+                                    preferredStyle: .alert)
+      
+      alert.addAction( UIAlertAction(title: "OK", style: .destructive) { (_:UIAlertAction) in action() } )
+      alert.addAction( UIAlertAction(title: "Cancel", style: .cancel) )
+      
+      self.present(alert, animated: true)
+    }
+    else
+    {
+      action()
+    }
+    
   }
 }
