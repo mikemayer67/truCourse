@@ -42,9 +42,18 @@ class DataViewController :
         
     let sb = self.storyboard!
     
-    visualizationControllers[.MapView]     = sb.instantiateViewController(withIdentifier: "mapViewController")
-    visualizationControllers[.BearingView] = sb.instantiateViewController(withIdentifier: "bearingViewController")
-    visualizationControllers[.LatLonView]  = sb.instantiateViewController(withIdentifier: "latLonViewController")
+    let mapViewController     = sb.instantiateViewController(withIdentifier: "mapViewController")     as! MapViewController
+    let bearingViewController = sb.instantiateViewController(withIdentifier: "bearingViewController") as! BearingViewController
+    let latLonViewController  = sb.instantiateViewController(withIdentifier: "latLonViewController")  as! LatLonViewController
+    
+    
+    visualizationControllers = [ .MapView     : mapViewController,
+                                 .BearingView : bearingViewController,
+                                 .LatLonView  : latLonViewController ]
+    
+    mapViewController.dataController     = dataController
+    bearingViewController.dataController = dataController
+    latLonViewController.dataController  = dataController
     
     currentView = visualizationControllers[VisualizationType.MapView]
     
@@ -71,7 +80,7 @@ class DataViewController :
                                     style: .plain, target: self, action: #selector(handleUndo(_:)))
     shareBarItem  = UIBarButtonItem(image: UIImage(named:"Upload_ffffff_25.png"),
                                     style: .plain, target: self, action: #selector(handleShare(_:)))
-    saveBarItem   = UIBarButtonItem(image: UIImage(named:"Add_file_ffffff_25.png"),
+    saveBarItem   = UIBarButtonItem(image: UIImage(named:"Save_file_ffffff_25.png"),
                                     style: .plain, target: self, action: #selector(handleSave(_:)))
     
     let onOffTint = UIColor(red: 1.0, green: 0.8, blue: 0.4, alpha: 1.0)

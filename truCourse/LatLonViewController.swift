@@ -10,6 +10,7 @@ import UIKit
 
 class LatLonViewController: UITableViewController, VisualizationView
 {
+  weak var dataController : DataController?
   
   var _visualizationType : VisualizationType { return .LatLonView }
   

@@ -258,6 +258,49 @@ class DataController : NSObject, CLLocationManagerDelegate
   
   // MARK: - Data methods
   
+  func popupActions(for index:Int) -> [UIAlertAction]
+  {
+    var insertAfter = true
+    var insertBefore = true
+    var update = true
+    var delete = true
+    
+    if insertionPoint?.after?.index  == index { insertAfter = false }
+    if insertionPoint?.before?.index == index { insertBefore = false }
+    
+    var actions = [UIAlertAction]()
+    
+    if insertAfter
+    {
+      actions.append( UIAlertAction(title: "Insert New Post \(index+1)",
+                                    style: .default,
+                                    handler: { (action:UIAlertAction) in print("insert after \(index)") } ) )
+    }
+    
+    if insertBefore
+    {
+      actions.append( UIAlertAction(title: "Insert New Post \(index)",
+                                    style: .default,
+                                    handler: { (action:UIAlertAction) in print("insert before \(index)") } ) )
+    }
+    
+    if update
+    {
+      actions.append( UIAlertAction(title: "Update Existing Post \(index)",
+                                    style: .default,
+                                    handler: { (action:UIAlertAction) in print("update post \(index)") } ) )
+    }
+    
+    if delete
+    {
+      actions.append( UIAlertAction(title: "Delete Post \(index)",
+                                    style: .destructive,
+                                    handler: { (action:UIAlertAction) in print("delete post \(index)") } ) )
+    }
+  
+    return actions
+  }
+  
   func record()
   {
     switch state

@@ -10,47 +10,10 @@ import Foundation
 import UIKit
 import CoreLocation
 
-enum MapOrientation : Int
-{
-  case North     = 0
-  case Heading   = 1
-}
-
 enum NorthType : Int
 {
   case True     = 0
   case Magnetic = 1
-}
-
-enum HeadingAccuracy : CLLocationDegrees
-{
-  case Precise = 1.0
-  case Good    = 2.0
-  case Medium  = 5.0
-  case Coarse  = 10.0
-  
-  func index() -> Int
-  {
-    switch self
-    {
-    case .Precise: return 0
-    case .Good:    return 1
-    case .Medium:  return 2
-    case .Coarse:  return 3
-    }
-  }
-  
-  mutating func set(byIndex: Int) -> Void
-  {
-    switch byIndex
-    {
-    case 0: self = .Precise
-    case 1: self = .Good
-    case 2: self = .Medium
-    case 3: self = .Coarse
-    default: self = .Good
-    }
-  }
 }
 
 enum BaseUnitType : Int

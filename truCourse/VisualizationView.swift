@@ -39,7 +39,7 @@ enum VisualizationType : Int
 }
 
 protocol VisualizationView : class
-{
+{  
   var _visualizationType : VisualizationType { get }
   var _hasSelection      : Bool              { get }
   

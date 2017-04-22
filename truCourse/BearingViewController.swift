@@ -10,6 +10,8 @@ import UIKit
 
 class BearingViewController: UITableViewController, VisualizationView
 {
+  weak var dataController : DataController?
+  
   var _visualizationType : VisualizationType { return .BearingView }
 
   var _hasSelection: Bool

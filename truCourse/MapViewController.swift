@@ -14,6 +14,8 @@ class MapViewController: UIViewController, VisualizationView, MKMapViewDelegate,
   @IBOutlet weak var mapView        : MKMapView!
   @IBOutlet weak var trackingView   : TrackingView!
   
+  weak var dataController : DataController?
+  
   private var routeOverlay    : MKOverlay?
   private var candOverlay     : MKOverlay?
   private var postAnnotations = [Int:PostAnnotation]()
@@ -109,7 +111,28 @@ class MapViewController: UIViewController, VisualizationView, MKMapViewDelegate,
   
   func handlePopup(_ sender:UILongPressGestureRecognizer)
   {
-    print("handlePopup: \(sender)")
+    guard dataController != nil else { return }
+    
+    print("handlePopup: \(sender.state.rawValue)")
+    guard sender.state == .began else { return }
+    
+    sender.isEnabled = false
+    sender.isEnabled = true
+    
+    let postView = sender.view as! MKAnnotationView
+    let post     = postView.annotation as! PostAnnotation
+    let index    = post.waypoint.index!
+    
+    let alert = UIAlertController( title: nil, message: nil, preferredStyle: .actionSheet)
+    
+    for action in dataController!.popupActions(for: index)
+    {
+      alert.addAction(action)
+    }
+  
+    alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+
+    self.present(alert, animated:true) { print("popup posted") }
   }
   
   // MARK: - Route update
