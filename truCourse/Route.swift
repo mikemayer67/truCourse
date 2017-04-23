@@ -144,7 +144,7 @@ class Route
       if head === wp
       {
         head = nil
-      } // head is only waypoint left in route
+      } // head was only waypoint left in route
     }
     
     wp.unlink()

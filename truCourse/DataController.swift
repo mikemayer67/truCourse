@@ -262,42 +262,50 @@ class DataController : NSObject, CLLocationManagerDelegate
   
   func popupActions(for index:Int) -> [UIAlertAction]
   {
-    var insertAfter = true
+    var insertAfter  = true
     var insertBefore = true
-    var update = true
-    var delete = true
+    var renumber     = true
+    var update       = true
+    var delete       = true
     
     if insertionPoint?.after?.index  == index { insertAfter = false }
     if insertionPoint?.before?.index == index { insertBefore = false }
     
     var actions = [UIAlertAction]()
     
-    if insertAfter
+    if insertBefore
     {
-      let insertion = { self.updateState(.Insert(index)) }
-      actions.append( UIAlertAction(title: "Insert New Post \(index+1)",
+      let insertion = { self.updateState(.Insert(index-1)) }
+      actions.append( UIAlertAction(title: "Insert new post before it",
                                     style: .default,
                                     handler: { _ in self.dataViewController?.confirmUnlock(insertion) } ) )
     }
     
-    if insertBefore
+    if insertAfter
     {
-      let insertion = { self.updateState(.Insert(index-1)) }
-      actions.append( UIAlertAction(title: "Insert New Post \(index)",
+      let insertion = { self.updateState(.Insert(index)) }
+      actions.append( UIAlertAction(title: "Insert new post after it",
                                     style: .default,
                                     handler: { _ in self.dataViewController?.confirmUnlock(insertion) } ) )
+    }
+    
+    if renumber
+    {
+      actions.append( UIAlertAction(title: "Renumber it...",
+                                    style: .default,
+                                    handler: { (action:UIAlertAction) in print ("renumber post \(index)") } ) )
     }
     
     if update
     {
-      actions.append( UIAlertAction(title: "Update Existing Post \(index)",
+      actions.append( UIAlertAction(title: "Relocate it",
                                     style: .default,
                                     handler: { (action:UIAlertAction) in print("update post \(index)") } ) )
     }
     
     if delete
     {
-      actions.append( UIAlertAction(title: "Delete Post \(index)",
+      actions.append( UIAlertAction(title: "Delete it...",
                                     style: .destructive,
                                     handler: { (action:UIAlertAction) in print("delete post \(index)") } ) )
     }
