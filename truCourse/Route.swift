@@ -140,6 +140,16 @@ class Route
     self.head!.reindex()
   }
   
+  func commit(_ candidate:Waypoint, at index:Int)
+  {
+    candidate.commit()
+    if index == 1
+    {
+      candidate.reindex()
+      head = candidate
+    }
+  }
+  
   func remove(post:Int)
   {
     let wp = head?.find(index: post)

@@ -329,7 +329,7 @@ class DataController : NSObject, CLLocationManagerDelegate
       let cand  = candidatePost!
       let index = insertionIndex!
       
-      cand.commit()
+      routes.working.commit(cand, at:index)
       
       candidatePost  = Waypoint(self.mostRecentLocation)
       candidatePost!.insert(after: cand, as: .Candidate)
