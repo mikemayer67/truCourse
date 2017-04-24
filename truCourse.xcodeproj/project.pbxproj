@@ -20,6 +20,8 @@
 		278905E41E7961D100F1B40B /* Waypoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278905E31E7961D100F1B40B /* Waypoint.swift */; };
 		27902EEA1E821512004B6D85 /* recenter_64.png in Resources */ = {isa = PBXBuildFile; fileRef = 27902EE91E821512004B6D85 /* recenter_64.png */; };
 		2793480C1E8A829E00594B0D /* VisualizationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2793480B1E8A829E00594B0D /* VisualizationView.swift */; };
+		27AD09471EAE2847005912B3 /* Undo_ffffff_25.png in Resources */ = {isa = PBXBuildFile; fileRef = 27AD09461EAE2847005912B3 /* Undo_ffffff_25.png */; };
+		27AD09491EAE285A005912B3 /* Redo_ffffff_25.png in Resources */ = {isa = PBXBuildFile; fileRef = 27AD09481EAE2859005912B3 /* Redo_ffffff_25.png */; };
 		27B101E51E82A41C0014C588 /* Off_ffffff_25.png in Resources */ = {isa = PBXBuildFile; fileRef = 27B101E41E82A41C0014C588 /* Off_ffffff_25.png */; };
 		27B101E71E82A47B0014C588 /* On_ffffff_25.png in Resources */ = {isa = PBXBuildFile; fileRef = 27B101E61E82A47B0014C588 /* On_ffffff_25.png */; };
 		27B10CFE1E6060E3005099BD /* MainController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27B10CFD1E6060E3005099BD /* MainController.swift */; };
@@ -46,7 +48,6 @@
 		27E775301E7CA95700091C78 /* World Map_ffffff_25.png in Resources */ = {isa = PBXBuildFile; fileRef = 27E7752F1E7CA95700091C78 /* World Map_ffffff_25.png */; };
 		27E7753C1E7CB84700091C78 /* Play_ffffff_25.png in Resources */ = {isa = PBXBuildFile; fileRef = 27E7753B1E7CB84700091C78 /* Play_ffffff_25.png */; };
 		27E7753E1E7CB85600091C78 /* Pause_ffffff_25.png in Resources */ = {isa = PBXBuildFile; fileRef = 27E7753D1E7CB85600091C78 /* Pause_ffffff_25.png */; };
-		27E775401E7CB88300091C78 /* Undo_ffffff_25.png in Resources */ = {isa = PBXBuildFile; fileRef = 27E7753F1E7CB88300091C78 /* Undo_ffffff_25.png */; };
 		27E775441E7CB90F00091C78 /* Upload_ffffff_25.png in Resources */ = {isa = PBXBuildFile; fileRef = 27E775431E7CB90F00091C78 /* Upload_ffffff_25.png */; };
 		27E775461E7CB95300091C78 /* Pin_ffffff_25.png in Resources */ = {isa = PBXBuildFile; fileRef = 27E775451E7CB95300091C78 /* Pin_ffffff_25.png */; };
 		27E775481E7CB99800091C78 /* Pin 2_ffffff_25.png in Resources */ = {isa = PBXBuildFile; fileRef = 27E775471E7CB99800091C78 /* Pin 2_ffffff_25.png */; };
@@ -74,6 +75,8 @@
 		278905E31E7961D100F1B40B /* Waypoint.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Waypoint.swift; sourceTree = "<group>"; };
 		27902EE91E821512004B6D85 /* recenter_64.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = recenter_64.png; sourceTree = "<group>"; };
 		2793480B1E8A829E00594B0D /* VisualizationView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VisualizationView.swift; sourceTree = "<group>"; };
+		27AD09461EAE2847005912B3 /* Undo_ffffff_25.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Undo_ffffff_25.png; sourceTree = "<group>"; };
+		27AD09481EAE2859005912B3 /* Redo_ffffff_25.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Redo_ffffff_25.png; sourceTree = "<group>"; };
 		27B101E41E82A41C0014C588 /* Off_ffffff_25.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Off_ffffff_25.png; sourceTree = "<group>"; };
 		27B101E61E82A47B0014C588 /* On_ffffff_25.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = On_ffffff_25.png; sourceTree = "<group>"; };
 		27B10CFD1E6060E3005099BD /* MainController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainController.swift; sourceTree = "<group>"; };
@@ -102,7 +105,6 @@
 		27E7752F1E7CA95700091C78 /* World Map_ffffff_25.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "World Map_ffffff_25.png"; sourceTree = "<group>"; };
 		27E7753B1E7CB84700091C78 /* Play_ffffff_25.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Play_ffffff_25.png; sourceTree = "<group>"; };
 		27E7753D1E7CB85600091C78 /* Pause_ffffff_25.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Pause_ffffff_25.png; sourceTree = "<group>"; };
-		27E7753F1E7CB88300091C78 /* Undo_ffffff_25.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Undo_ffffff_25.png; sourceTree = "<group>"; };
 		27E775431E7CB90F00091C78 /* Upload_ffffff_25.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Upload_ffffff_25.png; sourceTree = "<group>"; };
 		27E775451E7CB95300091C78 /* Pin_ffffff_25.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Pin_ffffff_25.png; sourceTree = "<group>"; };
 		27E775471E7CB99800091C78 /* Pin 2_ffffff_25.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Pin 2_ffffff_25.png"; sourceTree = "<group>"; };
@@ -214,8 +216,9 @@
 				27C558401E5F8769004FF32A /* Waypoint Map_ffffff_25.png */,
 				27E7752F1E7CA95700091C78 /* World Map_ffffff_25.png */,
 				27E7753B1E7CB84700091C78 /* Play_ffffff_25.png */,
+				27AD09461EAE2847005912B3 /* Undo_ffffff_25.png */,
+				27AD09481EAE2859005912B3 /* Redo_ffffff_25.png */,
 				27E7753D1E7CB85600091C78 /* Pause_ffffff_25.png */,
-				27E7753F1E7CB88300091C78 /* Undo_ffffff_25.png */,
 				27E775431E7CB90F00091C78 /* Upload_ffffff_25.png */,
 				27E775451E7CB95300091C78 /* Pin_ffffff_25.png */,
 				27E775491E7CB9B500091C78 /* Circled Play_ffffff_25.png */,
@@ -333,6 +336,7 @@
 				27B10D001E606EC1005099BD /* Back_ffffff_25.png in Resources */,
 				2755C5DB1E84E6CC000800F5 /* Trash_ffffff_25.png in Resources */,
 				27BC9E1B1EA859BC00398773 /* TrackOff_000000_25.png in Resources */,
+				27AD09471EAE2847005912B3 /* Undo_ffffff_25.png in Resources */,
 				27E775481E7CB99800091C78 /* Pin 2_ffffff_25.png in Resources */,
 				27F26E1C1EA94E90001EF37B /* Near Me_ffffff_25.png in Resources */,
 				27B101E51E82A41C0014C588 /* Off_ffffff_25.png in Resources */,
@@ -343,9 +347,9 @@
 				27E7753E1E7CB85600091C78 /* Pause_ffffff_25.png in Resources */,
 				27BC9E191EA8596C00398773 /* TrackOn_000000_25.png in Resources */,
 				27E7754A1E7CB9B500091C78 /* Circled Play_ffffff_25.png in Resources */,
+				27AD09491EAE285A005912B3 /* Redo_ffffff_25.png in Resources */,
 				27C558451E5F8769004FF32A /* Waypoint Map_ffffff_25.png in Resources */,
 				27C5585B1E5F9578004FF32A /* FactoryDefaults.plist in Resources */,
-				27E775401E7CB88300091C78 /* Undo_ffffff_25.png in Resources */,
 				27E7754C1E7CB9CE00091C78 /* Circled Pause_ffffff_25.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

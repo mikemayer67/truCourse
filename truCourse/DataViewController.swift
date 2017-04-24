@@ -22,6 +22,7 @@ class DataViewController :
   
   private var activeToolbar        = true
   private var activeToolbarItems   : [UIBarButtonItem]!
+  private var pausedToolbarItems   : [UIBarButtonItem]!
   private var inactiveToolbarItems : [UIBarButtonItem]!
   private var onBarItem            : UIBarButtonItem!
   private var offBarItem           : UIBarButtonItem!
@@ -29,6 +30,7 @@ class DataViewController :
   private var stopBarItem          : UIBarButtonItem!
   private var recordBarItem        : UIBarButtonItem!
   private var undoBarItem          : UIBarButtonItem!
+  private var redoBarItem          : UIBarButtonItem!
   private var shareBarItem         : UIBarButtonItem!
   private var saveBarItem          : UIBarButtonItem!
   
@@ -78,6 +80,8 @@ class DataViewController :
                                     style: .plain, target: self, action: #selector(handleRecord(_:)))
     undoBarItem   = UIBarButtonItem(image: UIImage(named:"Undo_ffffff_25.png"),
                                     style: .plain, target: self, action: #selector(handleUndo(_:)))
+    redoBarItem   = UIBarButtonItem(image: UIImage(named:"Redo_ffffff_25.png"),
+                                    style: .plain, target: self, action: #selector(handleRedo(_:)))
     shareBarItem  = UIBarButtonItem(image: UIImage(named:"Upload_ffffff_25.png"),
                                     style: .plain, target: self, action: #selector(handleShare(_:)))
     saveBarItem   = UIBarButtonItem(image: UIImage(named:"Save_file_ffffff_25.png"),
@@ -91,17 +95,29 @@ class DataViewController :
     stopBarItem.tintColor   = UIColor.white
     recordBarItem.tintColor = UIColor.white
     undoBarItem.tintColor   = UIColor.white
+    redoBarItem.tintColor   = UIColor.white
     shareBarItem.tintColor  = UIColor.white
     saveBarItem.tintColor   = UIColor.white
     
     activeToolbarItems = [
-      /*0*/ onBarItem,
-      /*1*/ startBarItem,
+      /*0*/ offBarItem,
+      /*1*/ stopBarItem,
       /*2*/ UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil),
       /*3*/ recordBarItem,
       /*4*/ UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil),
       /*5*/ shareBarItem,
       /*6*/ saveBarItem
+    ]
+    
+    pausedToolbarItems = [
+      /*0*/ onBarItem,
+      /*1*/ startBarItem,
+      /*2*/ UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil),
+      /*3*/ undoBarItem,
+      /*4*/ redoBarItem,
+      /*5*/ UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil),
+      /*6*/ shareBarItem,
+      /*7*/ saveBarItem
     ]
     
     let disabledBarItem = UIBarButtonItem(title: "location services diabled", style: .plain, target: nil, action: nil)
@@ -128,10 +144,12 @@ class DataViewController :
     switch dataController.state
     {
     case .Disabled: toolbar?.setItems(inactiveToolbarItems, animated: true)
+    case .Paused:   fallthrough
+    case .Idle:     toolbar?.setItems(pausedToolbarItems,   animated: true)
     default:        toolbar?.setItems(  activeToolbarItems, animated: true)
     }
   }
-  
+
   override func applyOptions()
   {
     for (_,controller) in visualizationControllers { controller.applyOptions() }
@@ -235,40 +253,35 @@ class DataViewController :
     shareBarItem.isEnabled = dataController.canShare
     saveBarItem.isEnabled  = dataController.canSave
     
+    let toolbar = navigationController?.toolbar
+    
     switch state
     {
     case .Uninitialized: break
-    case .Disabled:      break
+    case .Disabled:
+      toolbar?.setItems(inactiveToolbarItems, animated: true)
       
     case .Paused:
-      activeToolbarItems[0] = onBarItem
-      activeToolbarItems[3] = undoBarItem
-      activeToolbarItems[1].isEnabled = false
-      undoBarItem.isEnabled = dataController.canUndo
+      pausedToolbarItems[0]  = onBarItem
+      startBarItem.isEnabled = false
+      undoBarItem.isEnabled  = dataController.canUndo
+      redoBarItem.isEnabled  = dataController.canRedo
+      toolbar?.setItems(pausedToolbarItems, animated: true)
       
     case .Idle:
       activeToolbarItems[0]  = offBarItem
-      activeToolbarItems[1]  = startBarItem
-      activeToolbarItems[3]  = undoBarItem
       startBarItem.isEnabled = true
       undoBarItem.isEnabled  = dataController.canUndo
+      redoBarItem.isEnabled  = dataController.canRedo
+      toolbar?.setItems(pausedToolbarItems, animated: true)
       
     case .Inserting:
       fallthrough
       
     case .Editing:
-      activeToolbarItems[0]   = offBarItem
-      activeToolbarItems[1]   = stopBarItem
-      activeToolbarItems[3]   = recordBarItem
-      stopBarItem.isEnabled   = true
       recordBarItem.isEnabled = dataController.okToRecord
-    }
-    
-    let toolbar = navigationController?.toolbar
-    switch state
-    {
-    case .Disabled: toolbar?.setItems(inactiveToolbarItems, animated: true)
-    default:        toolbar?.setItems(  activeToolbarItems, animated: true)
+      toolbar?.setItems(activeToolbarItems, animated: true)
+
     }
     
     currentView.applyState(state)
@@ -315,6 +328,11 @@ class DataViewController :
   func handleUndo(_ sender: UIBarButtonItem)
   {
     dataController.undoLastAction()
+  }
+  
+  func handleRedo(_ sender: UIBarButtonItem)
+  {
+    dataController.redoLastAction()
   }
   
   func handleShare(_ sender: UIBarButtonItem)

@@ -124,11 +124,14 @@ class Route
     if self.head == nil
     {
       if post != 1 { fatalError("Can only insert post #1 into empty route") }
+      new_wp.commit()
+      self.head = new_wp
     }
     else if post == 1
     {
       new_wp.insert(before: self.head!)
       self.head = new_wp
+      new_wp.reindex()
     }
     else
     {
@@ -136,8 +139,6 @@ class Route
       if ref_wp == nil  { fatalError("route must contain post #\(post-1) to add post #\(post)") }
       new_wp.insert(after: ref_wp!)
     }
-    
-    self.head!.reindex()
   }
   
   func commit(_ candidate:Waypoint, at index:Int)

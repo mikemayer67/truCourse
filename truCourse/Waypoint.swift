@@ -119,6 +119,12 @@ class Waypoint
     { fatalError("Attempted to insert before an unlinked Waypoint") }
     
     _insert(as:type){ self.prev = nextPoint.prev; self.next = nextPoint }
+    
+    if type == .Committed
+    {
+      self.index = self.prev!.index! + 1
+      next!._updateIndices(from: self)
+    }
   }
   
   func insert(after priorPoint:Waypoint, as type:InsertionType = .Committed)
@@ -127,6 +133,12 @@ class Waypoint
     { fatalError("Attempted to insert after an unlinked Waypoint") }
     
     _insert(as:type){ self.next = priorPoint.next; self.prev = priorPoint }
+    
+    if type == .Committed
+    {
+      self.index = self.prev!.index! + 1
+      next!._updateIndices(from: self)
+    }
   }
 
   private func _insert(as type:InsertionType, link:()->() )

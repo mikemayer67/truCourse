@@ -283,7 +283,7 @@ class DataController : NSObject, CLLocationManagerDelegate
     
     if insertBefore
     {
-      let insertion = { self.updateState(.Insert(index-1)) }
+      let insertion = { self.updateState(.Insert(index)) }
       actions.append( UIAlertAction(title: "Insert new post before it",
                                     style: .default,
                                     handler: { _ in self.dataViewController?.confirmUnlock(insertion) } ) )
@@ -291,7 +291,7 @@ class DataController : NSObject, CLLocationManagerDelegate
     
     if insertAfter
     {
-      let insertion = { self.updateState(.Insert(index)) }
+      let insertion = { self.updateState(.Insert(index+1)) }
       actions.append( UIAlertAction(title: "Insert new post after it",
                                     style: .default,
                                     handler: { _ in self.dataViewController?.confirmUnlock(insertion) } ) )
@@ -376,6 +376,7 @@ class DataController : NSObject, CLLocationManagerDelegate
   
   func undoInsertion(_ action:InsertionAction)
   {
+    print("Undo Insertion: \(action.post)")
     let doUndo =
     {
       action.route.remove(post: action.post)
@@ -407,7 +408,15 @@ class DataController : NSObject, CLLocationManagerDelegate
   
   func redoInsertion(_ action:InsertionAction)
   {
+    print("Redo Insertion: \(action.post)")
     
+    action.route.insert(post: action.post, at: action.location)
+    
+    dataViewController?.currentView.update(route: action.route)
+    
+    lastRecordedPost = nil
+    dataViewController?.applyState()
+    insertionIndex = action.post + 1
   }
   
   // MARK: - Location Manager Delegate
