@@ -54,6 +54,11 @@ class Waypoint
   private(set) var prev   : Waypoint?
   private(set) var cand   : Waypoint?
   
+  var isCandidate : Bool
+  {
+    return prev?.cand === self
+  }
+  
   func string() -> String
   {
     let index = self.index ?? 0
@@ -167,8 +172,21 @@ class Waypoint
       prev!.next = self
       prev!.cand = nil
       
+      index = prev!.index! + 1
+      
       update()
       prev!.update()
+    }
+    
+    next?._updateIndices(from:self)
+  }
+  
+  internal func _updateIndices(from start:Waypoint)
+  {
+    if self !== start && self.index != 1
+    {
+      self.index = prev!.index! + 1
+      next!._updateIndices(from: start)
     }
   }
   
@@ -193,6 +211,8 @@ class Waypoint
       
       prev!.next = next
       next!.prev = prev
+      
+      next!._updateIndices(from: prev!)
     }
     
     prev!.update()

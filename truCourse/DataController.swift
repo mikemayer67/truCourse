@@ -20,12 +20,24 @@ class DataController : NSObject, CLLocationManagerDelegate
   private(set) var trackingAuthorized = false  // phone security settings
   
   private let routes = Routes()
-  private var insertionPoint : InsertionPoint?
   
   private(set) var state : AppState = .Uninitialized
   
+  private(set) var candidatePost  : Waypoint?
+  {
+    willSet
+    {
+      if candidatePost?.isCandidate == true { candidatePost!.unlink() }
+    }
+  }
+  
+  private(set) var insertionIndex : Int?
+  
   private(set) var currentLocation  : CLLocation?
   private      var lastRecordedPost : CLLocation?
+  
+  private(set) var undoStack = [UndoableAction]()
+  private(set) var redoStack = [UndoableAction]()
   
   let hasCompass = CLLocationManager.headingAvailable()
   
@@ -66,7 +78,12 @@ class DataController : NSObject, CLLocationManagerDelegate
   
   var canUndo : Bool
   {
-    return routes.working.insertionHistory.isEmpty == false
+    return undoStack.isEmpty == false
+  }
+  
+  var canRedo : Bool
+  {
+    return redoStack.isEmpty == false
   }
   
   // MARK: - Options
@@ -94,12 +111,13 @@ class DataController : NSObject, CLLocationManagerDelegate
         let status = CLLocationManager.authorizationStatus()
         lastRecordedPost = nil
         updateState(.Authorization(status))
+        return
       default:
         print("DC start transition sent multiple times")
       }
       
     case .Authorization(let status):
-      print("Transition = authorization(\(status))")
+      print("Transition = \(transition.string)")
       if status == .authorizedAlways || status == .authorizedWhenInUse
       {
         if !trackingAuthorized
@@ -110,7 +128,7 @@ class DataController : NSObject, CLLocationManagerDelegate
           
           if trackingEnabled == false    { state = .Paused    }
           else if currentRoute.locked    { state = .Idle      }
-          else if insertionPoint != nil  { state = .Inserting }
+          else if insertionIndex != nil  { state = .Inserting }
           else if currentRoute.isEmpty   { state = .Inserting }
           else                           { state = .Idle      }
         }
@@ -133,26 +151,8 @@ class DataController : NSObject, CLLocationManagerDelegate
     case .Insert(let index):
       print("Transition = insert(\(index))")
       
-      if index != nil
-      {
-        insertionPoint?.candidate.unlink()
-        
-        guard routes.working.head != nil else
-        { fatalError("Non-nil waypoint index without a working head") }
-        
-        if index == 0
-        {
-          insertionPoint = InsertionPoint( self.mostRecentLocation, before: routes.working.head! )
-        }
-        else if let wp = routes.working.head!.find(index: index!)
-        {
-          insertionPoint = InsertionPoint( self.mostRecentLocation, after: wp)
-        }
-        else
-        {
-          fatalError("Could not find waypoint \(index)")
-        }
-      }
+      insertionIndex = index
+      candidatePost = nil
       state = .Inserting
       
     case .Cancel:
@@ -163,7 +163,7 @@ class DataController : NSObject, CLLocationManagerDelegate
       case .Inserting(_):
         state = .Idle
       case .Editing(_):
-        if insertionPoint == nil { state = .Idle }
+        if insertionIndex == nil { state = .Idle }
         else                     { state = .Inserting }
       default:
         fatalError("Pause button should not be visible unless in .Insert or .Edit state")
@@ -187,34 +187,40 @@ class DataController : NSObject, CLLocationManagerDelegate
     case .Paused:
       print("State = paused")
       updateTrackingState(authorized:true, enabled:false)
-      insertionPoint?.unlink()
-      insertionPoint  = nil
-      dataViewController?.currentView.updateCandidate(nil)
+      candidatePost = nil
+      dataViewController?.currentView.update(candidate:nil)
 
     case .Idle:
       print("State = idle")
       updateTrackingState(authorized: true, enabled: true)
-      insertionPoint?.unlink()
-      insertionPoint  = nil
-      dataViewController?.currentView.updateCandidate(nil)
+      candidatePost = nil
+      dataViewController?.currentView.update(candidate:nil)
   
     case .Inserting:
       print("State = inserting")
       updateTrackingState(authorized: true, enabled: true)
       locked = false
+      
+      candidatePost = Waypoint(self.mostRecentLocation)
 
-      if insertionPoint == nil
+      let n = routes.working.count
+      if insertionIndex == nil { insertionIndex = n+1 }
+      
+      if routes.working.head != nil
       {
-        if routes.working.head != nil
+        if insertionIndex! == 1
         {
-          insertionPoint = InsertionPoint(self.mostRecentLocation, after:routes.working.tail!)
+          candidatePost?.insert(before: routes.working.head!, as: .Candidate)
         }
         else
         {
-          insertionPoint = InsertionPoint(self.mostRecentLocation)
+          let ref_wp = routes.working.find(post: insertionIndex! - 1)
+          if ref_wp == nil { fatalError("Cannot insert post #\(insertionIndex!)... route only has \(n) posts") }
+          candidatePost?.insert(after: ref_wp!, as: .Candidate)
         }
       }
-      dataViewController?.currentView.updateCandidate(insertionPoint?.candidate)
+      
+      dataViewController?.currentView.update(candidate:candidatePost)
   
     case .Editing:
       print("State = editing")
@@ -224,7 +230,7 @@ class DataController : NSObject, CLLocationManagerDelegate
     
     dataViewController?.applyState()
     
-    print("insertion = \(insertionPoint)")
+    print("insertion = \(insertionIndex)")
   }
   
   
@@ -258,6 +264,11 @@ class DataController : NSObject, CLLocationManagerDelegate
     }
   }
   
+  func update(route:Route)
+  {
+    dataViewController?.updateRoute(route:route)
+  }
+  
   // MARK: - Data methods
   
   func popupActions(for index:Int) -> [UIAlertAction]
@@ -267,9 +278,6 @@ class DataController : NSObject, CLLocationManagerDelegate
     var renumber     = true
     var update       = true
     var delete       = true
-    
-    if insertionPoint?.after?.index  == index { insertAfter = false }
-    if insertionPoint?.before?.index == index { insertBefore = false }
     
     var actions = [UIAlertAction]()
     
@@ -317,11 +325,20 @@ class DataController : NSObject, CLLocationManagerDelegate
   {
     switch state
     {
-    case .Inserting(_):
-      let cand = insertionPoint!.candidate
-      routes.working.insert(insertionPoint!)
-      insertionPoint = InsertionPoint(self.mostRecentLocation, after:cand)
-      dataViewController?.currentView.updateRoute(routes.working)
+    case .Inserting:
+      let cand  = candidatePost!
+      let index = insertionIndex!
+      
+      cand.commit()
+      
+      candidatePost  = Waypoint(self.mostRecentLocation)
+      candidatePost!.insert(after: cand, as: .Candidate)
+      insertionIndex = index + 1
+      
+      redoStack.removeAll()
+      undoStack.append( InsertionAction(self, post:index, at:cand.location, on:routes.working) )
+        
+      dataViewController?.currentView.update(route:routes.working)
 
       lastRecordedPost = currentLocation
       dataViewController?.applyState()
@@ -333,16 +350,42 @@ class DataController : NSObject, CLLocationManagerDelegate
     }
   }
   
-  func undoRecord()
+  // MARK: - Undo/Redo actions
+  
+  func undoLastAction()
   {
-    let doUndo = {
-      self.routes.working.undoInsertion(update:self.insertionPoint)
-      self.dataViewController?.currentView.updateRoute(self.routes.working)
+    if undoStack.isEmpty { return }
+    
+    let action = undoStack.removeLast()
+    
+    redoStack.append(action)
+    
+    action.undo()
+  }
+  
+  func redoLastAction()
+  {
+    if redoStack.isEmpty { return }
+    
+    let action = redoStack.removeLast()
+    
+    undoStack.append(action)
+    
+    action.redo()
+  }
+  
+  func undoInsertion(_ action:InsertionAction)
+  {
+    let doUndo =
+    {
+      action.route.remove(post: action.post)
+      
+      self.dataViewController?.currentView.update(route:self.routes.working)
       
       self.lastRecordedPost = nil
       self.dataViewController?.applyState()
       
-      if self.routes.working.head == nil { self.insertionPoint = nil }
+      self.insertionIndex = action.post
     }
     
     if dataViewController == nil
@@ -351,11 +394,8 @@ class DataController : NSObject, CLLocationManagerDelegate
     }
     else
     {
-      let post = routes.working.insertionHistory.last?.index
-      var title = "Remove post"
-      if post != nil { title = "\(title) \(post!)" }
-      let alert = UIAlertController(title: title,
-                                    message: "Please confirm deleting the most recent post (you will not be able to undo changes)",
+      let alert = UIAlertController(title: "Remove post \(action.post)",
+                                    message: "Confirm deletion",
                                     preferredStyle: .alert)
       
       alert.addAction( UIAlertAction(title: "OK", style: .destructive) { (_:UIAlertAction) in doUndo() } )
@@ -363,6 +403,11 @@ class DataController : NSObject, CLLocationManagerDelegate
       
       dataViewController!.present(alert, animated: true)
     }
+  }
+  
+  func redoInsertion(_ action:InsertionAction)
+  {
+    
   }
   
   // MARK: - Location Manager Delegate
@@ -377,10 +422,10 @@ class DataController : NSObject, CLLocationManagerDelegate
     if locations.isEmpty { return }
     currentLocation = locations[locations.endIndex-1]
     
-    if let cand = insertionPoint?.candidate
+    if let cand = candidatePost
     {
       cand.location = currentLocation!.coordinate
-      dataViewController?.currentView.updateCandidate(cand)
+      dataViewController?.currentView.update(candidate:cand)
     }
     
     dataViewController?.handleLocationUpdate()

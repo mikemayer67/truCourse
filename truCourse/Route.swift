@@ -21,9 +21,6 @@ class Route
   
   private(set) var head           : Waypoint?
   
-  private(set) var insertionHistory = [Waypoint]()
- 
-  
   var dirty  : Bool = false
   var locked : Bool = false
   
@@ -42,6 +39,11 @@ class Route
   subscript(index: Int) -> Waypoint?
   {
     return head?.find(index:index)
+  }
+  
+  func find(post: Int) -> Waypoint?
+  {
+    return head?.find(index:post)
   }
   
   var tail : Waypoint?
@@ -115,40 +117,44 @@ class Route
     dirty  = false
   }
   
-  func insert(_ ip : InsertionPoint)
+  func insert(post:Int, at location:CLLocationCoordinate2D)
   {
-    let cand = ip.candidate
-    cand.commit()
+    let new_wp = Waypoint(location)
     
-    if head == nil || (ip.before != nil && ip.before! === head)
+    if self.head == nil
     {
-      head = cand
+      if post != 1 { fatalError("Can only insert post #1 into empty route") }
+    }
+    else if post == 1
+    {
+      new_wp.insert(before: self.head!)
+      self.head = new_wp
+    }
+    else
+    {
+      let ref_wp = self.head?.find(index:post-1)
+      if ref_wp == nil  { fatalError("route must contain post #\(post-1) to add post #\(post)") }
+      new_wp.insert(after: ref_wp!)
     }
     
-    insertionHistory.append(cand)
-    
-    head!.reindex()
+    self.head!.reindex()
   }
   
-  func undoInsertion(update insertionPoint:InsertionPoint?)
+  func remove(post:Int)
   {
-    if insertionHistory.isEmpty { return }
-        
-    let wp = insertionHistory.removeLast()
+    let wp = head?.find(index: post)
+    if wp == nil  { fatalError("route must contain post #\(post) to remove it") }
     
-    insertionPoint?.relink(dropping:wp)
-    
-    if head === wp
+    if wp === head
     {
-      head = wp.next
-      if head === wp
+      head = wp!.next
+      if wp === head   // only post remainin
       {
         head = nil
-      } // head was only waypoint left in route
+      }
     }
     
-    wp.unlink()
-    
+    wp!.unlink()
     head?.reindex()
   }
   

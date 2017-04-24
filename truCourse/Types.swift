@@ -42,4 +42,28 @@ enum AppStateTransition
   case Edit(Int)      // index indicates which post to begin editing
   case Cancel         // stop inserting or editing candidate waypoint
   case Save(Bool)     // flag indicating whether to lock the route for futuere edits
+  
+  var string : String
+  {
+    var rval : String!
+    switch self
+    {
+    case .Authorization(let status):
+      switch status
+      {
+      case .authorizedAlways: rval = "Authorization (Always)"
+      case .authorizedWhenInUse: rval = "Authorization (When in Use)"
+      case .denied: rval = "Authorization (Denied)"
+      case .notDetermined: rval = "Authorization (Not determined)"
+      case .restricted: rval = "Authorization (restricted)"
+      }
+    case .Start:               rval = "Start"
+    case .Enabled(let state):  rval = "Enabled(\(state))"
+    case .Insert(let index):   rval = "Insert(\(index))"
+    case .Edit(let index):     rval = "Edit(\(index))"
+    case .Cancel:              rval = "Cancel"
+    case .Save(let flag):      rval = "Save(\(flag))"
+    }
+    return rval
+  }
 }

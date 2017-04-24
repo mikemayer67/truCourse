@@ -97,7 +97,7 @@ extension UIViewController
     }
   }
   
-  func updateRoute(_ route:Route)
+  func update(route:Route)
   {
     if let vv = self as? VisualizationView
     {
@@ -105,11 +105,11 @@ extension UIViewController
     }
   }
   
-  func updateCandidate(_ cand:Waypoint?)
+  func update(candidate:Waypoint?)
   {
     if let vv = self as? VisualizationView
     {
-      vv._updateCandidate(cand)
+      vv._updateCandidate(candidate)
     }
   }
 }

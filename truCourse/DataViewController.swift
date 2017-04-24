@@ -136,6 +136,13 @@ class DataViewController :
   {
     for (_,controller) in visualizationControllers { controller.applyOptions() }
   }
+  
+  // MARK: - Passtroughs to View Controller
+  
+  func updateRoute(route:Route)
+  {
+    currentView.update(route:route)
+  }
 
   // MARK: - Page View Data Source
   
@@ -200,7 +207,7 @@ class DataViewController :
           if Date().timeIntervalSince(lastRecordTime!) <= options.shakeUndoTimeout!
           {
             lastRecordTime = nil
-            dataController.undoRecord()
+            dataController.undoLastAction()
           }
         }
       }
@@ -307,7 +314,7 @@ class DataViewController :
   
   func handleUndo(_ sender: UIBarButtonItem)
   {
-    dataController.undoRecord()
+    dataController.undoLastAction()
   }
   
   func handleShare(_ sender: UIBarButtonItem)
