@@ -214,11 +214,14 @@ class Waypoint
     {
       if prev!.cand != nil
       {
-        guard prev!.cand!.next === self else
-        { fatalError("Improperly linked candidate encountered") }
-        
         prev!.cand!.next = next
         prev!.cand!.update()
+      }
+      
+      if cand != nil
+      {
+        prev!.cand = cand
+        cand!.prev = prev
       }
       
       prev!.next = next

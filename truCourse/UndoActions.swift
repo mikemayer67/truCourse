@@ -47,3 +47,26 @@ class InsertionAction : UndoableAction
     dataController.redoInsertion(self)
   }
 }
+
+class DeletionAction : UndoableAction
+{
+  let post           : Int
+  let location       : CLLocationCoordinate2D
+  
+  init(_ dc:DataController, post:Int, at location:CLLocationCoordinate2D, on route:Route)
+  {
+    self.post           = post
+    self.location       = location
+    super.init(dc, on:route)
+  }
+  
+  override func undo()
+  {
+    dataController.undoDeletion(self)
+  }
+  
+  override func redo()
+  {
+    dataController.redoDeletion(self)
+  }
+}

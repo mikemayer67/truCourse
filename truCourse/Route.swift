@@ -159,7 +159,7 @@ class Route
     if wp === head
     {
       head = wp!.next
-      if wp === head   // only post remainin
+      if wp === head   // only post remaining
       {
         head = nil
       }

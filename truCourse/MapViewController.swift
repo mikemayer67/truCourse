@@ -123,14 +123,15 @@ class MapViewController: UIViewController, VisualizationView, MKMapViewDelegate,
     let post     = postView.annotation as! PostAnnotation
     let index    = post.waypoint.index!
     
+    let actions = dataController!.popupActions(for: index)
+    
+    if actions == nil { return }
+    
     let alert = UIAlertController( title: "Post \(index) selected",
                                    message: "What do you want to do?",
                                    preferredStyle: .actionSheet)
     
-    for action in dataController!.popupActions(for: index)
-    {
-      alert.addAction(action)
-    }
+    actions!.forEach { alert.addAction($0) }
   
     alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
 

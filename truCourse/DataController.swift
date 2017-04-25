@@ -12,7 +12,7 @@ import CoreLocation
 
 class DataController : NSObject, CLLocationManagerDelegate
 {
-  @IBOutlet var dataViewController : DataViewController?
+  @IBOutlet var dataViewController : DataViewController!
   
   let locationManager = CLLocationManager()
   
@@ -151,11 +151,12 @@ class DataController : NSObject, CLLocationManagerDelegate
     case .Insert(let index):
       print("Transition = insert(\(index))")
       
-      insertionIndex = index
+      if index != nil { insertionIndex = index }
+      
       candidatePost = nil
       state = .Inserting
       
-    case .Cancel:
+    case .Pause:
       print("Transition = cancel");
       
       switch state
@@ -188,13 +189,13 @@ class DataController : NSObject, CLLocationManagerDelegate
       print("State = paused")
       updateTrackingState(authorized:true, enabled:false)
       candidatePost = nil
-      dataViewController?.currentView.update(candidate:nil)
+      dataViewController.currentView.update(candidate:nil)
 
     case .Idle:
       print("State = idle")
       updateTrackingState(authorized: true, enabled: true)
       candidatePost = nil
-      dataViewController?.currentView.update(candidate:nil)
+      dataViewController.currentView.update(candidate:nil)
   
     case .Inserting:
       print("State = inserting")
@@ -220,7 +221,7 @@ class DataController : NSObject, CLLocationManagerDelegate
         }
       }
       
-      dataViewController?.currentView.update(candidate:candidatePost)
+      dataViewController.currentView.update(candidate:candidatePost)
   
     case .Editing:
       print("State = editing")
@@ -228,7 +229,7 @@ class DataController : NSObject, CLLocationManagerDelegate
       locked = false
     }
     
-    dataViewController?.applyState()
+    dataViewController.applyState()
     
     print("insertion = \(insertionIndex)")
   }
@@ -266,13 +267,15 @@ class DataController : NSObject, CLLocationManagerDelegate
   
   func update(route:Route)
   {
-    dataViewController?.updateRoute(route:route)
+    dataViewController.updateRoute(route:route)
   }
   
   // MARK: - Data methods
   
-  func popupActions(for index:Int) -> [UIAlertAction]
+  func popupActions(for index:Int) -> [UIAlertAction]?
   {
+    let dvc = self.dataViewController!
+    
     var insertAfter  = true
     var insertBefore = true
     var renumber     = true
@@ -283,18 +286,22 @@ class DataController : NSObject, CLLocationManagerDelegate
     
     if insertBefore
     {
-      let insertion = { self.updateState(.Insert(index)) }
-      actions.append( UIAlertAction(title: "Insert new post before it",
-                                    style: .default,
-                                    handler: { _ in self.dataViewController?.confirmUnlock(insertion) } ) )
+      let alertAction = UIAlertAction(title: "Insert new post before it", style:.default, handler:
+          { (_:UIAlertAction)->Void in
+            dvc.confirmAction(type:.Insertion, action: { self.updateState(.Insert(index)) } ) }
+      )
+      
+      actions.append( alertAction )
     }
     
     if insertAfter
     {
-      let insertion = { self.updateState(.Insert(index+1)) }
-      actions.append( UIAlertAction(title: "Insert new post after it",
-                                    style: .default,
-                                    handler: { _ in self.dataViewController?.confirmUnlock(insertion) } ) )
+      
+      let alertAction = UIAlertAction(title: "Insert new post after it", style:.default, handler:
+          { (_:UIAlertAction)->Void in
+            dvc.confirmAction(type:.Insertion, action: { self.updateState(.Insert(index+1)) } ) } )
+      
+      actions.append( alertAction )
     }
     
     if renumber
@@ -313,9 +320,12 @@ class DataController : NSObject, CLLocationManagerDelegate
     
     if delete
     {
-      actions.append( UIAlertAction(title: "Delete it...",
-                                    style: .destructive,
-                                    handler: { (action:UIAlertAction) in print("delete post \(index)") } ) )
+      
+      let alertAction = UIAlertAction(title: "Delete it...", style:.destructive, handler:
+        { (_:UIAlertAction)->Void in
+          dvc.confirmAction(type:.Deletion(index), action: { self.delete(post:index) } ) } )
+      
+      actions.append( alertAction )
     }
   
     return actions
@@ -329,25 +339,51 @@ class DataController : NSObject, CLLocationManagerDelegate
       let cand  = candidatePost!
       let index = insertionIndex!
       
-      routes.working.commit(cand, at:index)
+      let route = routes.working!
+      
+      route.commit(cand, at:index)
       
       candidatePost  = Waypoint(self.mostRecentLocation)
       candidatePost!.insert(after: cand, as: .Candidate)
       insertionIndex = index + 1
       
       redoStack.removeAll()
-      undoStack.append( InsertionAction(self, post:index, at:cand.location, on:routes.working) )
+      undoStack.append( InsertionAction(self, post:index, at:cand.location, on:route) )
         
-      dataViewController?.currentView.update(route:routes.working)
+      dataViewController.currentView.update(route:route)
 
       lastRecordedPost = currentLocation
-      dataViewController?.applyState()
+      dataViewController.applyState()
       
     case .Editing(let index):
       print("Need to handle record during editing")
     default:
       fatalError("Recording should only be called in insert or edit mode")
     }
+  }
+  
+  func delete(post:Int)
+  {
+    print("delete post \(post)");
+    
+    let route = routes.working!
+    let wp    = route.find(post: post)!
+    
+    redoStack.removeAll()
+    undoStack.append( DeletionAction(self, post: post, at: wp.location, on: route) )
+    
+    route.remove(post: post)
+    
+    if insertionIndex != nil
+    {
+      if insertionIndex! > post { insertionIndex = insertionIndex! - 1 }
+    }
+    
+    dataViewController.currentView.update(route: route)
+    
+    lastRecordedPost = nil
+    dataViewController.applyState()
+
   }
   
   // MARK: - Undo/Redo actions
@@ -377,33 +413,22 @@ class DataController : NSObject, CLLocationManagerDelegate
   func undoInsertion(_ action:InsertionAction)
   {
     print("Undo Insertion: \(action.post)")
-    let doUndo =
-    {
-      action.route.remove(post: action.post)
-      
-      self.dataViewController?.currentView.update(route:self.routes.working)
-      
-      self.lastRecordedPost = nil
-      self.dataViewController?.applyState()
-      
-      self.insertionIndex = action.post
-    }
     
-    if dataViewController == nil
-    {
-      doUndo()
-    }
-    else
-    {
-      let alert = UIAlertController(title: "Remove post \(action.post)",
-                                    message: "Confirm deletion",
-                                    preferredStyle: .alert)
-      
-      alert.addAction( UIAlertAction(title: "OK", style: .destructive) { (_:UIAlertAction) in doUndo() } )
-      alert.addAction( UIAlertAction(title: "Cancel", style: .cancel) )
-      
-      dataViewController!.present(alert, animated: true)
-    }
+    dataViewController.confirmAction(
+      type: .Deletion(action.post),
+      action: {
+        let route = action.route
+        route.remove(post: action.post)
+        self.dataViewController.currentView.update(route:route)
+        self.lastRecordedPost = nil
+        self.dataViewController.applyState()
+        self.insertionIndex = action.post
+      },
+      failure: {
+        let ua = self.redoStack.removeLast()
+        self.undoStack.append(ua)
+      }
+    )
   }
   
   func redoInsertion(_ action:InsertionAction)
@@ -412,11 +437,50 @@ class DataController : NSObject, CLLocationManagerDelegate
     
     action.route.insert(post: action.post, at: action.location)
     
-    dataViewController?.currentView.update(route: action.route)
+    dataViewController.currentView.update(route: action.route)
     
     lastRecordedPost = nil
-    dataViewController?.applyState()
+    dataViewController.applyState()
     insertionIndex = action.post + 1
+  }
+  
+  func undoDeletion(_ action:DeletionAction)
+  {
+    print("Undo Deletion: \(action.post)")
+    
+    action.route.insert(post: action.post, at: action.location)
+    
+    if insertionIndex != nil,
+      insertionIndex! >= action.post
+    {
+      insertionIndex = insertionIndex! + 1
+    }
+    
+    print("New insertion index: \(insertionIndex)")
+    
+    dataViewController.currentView.update(route:action.route)
+    
+    lastRecordedPost = nil
+    dataViewController.applyState()
+  }
+  
+  func redoDeletion(_ action:DeletionAction)
+  {
+    print("Redo Deletion: \(action.post)")
+    
+    action.route.remove(post:action.post)
+    
+    if insertionIndex != nil
+    {
+      if insertionIndex! > action.post { insertionIndex = insertionIndex! - 1 }
+    }
+    print("New insertion index: \(insertionIndex)")
+
+    
+    dataViewController.currentView.update(route: action.route)
+    
+    lastRecordedPost = nil
+    dataViewController.applyState()
   }
   
   // MARK: - Location Manager Delegate
@@ -434,10 +498,10 @@ class DataController : NSObject, CLLocationManagerDelegate
     if let cand = candidatePost
     {
       cand.location = currentLocation!.coordinate
-      dataViewController?.currentView.update(candidate:cand)
+      dataViewController.currentView.update(candidate:cand)
     }
     
-    dataViewController?.handleLocationUpdate()
+    dataViewController.handleLocationUpdate()
   }
   
   func locationManager(_ manager: CLLocationManager, didUpdateHeading newHeading: CLHeading)

@@ -269,7 +269,7 @@ class DataViewController :
       toolbar?.setItems(pausedToolbarItems, animated: true)
       
     case .Idle:
-      activeToolbarItems[0]  = offBarItem
+      pausedToolbarItems[0]  = offBarItem
       startBarItem.isEnabled = true
       undoBarItem.isEnabled  = dataController.canUndo
       redoBarItem.isEnabled  = dataController.canRedo
@@ -311,12 +311,13 @@ class DataViewController :
   
   func handleStart(_ sender: UIBarButtonItem)
   {
-    self.confirmUnlock { self.dataController.updateState(.Insert(nil)) }
+    self.confirmAction(type: .Insertion,
+                       action: { self.dataController.updateState(.Insert(nil)) } )
   }
   
   func handlePause(_ sender: UIBarButtonItem)
   {
-    dataController.updateState(.Cancel)
+    dataController.updateState(.Pause)
   }
   
   func handleRecord(_ sender: UIBarButtonItem)
@@ -345,18 +346,48 @@ class DataViewController :
     print("DVC handleSave")
   }
   
-  // MARK: - Unlock Confirmation
+  // MARK: - Confirmation Dialog
   
-  func confirmUnlock( _ action : @escaping ()->Void )
+  func confirmAction(type:ActionType, action:@escaping ()->Void, failure:@escaping ()->Void)
   {
-    if dataController.locked
+    var confirmationRequired = true
+    var title   : String?
+    var message : String?
+    
+    switch type
     {
-      let alert = UIAlertController(title: "Unlock Route",
-                                    message: "Please confirm updating the saved route",
-                                    preferredStyle: .alert)
+    case .Insertion:
       
-      alert.addAction( UIAlertAction(title: "OK", style: .destructive) { (_:UIAlertAction) in action() } )
-      alert.addAction( UIAlertAction(title: "Cancel", style: .cancel) )
+      if dataController.locked
+      {
+        title = "Unlock route"
+        message = "Please confirm updating the saved route"
+      }
+      else
+      {
+        confirmationRequired = false
+      }
+      
+    case .Deletion(let post):
+      
+      if dataController.locked
+      {
+        title = "Unlock and Delete Post \(post)"
+        message = "Please confirm deleting post \(post) from the saved route.  (This will unlock the route for future modifications)"
+      }
+      else
+      {
+        title = "Delete Post \(post)"
+        message = "Please confirm deleting post \(post)"
+      }
+    }
+    
+    if confirmationRequired
+    {
+      let alert = UIAlertController(title:title, message:message, preferredStyle: .alert)
+      
+      alert.addAction( UIAlertAction(title: "OK",    style: .destructive) { (_:UIAlertAction) in action() } )
+      alert.addAction( UIAlertAction(title: "Cancel", style: .cancel)     { (_:UIAlertAction) in failure() } )
       
       self.present(alert, animated: true)
     }
@@ -364,6 +395,10 @@ class DataViewController :
     {
       action()
     }
-    
+  }
+  
+  func confirmAction(type:ActionType, action: @escaping ()->Void)
+  {
+    confirmAction(type:type, action:action, failure:{})
   }
 }
