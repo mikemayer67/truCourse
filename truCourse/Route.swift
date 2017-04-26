@@ -51,6 +51,18 @@ class Route
     return head?.prev
   }
 
+  func restart(at post:Int) -> Bool
+  {
+    var rval = false
+    if let wp = head?.find(index: post)
+    {
+      wp.reindex()
+      head = wp
+      rval = true
+    }
+    return rval
+  }
+  
   // MARK: - Constructors and Encoding
 
   init()

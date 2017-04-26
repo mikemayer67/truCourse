@@ -37,15 +37,8 @@ class InsertionAction : RouteEditAction
     super.init(dc, on:route)
   }
   
-  override func undo()
-  {
-    dataController.undo(insertion:self)
-  }
-
-  override func redo()
-  {
-    dataController.redo(insertion:self)
-  }
+  override func undo() { dataController.undo(insertion:self) }
+  override func redo() { dataController.redo(insertion:self) }
 }
 
 class DeletionAction : RouteEditAction
@@ -60,13 +53,20 @@ class DeletionAction : RouteEditAction
     super.init(dc, on:route)
   }
   
-  override func undo()
+  override func undo() { dataController.undo(deletion:self) }
+  override func redo() { dataController.redo(deletion:self) }
+}
+
+class NewStartAction : RouteEditAction
+{
+  let post : Int
+  
+  init(_ dc:DataController, post:Int, on route:Route)
   {
-    dataController.undo(deletion:self)
+    self.post = post
+    super.init(dc,on:route)
   }
   
-  override func redo()
-  {
-    dataController.redo(deletion:self)
-  }
+  override func undo() { dataController.undo(newStart:self) }
+  override func redo() { dataController.redo(newStart:self) }
 }

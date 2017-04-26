@@ -72,4 +72,6 @@ enum ActionType
 {
   case Insertion
   case Deletion(Int)
+  case NewStart(Int)
+  case ReverseRoute
 }

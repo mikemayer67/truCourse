@@ -351,18 +351,6 @@ class DataViewController :
     
     switch type
     {
-    case .Insertion:
-      
-      if dataController.locked
-      {
-        title = "Unlock route"
-        message = "Please confirm updating the saved route"
-      }
-      else
-      {
-        confirmationRequired = false
-      }
-      
     case .Deletion(let post):
       
       if dataController.locked
@@ -375,6 +363,19 @@ class DataViewController :
         title = "Delete Post \(post)"
         message = "Please confirm deleting post \(post)"
       }
+      
+    default:
+      
+      if dataController.locked
+      {
+        title = "Unlock route"
+        message = "Please confirm updating the saved route"
+      }
+      else
+      {
+        confirmationRequired = false
+      }
+      
     }
     
     if confirmationRequired
