@@ -45,6 +45,7 @@
 		27C5585B1E5F9578004FF32A /* FactoryDefaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = 27C558591E5F9578004FF32A /* FactoryDefaults.plist */; };
 		27C5585E1E5F97B2004FF32A /* OptionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27C5585D1E5F97B2004FF32A /* OptionsViewController.swift */; };
 		27D509471EA8D227002A5920 /* TrackingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D509461EA8D227002A5920 /* TrackingView.swift */; };
+		27E0985A1EB0219D00FA21D3 /* UndoManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E098591EB0219D00FA21D3 /* UndoManager.swift */; };
 		27E775301E7CA95700091C78 /* World Map_ffffff_25.png in Resources */ = {isa = PBXBuildFile; fileRef = 27E7752F1E7CA95700091C78 /* World Map_ffffff_25.png */; };
 		27E7753C1E7CB84700091C78 /* Play_ffffff_25.png in Resources */ = {isa = PBXBuildFile; fileRef = 27E7753B1E7CB84700091C78 /* Play_ffffff_25.png */; };
 		27E7753E1E7CB85600091C78 /* Pause_ffffff_25.png in Resources */ = {isa = PBXBuildFile; fileRef = 27E7753D1E7CB85600091C78 /* Pause_ffffff_25.png */; };
@@ -102,6 +103,7 @@
 		27C558591E5F9578004FF32A /* FactoryDefaults.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = FactoryDefaults.plist; sourceTree = "<group>"; };
 		27C5585D1E5F97B2004FF32A /* OptionsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OptionsViewController.swift; sourceTree = "<group>"; };
 		27D509461EA8D227002A5920 /* TrackingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrackingView.swift; sourceTree = "<group>"; };
+		27E098591EB0219D00FA21D3 /* UndoManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UndoManager.swift; sourceTree = "<group>"; };
 		27E7752F1E7CA95700091C78 /* World Map_ffffff_25.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "World Map_ffffff_25.png"; sourceTree = "<group>"; };
 		27E7753B1E7CB84700091C78 /* Play_ffffff_25.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Play_ffffff_25.png; sourceTree = "<group>"; };
 		27E7753D1E7CB85600091C78 /* Pause_ffffff_25.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Pause_ffffff_25.png; sourceTree = "<group>"; };
@@ -183,6 +185,7 @@
 				27C5584C1E5F8790004FF32A /* Types.swift */,
 				273DCEB01E7AC11D005AE82E /* Constants.swift */,
 				274B508E1EA9A7C7000A1527 /* Extensions.swift */,
+				27E098591EB0219D00FA21D3 /* UndoManager.swift */,
 				27B10CFD1E6060E3005099BD /* MainController.swift */,
 				27DB65E21E60E2D100498C12 /* DataViews */,
 				278905E21E7961AC00F1B40B /* Data */,
@@ -375,6 +378,7 @@
 				273DCEB11E7AC11D005AE82E /* Constants.swift in Sources */,
 				27C5585E1E5F97B2004FF32A /* OptionsViewController.swift in Sources */,
 				274B508F1EA9A7C7000A1527 /* Extensions.swift in Sources */,
+				27E0985A1EB0219D00FA21D3 /* UndoManager.swift in Sources */,
 				27F74D7A1EA4E7AA008D172A /* PostAnnotation.swift in Sources */,
 				2742AC9E1EAC39AB00B2EC53 /* UndoActions.swift in Sources */,
 				278905E41E7961D100F1B40B /* Waypoint.swift in Sources */,

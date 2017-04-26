@@ -143,10 +143,9 @@ class DataViewController :
     let toolbar = navigationController?.toolbar
     switch dataController.state
     {
-    case .Disabled: toolbar?.setItems(inactiveToolbarItems, animated: true)
-    case .Paused:   fallthrough
-    case .Idle:     toolbar?.setItems(pausedToolbarItems,   animated: true)
-    default:        toolbar?.setItems(  activeToolbarItems, animated: true)
+    case .Disabled:       toolbar?.setItems(inactiveToolbarItems, animated: true)
+    case .Paused, .Idle:  toolbar?.setItems(pausedToolbarItems,   animated: true)
+    default:              toolbar?.setItems(  activeToolbarItems, animated: true)
     }
   }
 
@@ -225,7 +224,7 @@ class DataViewController :
           if Date().timeIntervalSince(lastRecordTime!) <= options.shakeUndoTimeout!
           {
             lastRecordTime = nil
-            dataController.undoLastAction()
+            UndoManager.shared.undo()
           }
         }
       }
@@ -264,21 +263,18 @@ class DataViewController :
     case .Paused:
       pausedToolbarItems[0]  = onBarItem
       startBarItem.isEnabled = false
-      undoBarItem.isEnabled  = dataController.canUndo
-      redoBarItem.isEnabled  = dataController.canRedo
+      undoBarItem.isEnabled  = UndoManager.shared.hasUndo
+      redoBarItem.isEnabled  = UndoManager.shared.hasRedo
       toolbar?.setItems(pausedToolbarItems, animated: true)
       
     case .Idle:
       pausedToolbarItems[0]  = offBarItem
       startBarItem.isEnabled = true
-      undoBarItem.isEnabled  = dataController.canUndo
-      redoBarItem.isEnabled  = dataController.canRedo
+      undoBarItem.isEnabled  = UndoManager.shared.hasUndo
+      redoBarItem.isEnabled  = UndoManager.shared.hasRedo
       toolbar?.setItems(pausedToolbarItems, animated: true)
       
-    case .Inserting:
-      fallthrough
-      
-    case .Editing:
+    case .Inserting, .Editing:
       recordBarItem.isEnabled = dataController.okToRecord
       toolbar?.setItems(activeToolbarItems, animated: true)
 
@@ -291,8 +287,7 @@ class DataViewController :
   {
     switch dataController.state
     {
-    case .Inserting: fallthrough
-    case .Editing:
+    case .Inserting, .Editing:
       recordBarItem.isEnabled = dataController.okToRecord
     default:
       break;
@@ -328,12 +323,12 @@ class DataViewController :
   
   func handleUndo(_ sender: UIBarButtonItem)
   {
-    dataController.undoLastAction()
+    UndoManager.shared.undo()
   }
   
   func handleRedo(_ sender: UIBarButtonItem)
   {
-    dataController.redoLastAction()
+    UndoManager.shared.redo()
   }
   
   func handleShare(_ sender: UIBarButtonItem)

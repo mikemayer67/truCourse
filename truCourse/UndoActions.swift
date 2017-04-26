@@ -9,7 +9,7 @@
 import Foundation
 import CoreLocation
 
-class UndoableAction
+class RouteEditAction : UndoableAction
 {
   let dataController : DataController
   let route          : Route
@@ -25,7 +25,7 @@ class UndoableAction
 }
 
 
-class InsertionAction : UndoableAction
+class InsertionAction : RouteEditAction
 {
   let post           : Int
   let location       : CLLocationCoordinate2D
@@ -39,16 +39,16 @@ class InsertionAction : UndoableAction
   
   override func undo()
   {
-    dataController.undoInsertion(self)
+    dataController.undo(insertion:self)
   }
 
   override func redo()
   {
-    dataController.redoInsertion(self)
+    dataController.redo(insertion:self)
   }
 }
 
-class DeletionAction : UndoableAction
+class DeletionAction : RouteEditAction
 {
   let post           : Int
   let location       : CLLocationCoordinate2D
@@ -62,11 +62,11 @@ class DeletionAction : UndoableAction
   
   override func undo()
   {
-    dataController.undoDeletion(self)
+    dataController.undo(deletion:self)
   }
   
   override func redo()
   {
-    dataController.redoDeletion(self)
+    dataController.redo(deletion:self)
   }
 }

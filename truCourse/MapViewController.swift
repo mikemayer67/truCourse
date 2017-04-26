@@ -61,9 +61,7 @@ class MapViewController: UIViewController, VisualizationView, MKMapViewDelegate,
   {
     switch state
     {
-    case .Uninitialized: fallthrough
-    case .Disabled:      fallthrough
-    case .Paused:
+    case .Uninitialized, .Disabled, .Paused:
       trackingView.pause()
       mapView.showsUserLocation = false
       mapView.setUserTrackingMode(.none, animated: false)
