@@ -236,6 +236,26 @@ class Waypoint
     next = nil
   }
   
+  func reverse(thru tail:Waypoint? = nil)
+  {
+    if self === tail { return }
+    
+    self.next = self.prev
+    self.next!.reverse( thru: tail ?? self )
+    self.next!.prev = self
+    
+    if let cand = self.next!.cand
+    {
+      self.cand = cand
+      self.next!.cand = nil
+      cand.next = self.next
+      cand.prev = self
+      cand.update()
+    }
+    
+    self.update()
+  }
+  
   // MARK: - Route iterator and iterated properties
   
   var length : Int

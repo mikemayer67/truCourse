@@ -70,3 +70,9 @@ class NewStartAction : RouteEditAction
   override func undo() { dataController.undo(newStart:self) }
   override func redo() { dataController.redo(newStart:self) }
 }
+
+class ReverseRouteAction : RouteEditAction
+{
+  override func undo() { dataController.reverse(route:self.route) }
+  override func redo() { dataController.reverse(route:self.route) }
+}

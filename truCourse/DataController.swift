@@ -270,7 +270,12 @@ class DataController : NSObject, CLLocationManagerDelegate
       actions.append(
         UIAlertAction(title:"reverse route", style:.default, handler:
           { (_:UIAlertAction)->Void in
-            dvc.confirmAction(type: .ReverseRoute, action: { self.reverseRoute() } )
+            dvc.confirmAction(type: .ReverseRoute, action:
+              {
+                let action = ReverseRouteAction(self, on:self.routes.working!)
+                action.redo()
+                UndoManager.shared.add(action)
+              } )
           } ) )
       
       actions.append(
@@ -284,7 +289,11 @@ class DataController : NSObject, CLLocationManagerDelegate
       actions.append(
         UIAlertAction(title: "make this first post", style:.default, handler:
           { (_:UIAlertAction)->Void in
-            dvc.confirmAction(type: .NewStart(post), action: { self.restart(at:post) } )
+            dvc.confirmAction(type: .NewStart(post), action:
+              {
+                let action = NewStartAction(self, post:post, on:self.routes.working!)
+                if self.redo(newStart: action) { UndoManager.shared.add(action) }
+              } )
           } ) )
     }
     
@@ -309,7 +318,13 @@ class DataController : NSObject, CLLocationManagerDelegate
     actions.append(
       UIAlertAction(title: "delete post \(post)...", style:.destructive, handler:
         { (_:UIAlertAction)->Void in
-          dvc.confirmAction(type:.Deletion(post), action: { self.delete(post:post) } )
+          dvc.confirmAction(type:.Deletion(post), action:
+            {
+              let route    = self.routes.working!
+              let location = route.find(post:post)!.location
+              let action = DeletionAction(self, post:post, at:location, on:route)
+              if self.redo(deletion: action) { UndoManager.shared.add(action) }
+            } )
         } ) )
   
     return actions
@@ -332,70 +347,36 @@ class DataController : NSObject, CLLocationManagerDelegate
       insertionIndex = index + 1
 
       UndoManager.shared.add( InsertionAction(self, post:index, at:cand.location, on:route) )
-        
-      dataViewController.currentView.update(route:route)
 
       lastRecordedPost = currentLocation
+      dataViewController.currentView.update(route:route)
       dataViewController.applyState()
       
     case .Editing(let index):
       print("Need to handle record during editing")
+      
     default:
       fatalError("Recording should only be called in insert or edit mode")
     }
   }
   
-  func delete(post:Int)
+  func reverse(route:Route)
   {
-    let route = routes.working!
-    let wp    = route.find(post: post)!
-    
-    UndoManager.shared.add( DeletionAction(self, post: post, at: wp.location, on: route) )
-    
-    route.remove(post: post)
-    
+    route.reverse()
     if insertionIndex != nil
     {
-      if insertionIndex! > post { insertionIndex = insertionIndex! - 1 }
+      let n = route.count
+      insertionIndex = (n+3) - insertionIndex!
     }
-    
-    dataViewController.currentView.update(route: route)
-    
-    lastRecordedPost = nil
+    dataViewController.currentView.update(route:route)
     dataViewController.applyState()
-
   }
   
-  func reverseRoute()
-  {
-    print("reverse route")
-  }
-  
-  func restart(at post:Int)
-  {
-    print("restart at: \(post)")
-    
-    let route = routes.working!
-    
-    if route.restart(at: post)
-    {
-      if insertionIndex != nil
-      {
-        let n = route.count
-        insertionIndex = ( insertionIndex! - post + n ) % n + 1
-      }
-      
-      UndoManager.shared.add(NewStartAction(self, post:post, on:route) )
-      dataViewController.currentView.update(route: route)
-      
-      lastRecordedPost = nil
-      dataViewController.applyState()
-    }
-  }
   
   // MARK: - Undo/Redo actions
   
-  func undo(insertion:InsertionAction)
+  @discardableResult
+  func undo(insertion:InsertionAction) -> Bool
   {
     dataViewController.confirmAction(
       type: .Deletion(insertion.post),
@@ -411,9 +392,12 @@ class DataController : NSObject, CLLocationManagerDelegate
         UndoManager.shared.cancel(undo:insertion)
       }
     )
+    
+    return true
   }
   
-  func redo(insertion:InsertionAction)
+  @discardableResult
+  func redo(insertion:InsertionAction) -> Bool
   {
     let route = insertion.route
     
@@ -424,9 +408,12 @@ class DataController : NSObject, CLLocationManagerDelegate
     lastRecordedPost = nil
     dataViewController.applyState()
     insertionIndex = insertion.post + 1
+    
+    return true
   }
   
-  func undo(deletion:DeletionAction)
+  @discardableResult
+  func undo(deletion:DeletionAction) -> Bool
   {
     let route = deletion.route
     
@@ -439,12 +426,13 @@ class DataController : NSObject, CLLocationManagerDelegate
     }
     
     dataViewController.currentView.update(route:route)
-    
-    lastRecordedPost = nil
     dataViewController.applyState()
+    
+    return true
   }
   
-  func redo(deletion:DeletionAction)
+  @discardableResult
+  func redo(deletion:DeletionAction) -> Bool
   {
     let route = deletion.route
     
@@ -456,20 +444,23 @@ class DataController : NSObject, CLLocationManagerDelegate
     }
     
     dataViewController.currentView.update(route: route)
-    
-    lastRecordedPost = nil
     dataViewController.applyState()
+    
+    return true
   }
   
-  func undo(newStart:NewStartAction)
-  {    
+  @discardableResult
+  func undo(newStart:NewStartAction) -> Bool
+  {
     let post  = newStart.post
     let route = newStart.route
     
     let n       = route.count
     let oldPost =  ( n + 1 - post)%n + 1
     
-    if( route.restart(at: oldPost) )
+    let rval = route.restart(at: oldPost)
+      
+    if rval
     {
       if insertionIndex != nil
       {
@@ -479,16 +470,20 @@ class DataController : NSObject, CLLocationManagerDelegate
       dataViewController.currentView.update(route: route)
       dataViewController.applyState()
     }
+    return rval
   }
   
-  func redo(newStart:NewStartAction)
+  @discardableResult
+  func redo(newStart:NewStartAction) -> Bool
   {
     let post  = newStart.post
     let route = newStart.route
     
     let n       = route.count
     
-    if( route.restart(at: post) )
+    let rval = route.restart(at: post)
+    
+    if rval
     {
       if insertionIndex != nil
       {
@@ -498,6 +493,7 @@ class DataController : NSObject, CLLocationManagerDelegate
       dataViewController.currentView.update(route: route)
       dataViewController.applyState()
     }
+    return rval
   }
   
   // MARK: - Location Manager Delegate

@@ -63,6 +63,18 @@ class Route
     return rval
   }
   
+  @discardableResult
+  func reverse() -> Bool
+  {
+    if head == nil         { return false }
+    if head!.next === head { return false }
+    
+    head!.reverse()
+    head!.reindex()
+    
+    return true
+  }
+  
   // MARK: - Constructors and Encoding
 
   init()
