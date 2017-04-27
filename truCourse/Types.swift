@@ -38,9 +38,7 @@ enum AppStateTransition
   case Start
   case Enabled(Bool)  // user starting/pausing use of location services
   case Insert(Int?)   // location to begin insertion (nil inserts at end)
-  case Edit(Int)      // index indicates which post to begin editing
   case Pause          // stop inserting or editing candidate waypoint
-  case Save(Bool)     // flag indicating whether to lock the route for futuere edits
   
   var string : String
   {
@@ -59,9 +57,7 @@ enum AppStateTransition
     case .Start:               rval = "Start"
     case .Enabled(let state):  rval = "Enabled(\(state))"
     case .Insert(let index):   rval = "Insert(\(index))"
-    case .Edit(let index):     rval = "Edit(\(index))"
     case .Pause:               rval = "Pause"
-    case .Save(let flag):      rval = "Save(\(flag))"
     }
     return rval
   }

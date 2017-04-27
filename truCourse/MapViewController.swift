@@ -109,9 +109,7 @@ class MapViewController: UIViewController, VisualizationView, MKMapViewDelegate,
   
   func handlePopup(_ sender:UILongPressGestureRecognizer)
   {
-    guard dataController != nil else { return }
-    
-    print("handlePopup: \(sender.state.rawValue)")
+    guard dataController != nil  else { return }
     guard sender.state == .began else { return }
     
     sender.isEnabled = false
@@ -133,7 +131,7 @@ class MapViewController: UIViewController, VisualizationView, MKMapViewDelegate,
   
     alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
 
-    self.present(alert, animated:true) { print("popup posted") }
+    self.present(alert, animated:true)
   }
   
   // MARK: - Route update

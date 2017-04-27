@@ -95,7 +95,6 @@ class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate
     switch transition
     {
     case .Start:
-      print("Transition = start")
       switch self.state
       {
       case .Uninitialized:
@@ -111,7 +110,6 @@ class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate
       }
       
     case .Authorization(let status):
-      print("Transition = \(transition.string)")
       if status == .authorizedAlways || status == .authorizedWhenInUse
       {
         if !trackingAuthorized
@@ -136,21 +134,16 @@ class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate
       }
       
     case .Enabled(let userEnabled):
-      print("Transition = enabled(\(userEnabled))")
       if userEnabled { state = .Idle   }
       else           { state = .Paused }
       
     case .Insert(let index):
-      print("Transition = insert(\(index))")
-      
       if index != nil { insertionIndex = index }
       
       candidatePost = nil
       state = .Inserting
       
     case .Pause:
-      print("Transition = cancel");
-      
       switch state
       {
       case .Inserting(_):
@@ -158,36 +151,27 @@ class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate
       default:
         fatalError("Pause button should not be visible unless in .Insert or .Edit state")
       }
-      
-    default:
-      print("Transition = ???")
-      print("DC need to implment transition \(transition)")
     }
     
     switch state
     {
     case .Uninitialized:
-      print("State = uninitialized")
       break
       
     case .Disabled:
-      print("State = disabled")
       updateTrackingState(authorized:false, enabled:nil)
   
     case .Paused:
-      print("State = paused")
       updateTrackingState(authorized:true, enabled:false)
       candidatePost = nil
       dataViewController.removeCandidate()
 
     case .Idle:
-      print("State = idle")
       updateTrackingState(authorized: true, enabled: true)
       candidatePost = nil
       dataViewController.removeCandidate()
   
     case .Inserting:
-      print("State = inserting")
       updateTrackingState(authorized: true, enabled: true)
       locked = false
       
@@ -214,8 +198,6 @@ class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate
     }
     
     dataViewController.applyState()
-    
-    print("insertion = \(insertionIndex)")
   }
   
   
@@ -367,14 +349,6 @@ class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate
     
     dataViewController.parent!.present(rc, animated: true)
   }
-  
-  /*
-  func renumber(post:Int, as newPost:Int)
-  {
-    print("renumber post \(post) as \(newPost)")
-  }
-  */
-  
   
   // MARK: - Undo/Redo actions
   

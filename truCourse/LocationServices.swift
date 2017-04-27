@@ -42,8 +42,6 @@ class LocationServices : NSObject, CLLocationManagerDelegate
   
   func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus)
   {
-    print("LM: Authorization Changed: \(status.rawValue)")
-
     self.status = status
     Notification.enqueue(.locationAuthorizationChanged, postingStyle: .asap)
   }
