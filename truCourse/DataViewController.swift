@@ -156,9 +156,20 @@ class DataViewController :
   
   // MARK: - Passtroughs to View Controller
   
-  func updateRoute(route:Route)
+  func updateRoute(_ route:Route)
   {
     currentView.update(route:route)
+    self.applyState()
+  }
+  
+  func updateCandidate(_ candidate:Waypoint)
+  {
+    currentView.update(candidate:candidate)
+  }
+  
+  func removeCandidate()
+  {
+    currentView.update(candidate:nil)
   }
 
   // MARK: - Page View Data Source

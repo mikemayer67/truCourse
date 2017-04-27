@@ -177,13 +177,13 @@ class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate
       print("State = paused")
       updateTrackingState(authorized:true, enabled:false)
       candidatePost = nil
-      dataViewController.currentView.update(candidate:nil)
+      dataViewController.removeCandidate()
 
     case .Idle:
       print("State = idle")
       updateTrackingState(authorized: true, enabled: true)
       candidatePost = nil
-      dataViewController.currentView.update(candidate:nil)
+      dataViewController.removeCandidate()
   
     case .Inserting:
       print("State = inserting")
@@ -209,7 +209,7 @@ class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate
         }
       }
       
-      dataViewController.currentView.update(candidate:candidatePost)
+      dataViewController.updateCandidate(candidatePost!)
   
     case .Editing:
       print("State = editing")
@@ -251,11 +251,6 @@ class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate
     {
       locationManager.stopUpdatingLocation()
     }
-  }
-  
-  func update(route:Route)
-  {
-    dataViewController.updateRoute(route:route)
   }
   
   // MARK: - Data methods
@@ -353,8 +348,7 @@ class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate
       UndoManager.shared.add( InsertionAction(self, post:index, at:cand.location, on:route) )
 
       lastRecordedPost = currentLocation
-      dataViewController.currentView.update(route:route)
-      dataViewController.applyState()
+      dataViewController.updateRoute(route)
       
     case .Editing(let index):
       print("Need to handle record during editing")
@@ -396,7 +390,7 @@ class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate
       action: {
         let route = insertion.route
         route.remove(post: insertion.post)
-        self.dataViewController.currentView.update(route:route)
+        self.dataViewController.updateRoute(route)
         self.lastRecordedPost = nil
         self.dataViewController.applyState()
         self.insertionIndex = insertion.post
@@ -416,7 +410,7 @@ class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate
     
     route.insert(post: insertion.post, at: insertion.location)
     
-    dataViewController.currentView.update(route:route)
+    dataViewController.updateRoute(route)
     
     lastRecordedPost = nil
     dataViewController.applyState()
@@ -438,8 +432,7 @@ class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate
       insertionIndex = insertionIndex! + 1
     }
     
-    dataViewController.currentView.update(route:route)
-    dataViewController.applyState()
+    dataViewController.updateRoute(route)
     
     return true
   }
@@ -456,8 +449,7 @@ class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate
       if insertionIndex! > deletion.post { insertionIndex = insertionIndex! - 1 }
     }
     
-    dataViewController.currentView.update(route: route)
-    dataViewController.applyState()
+    dataViewController.updateRoute(route)
     
     return true
   }
@@ -472,7 +464,7 @@ class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate
     let oldPost =  ( n + 1 - post)%n + 1
     
     let rval = route.restart(at: oldPost)
-      
+  
     if rval
     {
       if insertionIndex != nil
@@ -480,8 +472,7 @@ class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate
         insertionIndex = (insertionIndex! - oldPost + n ) % n + 1
       }
       
-      dataViewController.currentView.update(route: route)
-      dataViewController.applyState()
+      dataViewController.updateRoute(route)
     }
     return rval
   }
@@ -503,8 +494,7 @@ class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate
         insertionIndex = (insertionIndex! - post + n ) % n + 1
       }
       
-      dataViewController.currentView.update(route: route)
-      dataViewController.applyState()
+      dataViewController.updateRoute(route)
     }
     return rval
   }
@@ -529,8 +519,7 @@ class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate
       let n = route.count
       insertionIndex = (n+3) - insertionIndex!
     }
-    dataViewController.currentView.update(route:route)
-    dataViewController.applyState()
+    dataViewController.updateRoute(route)
     
     return true
   }
@@ -550,21 +539,21 @@ class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate
   
   func _do(renumberPost oldPost:Int, as newPost:Int, on route:Route) -> Bool
   {
+    let oldState = self.state
+    
+    candidatePost = nil;
+    
     route.renumber(post:oldPost, as:newPost)
     
-    if let oldIndex = insertionIndex
+    switch oldState
     {
-      var newIndex = oldIndex
-      if      oldPost < newPost && oldIndex >= oldPost && oldIndex <= newPost { newIndex = oldIndex - 1 }
-      else if oldPost > newPost && oldIndex >= newPost && oldIndex <= oldPost { newIndex = oldIndex + 1 }
-      
-      print("index changed from \(oldIndex) to \(newIndex)")
-      
-      updateState(.Insert(newIndex))
+    case .Inserting:
+      updateState(.Insert(insertionIndex))
+    default:
+      break
     }
-    
-    dataViewController.currentView.update(route:route)
-    dataViewController.applyState()
+        
+    dataViewController.updateRoute(route)
     
     return true
   }
@@ -584,7 +573,7 @@ class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate
     if let cand = candidatePost
     {
       cand.location = currentLocation!.coordinate
-      dataViewController.currentView.update(candidate:cand)
+      dataViewController.updateCandidate(cand)
     }
     
     dataViewController.handleLocationUpdate()
@@ -629,7 +618,6 @@ class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate
   {
     let oldPost = renumberIndex!
     let newPost = (row+1 < oldPost ? row+1 : row+2)
-    
     
     let action = RenumberPostAction(self, from:oldPost, to:newPost, on:routes.working)
     

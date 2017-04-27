@@ -74,7 +74,7 @@
                   moduleName = "truCourse"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/mike/Desktop/IOS%20Projects/truCourse/truCourse/UndoManager.swift"
-                  timestampString = "514967154.248201"
+                  timestampString = "514989553.909385"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "0"
@@ -89,7 +89,7 @@
                   moduleName = "truCourse"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/mike/Desktop/IOS%20Projects/truCourse/truCourse/UndoManager.swift"
-                  timestampString = "514967154.250835"
+                  timestampString = "514989553.911973"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "0"
@@ -97,22 +97,6 @@
                   offsetFromSymbolStart = "4">
                </Location>
             </Locations>
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "truCourse/DataController.swift"
-            timestampString = "514947815.604095"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "295"
-            endingLineNumber = "295"
-            landmarkName = "popupActions(for:)"
-            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

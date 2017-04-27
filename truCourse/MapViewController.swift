@@ -52,7 +52,7 @@ class MapViewController: UIViewController, VisualizationView, MKMapViewDelegate,
     mapView.mapType    = options.mapType
     mapView.showsScale = options.showScale
     
-    for (_,post) in postAnnotations { post.applyOptions() }
+    for (_,post) in postAnnotations { post.updateTitle() }
   }
   
   // MARK: - State

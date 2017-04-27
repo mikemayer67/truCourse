@@ -13,14 +13,14 @@ import CoreGraphics
 
 /*********************************************
  
- |<-marker width-->|
+      |<-marker width-->|
  
- ---   +-----------------+   ---                 Because of issues with drawing text, I am
+---   +-----------------+   ---                 Because of issues with drawing text, I am
  ^    |                 |    ^                  going to skip using affine transforms to make
  |    |                 |    |                  the coordintes more "natural".  Rather, I am
  |    |                 |    marker height      using my own method to convert the coordinates
- |    |                 |    |                  I would like to use (origin at the point, +y=up]
- |    |                 |    v                  to CoreGraphics coordinates (origin in upper-left, +y=down].
+ |    |                 |    |                  I would like to use (origin at the tip of point, +y=up)
+ |    |                 |    v                  to CoreGraphics coordinates (origin in upper-left, +y=down).
  |    +-----+     +-----+   ---
  |          |     |                             Note that I will also apply a skew to this during
  |          |     |                             the conversion.
@@ -32,9 +32,9 @@ import CoreGraphics
  |           \   /    | point height                 |       1             skew      0 |
  |            \ /     v                          T = |       0             -1        0 |
  v             V     ---                             | image_width/2   image_height  1 |
- ---                                                  +-                               -+
- |<--->|
- post width
+---                                                  +-                               -+
+            |<--->|
+           post width
  
  ***********************************************/
 
@@ -152,10 +152,5 @@ class PostAnnotation : NSObject, MKAnnotation
   {
     self.title    = waypoint.annotationTitle
     self.subtitle = waypoint.annotationSubtitle
-  }
-  
-  func applyOptions()
-  {
-    updateTitle()
   }
 }
