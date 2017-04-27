@@ -73,6 +73,21 @@ class NewStartAction : RouteEditAction
 
 class ReverseRouteAction : RouteEditAction
 {
-  override func undo() { dataController.reverse(route:self.route) }
-  override func redo() { dataController.reverse(route:self.route) }
+  override func undo() { dataController.undo(reverseRoute:self) }
+  override func redo() { dataController.redo(reverseRoute:self) }
+}
+
+class RenumberPostAction : RouteEditAction
+{
+  let oldPost : Int
+  let newPost : Int
+  init(_ dc:DataController, from oldPost:Int, to newPost:Int, on route:Route )
+  {
+    self.oldPost = oldPost
+    self.newPost = newPost
+    super.init(dc,on:route)
+  }
+  
+  override func undo() { dataController.undo(renumberPost:self) }
+  override func redo() { dataController.redo(renumberPost:self) }
 }

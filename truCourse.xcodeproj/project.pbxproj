@@ -20,6 +20,7 @@
 		278905E41E7961D100F1B40B /* Waypoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278905E31E7961D100F1B40B /* Waypoint.swift */; };
 		27902EEA1E821512004B6D85 /* recenter_64.png in Resources */ = {isa = PBXBuildFile; fileRef = 27902EE91E821512004B6D85 /* recenter_64.png */; };
 		2793480C1E8A829E00594B0D /* VisualizationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2793480B1E8A829E00594B0D /* VisualizationView.swift */; };
+		27AA19871EB0BB32003FB5F6 /* RenumberViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27AA19861EB0BB32003FB5F6 /* RenumberViewController.swift */; };
 		27AD09471EAE2847005912B3 /* Undo_ffffff_25.png in Resources */ = {isa = PBXBuildFile; fileRef = 27AD09461EAE2847005912B3 /* Undo_ffffff_25.png */; };
 		27AD09491EAE285A005912B3 /* Redo_ffffff_25.png in Resources */ = {isa = PBXBuildFile; fileRef = 27AD09481EAE2859005912B3 /* Redo_ffffff_25.png */; };
 		27B101E51E82A41C0014C588 /* Off_ffffff_25.png in Resources */ = {isa = PBXBuildFile; fileRef = 27B101E41E82A41C0014C588 /* Off_ffffff_25.png */; };
@@ -76,6 +77,7 @@
 		278905E31E7961D100F1B40B /* Waypoint.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Waypoint.swift; sourceTree = "<group>"; };
 		27902EE91E821512004B6D85 /* recenter_64.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = recenter_64.png; sourceTree = "<group>"; };
 		2793480B1E8A829E00594B0D /* VisualizationView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VisualizationView.swift; sourceTree = "<group>"; };
+		27AA19861EB0BB32003FB5F6 /* RenumberViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RenumberViewController.swift; sourceTree = "<group>"; };
 		27AD09461EAE2847005912B3 /* Undo_ffffff_25.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Undo_ffffff_25.png; sourceTree = "<group>"; };
 		27AD09481EAE2859005912B3 /* Redo_ffffff_25.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Redo_ffffff_25.png; sourceTree = "<group>"; };
 		27B101E41E82A41C0014C588 /* Off_ffffff_25.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Off_ffffff_25.png; sourceTree = "<group>"; };
@@ -161,6 +163,17 @@
 			name = Data;
 			sourceTree = "<group>";
 		};
+		27AA19831EB07055003FB5F6 /* SupportClasses */ = {
+			isa = PBXGroup;
+			children = (
+				27C5584C1E5F8790004FF32A /* Types.swift */,
+				273DCEB01E7AC11D005AE82E /* Constants.swift */,
+				274B508E1EA9A7C7000A1527 /* Extensions.swift */,
+				27E098591EB0219D00FA21D3 /* UndoManager.swift */,
+			);
+			name = SupportClasses;
+			sourceTree = "<group>";
+		};
 		27C5581E1E5F872E004FF32A = {
 			isa = PBXGroup;
 			children = (
@@ -182,11 +195,8 @@
 			isa = PBXGroup;
 			children = (
 				27C558471E5F8790004FF32A /* AppDelegate.swift */,
-				27C5584C1E5F8790004FF32A /* Types.swift */,
-				273DCEB01E7AC11D005AE82E /* Constants.swift */,
-				274B508E1EA9A7C7000A1527 /* Extensions.swift */,
-				27E098591EB0219D00FA21D3 /* UndoManager.swift */,
 				27B10CFD1E6060E3005099BD /* MainController.swift */,
+				27AA19831EB07055003FB5F6 /* SupportClasses */,
 				27DB65E21E60E2D100498C12 /* DataViews */,
 				278905E21E7961AC00F1B40B /* Data */,
 				27DB65E11E60E2B500498C12 /* Options */,
@@ -251,6 +261,7 @@
 				27C5584A1E5F8790004FF32A /* MapViewController.swift */,
 				27F74D791EA4E7AA008D172A /* PostAnnotation.swift */,
 				27D509461EA8D227002A5920 /* TrackingView.swift */,
+				27AA19861EB0BB32003FB5F6 /* RenumberViewController.swift */,
 			);
 			name = DataViews;
 			sourceTree = "<group>";
@@ -366,6 +377,7 @@
 			files = (
 				270A77721E8CC570001E605B /* InsertionPoint.swift in Sources */,
 				2793480C1E8A829E00594B0D /* VisualizationView.swift in Sources */,
+				27AA19871EB0BB32003FB5F6 /* RenumberViewController.swift in Sources */,
 				27C5584F1E5F8790004FF32A /* LatLonViewController.swift in Sources */,
 				27C5584D1E5F8790004FF32A /* AppDelegate.swift in Sources */,
 				27C5584E1E5F8790004FF32A /* BearingViewController.swift in Sources */,

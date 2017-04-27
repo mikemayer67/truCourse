@@ -74,4 +74,5 @@ enum ActionType
   case Deletion(Int)
   case NewStart(Int)
   case ReverseRoute
+  case RenumberPost(Int)
 }

@@ -75,6 +75,26 @@ class Route
     return true
   }
   
+  @discardableResult
+  func renumber(post oldPost:Int, as newPost:Int) -> Bool
+  {
+    if oldPost == newPost { return true }
+    
+    guard let a = self.find(post: oldPost) else { return false }
+    guard let b = self.find(post: newPost) else { return false }
+    
+    a.unlink()
+    if oldPost < newPost { a.insert(after:b)  }
+    else                 { a.insert(before:b) }
+    
+    if      head === a { head = a.next }
+    else if head === b { head = a      }
+    
+    head!.reindex()
+    
+    return true
+  }
+  
   // MARK: - Constructors and Encoding
 
   init()

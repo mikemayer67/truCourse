@@ -10,7 +10,7 @@ import UIKit
 import Foundation
 import CoreLocation
 
-class DataController : NSObject, CLLocationManagerDelegate
+class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate, UIPickerViewDataSource, RenumberViewDelegate
 {
   @IBOutlet var dataViewController : DataViewController!
   
@@ -32,6 +32,7 @@ class DataController : NSObject, CLLocationManagerDelegate
   }
   
   private(set) var insertionIndex : Int?
+  private(set) var renumberIndex  : Int?
   
   private(set) var currentLocation  : CLLocation?
   private      var lastRecordedPost : CLLocation?
@@ -303,11 +304,14 @@ class DataController : NSObject, CLLocationManagerDelegate
           dvc.confirmAction(type:.Insertion, action: { self.updateState(.Insert(post+1)) } )
         } ) )
     
-    actions.append(
-      UIAlertAction(title: "renumber post \(post)...", style: .default, handler:
-        { (_:UIAlertAction)->Void in
-          print ("renumber post \(post)")
+    if routes.working.count > 2
+    {
+      actions.append(
+        UIAlertAction(title: "renumber post \(post)...", style: .default, handler:
+          { (_:UIAlertAction)->Void in
+            dvc.confirmAction(type:.RenumberPost(post), action: { self.start_renumber(post:post) } )
         } ) )
+    }
     
     actions.append(
       UIAlertAction(title: "move post \(post)", style: .default, handler:
@@ -360,16 +364,25 @@ class DataController : NSObject, CLLocationManagerDelegate
     }
   }
   
-  func reverse(route:Route)
+  func start_renumber(post:Int)
   {
-    route.reverse()
-    if insertionIndex != nil
-    {
-      let n = route.count
-      insertionIndex = (n+3) - insertionIndex!
-    }
-    dataViewController.currentView.update(route:route)
-    dataViewController.applyState()
+    let rc = UIStoryboard.init(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "RenumberViewController") as! RenumberViewController
+    
+    rc.delegate = self
+    rc.modalPresentationStyle = .overCurrentContext
+    rc.transitioningDelegate  = rc
+    rc.modalPresentationCapturesStatusBarAppearance = true
+    rc.setNeedsStatusBarAppearanceUpdate()
+    dataViewController.definesPresentationContext = true
+    
+    renumberIndex = post
+    
+    dataViewController.parent!.present(rc, animated: true)
+  }
+  
+  func renumber(post:Int, as newPost:Int)
+  {
+    print("renumber post \(post) as \(newPost)")
   }
   
   
@@ -496,6 +509,66 @@ class DataController : NSObject, CLLocationManagerDelegate
     return rval
   }
   
+  @discardableResult
+  func undo(reverseRoute action:ReverseRouteAction) -> Bool
+  {
+    return _do(reverseRoute:action.route)
+  }
+  
+  @discardableResult
+  func redo(reverseRoute action:ReverseRouteAction) -> Bool
+  {
+    return _do(reverseRoute:action.route)
+  }
+  
+  func _do(reverseRoute route:Route) -> Bool
+  {
+    route.reverse()
+    if insertionIndex != nil
+    {
+      let n = route.count
+      insertionIndex = (n+3) - insertionIndex!
+    }
+    dataViewController.currentView.update(route:route)
+    dataViewController.applyState()
+    
+    return true
+  }
+  
+  
+  @discardableResult
+  func undo(renumberPost action:RenumberPostAction)->Bool
+  {
+    return _do(renumberPost:action.newPost, as:action.oldPost, on:action.route)
+  }
+  
+  @discardableResult
+  func redo(renumberPost action:RenumberPostAction)->Bool
+  {
+    return _do(renumberPost:action.oldPost, as:action.newPost, on:action.route)
+  }
+  
+  func _do(renumberPost oldPost:Int, as newPost:Int, on route:Route) -> Bool
+  {
+    route.renumber(post:oldPost, as:newPost)
+    
+    if let oldIndex = insertionIndex
+    {
+      var newIndex = oldIndex
+      if      oldPost < newPost && oldIndex >= oldPost && oldIndex <= newPost { newIndex = oldIndex - 1 }
+      else if oldPost > newPost && oldIndex >= newPost && oldIndex <= oldPost { newIndex = oldIndex + 1 }
+      
+      print("index changed from \(oldIndex) to \(newIndex)")
+      
+      updateState(.Insert(newIndex))
+    }
+    
+    dataViewController.currentView.update(route:route)
+    dataViewController.applyState()
+    
+    return true
+  }
+  
   // MARK: - Location Manager Delegate
   
   func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus)
@@ -525,5 +598,42 @@ class DataController : NSObject, CLLocationManagerDelegate
       Options.shared.declination = routes.working.declination
     }
     locationManager.stopUpdatingHeading()
+  }
+  
+  // MARK: - Renumber Picker delegate methods
+  
+  func title(for view: RenumberViewController) -> String?
+  {
+    guard let post = renumberIndex else { return nil }
+    return "Renumber Post \(post) as:"
+  }
+  
+  func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int
+  {
+    let n = routes.working.count
+    return n - 1
+  }
+  
+  func numberOfComponents(in pickerView: UIPickerView) -> Int
+  {
+    return 1
+  }
+  
+  func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String?
+  {
+    let post = (row+1 < renumberIndex! ? row+1 : row+2)
+    return "Post \(post)"
+  }
+  
+  func renumberView(_ view: RenumberViewController, didSelect row: Int)
+  {
+    let oldPost = renumberIndex!
+    let newPost = (row+1 < oldPost ? row+1 : row+2)
+    
+    
+    let action = RenumberPostAction(self, from:oldPost, to:newPost, on:routes.working)
+    
+    UndoManager.shared.add(action)
+    action.redo()
   }
 }
