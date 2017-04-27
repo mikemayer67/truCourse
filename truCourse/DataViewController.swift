@@ -285,7 +285,7 @@ class DataViewController :
       redoBarItem.isEnabled  = UndoManager.shared.hasRedo
       toolbar?.setItems(pausedToolbarItems, animated: true)
       
-    case .Inserting, .Editing:
+    case .Inserting:
       recordBarItem.isEnabled = dataController.okToRecord
       toolbar?.setItems(activeToolbarItems, animated: true)
 
@@ -298,7 +298,7 @@ class DataViewController :
   {
     switch dataController.state
     {
-    case .Inserting, .Editing:
+    case .Inserting:
       recordBarItem.isEnabled = dataController.okToRecord
     default:
       break;

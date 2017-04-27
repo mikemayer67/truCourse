@@ -29,7 +29,6 @@ enum AppState
   case Paused         // User disabled location updates
   case Idle           // Authorized and user enabled
   case Inserting      // Inserting new candidate
-  case Editing(Int)   // editting index
 }
 
 enum AppStateTransition
@@ -75,4 +74,5 @@ enum ActionType
   case NewStart(Int)
   case ReverseRoute
   case RenumberPost(Int)
+  case MovePost(Int)
 }

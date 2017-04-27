@@ -10,8 +10,8 @@ import Foundation
 
 protocol UndoableAction : class
 {
-  func undo() -> Void
-  func redo() -> Void
+  func undo() -> Bool
+  func redo() -> Bool
 }
 
 class UndoManager
@@ -45,9 +45,11 @@ class UndoManager
     if undoStack.isEmpty == false
     {
       let action = undoStack.removeLast()
-      redoStack.append(action)
-    
-      action.undo()
+      
+      if action.undo()
+      {
+        redoStack.append(action)
+      }
     }
   }
   
@@ -56,9 +58,15 @@ class UndoManager
     if redoStack.isEmpty == false
     {
       let action = redoStack.removeLast()
-      undoStack.append(action)
       
-      action.redo()
+      if action.redo()
+      {
+        undoStack.append(action)
+      }
+      else
+      {
+        redoStack.removeAll()
+      }
     }
   }
   

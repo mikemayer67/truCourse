@@ -51,53 +51,5 @@
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "truCourse/UndoManager.swift"
-            timestampString = "514860358.237575"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "11"
-            endingLineNumber = "11"
-            landmarkName = "UndoableAction"
-            landmarkType = "5">
-            <Locations>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "truCourse.UndoManager.__deallocating_deinit"
-                  moduleName = "truCourse"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/mike/Desktop/IOS%20Projects/truCourse/truCourse/UndoManager.swift"
-                  timestampString = "514991642.170492"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "0"
-                  endingLineNumber = "0"
-                  offsetFromSymbolStart = "4">
-               </Location>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "truCourse.UndoManager.deinit"
-                  moduleName = "truCourse"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/mike/Desktop/IOS%20Projects/truCourse/truCourse/UndoManager.swift"
-                  timestampString = "514991642.173012"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "0"
-                  endingLineNumber = "0"
-                  offsetFromSymbolStart = "4">
-               </Location>
-            </Locations>
-         </BreakpointContent>
-      </BreakpointProxy>
    </Breakpoints>
 </Bucket>

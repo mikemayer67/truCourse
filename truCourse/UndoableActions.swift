@@ -18,8 +18,8 @@ class RouteEditAction : UndoableAction
     self.dataController = dc
   }
   
-  func undo() { fatalError("undo must be subclassed") }
-  func redo() { fatalError("redo must be subclassed") }
+  func undo()->Bool { fatalError("undo must be subclassed") }
+  func redo()->Bool { fatalError("redo must be subclassed") }
 }
 
 
@@ -35,8 +35,8 @@ class InsertionAction : RouteEditAction
     super.init(dc)
   }
   
-  override func undo() { dataController.undo(insertion:self) }
-  override func redo() { dataController.redo(insertion:self) }
+  override func undo()->Bool { return dataController.undo(insertion:self) }
+  override func redo()->Bool { return dataController.redo(insertion:self) }
 }
 
 class DeletionAction : RouteEditAction
@@ -51,8 +51,8 @@ class DeletionAction : RouteEditAction
     super.init(dc)
   }
   
-  override func undo() { dataController.undo(deletion:self) }
-  override func redo() { dataController.redo(deletion:self) }
+  override func undo()->Bool { return dataController.undo(deletion:self) }
+  override func redo()->Bool { return dataController.redo(deletion:self) }
 }
 
 class NewStartAction : RouteEditAction
@@ -65,14 +65,14 @@ class NewStartAction : RouteEditAction
     super.init(dc)
   }
   
-  override func undo() { dataController.undo(newStart:self) }
-  override func redo() { dataController.redo(newStart:self) }
+  override func undo()->Bool { return dataController.undo(newStart:self) }
+  override func redo()->Bool { return dataController.redo(newStart:self) }
 }
 
 class ReverseRouteAction : RouteEditAction
 {
-  override func undo() { dataController.undo(reverseRoute:self) }
-  override func redo() { dataController.redo(reverseRoute:self) }
+  override func undo()->Bool { return dataController.undo(reverseRoute:self) }
+  override func redo()->Bool { return dataController.redo(reverseRoute:self) }
 }
 
 class RenumberPostAction : RouteEditAction
@@ -86,6 +86,24 @@ class RenumberPostAction : RouteEditAction
     super.init(dc)
   }
   
-  override func undo() { dataController.undo(renumberPost:self) }
-  override func redo() { dataController.redo(renumberPost:self) }
+  override func undo()->Bool { return dataController.undo(renumberPost:self) }
+  override func redo()->Bool { return dataController.redo(renumberPost:self) }
+}
+
+class MovePostAction : RouteEditAction
+{
+  let post        : Int
+  let oldLocation : CLLocationCoordinate2D
+  let newLocation : CLLocationCoordinate2D
+  
+  init(_ dc:DataController, post:Int, from oldLocation:CLLocationCoordinate2D, to newLocation:CLLocationCoordinate2D)
+  {
+    self.post        = post
+    self.oldLocation = oldLocation
+    self.newLocation = newLocation
+    super.init(dc)
+  }
+  
+  override func undo()->Bool { return dataController.undo(movePost:self) }
+  override func redo()->Bool { return dataController.redo(movePost:self) }
 }
