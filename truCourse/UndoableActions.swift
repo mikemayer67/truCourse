@@ -1,5 +1,5 @@
 //
-//  UndoActions.swift
+//  UndoableActions.swift
 //  truCourse
 //
 //  Created by Mike Mayer on 4/22/17.
@@ -12,12 +12,10 @@ import CoreLocation
 class RouteEditAction : UndoableAction
 {
   let dataController : DataController
-  let route          : Route
 
-  init(_ dc:DataController, on route:Route)
+  init(_ dc:DataController)
   {
     self.dataController = dc
-    self.route = route
   }
   
   func undo() { fatalError("undo must be subclassed") }
@@ -30,11 +28,11 @@ class InsertionAction : RouteEditAction
   let post           : Int
   let location       : CLLocationCoordinate2D
   
-  init(_ dc:DataController, post:Int, at location:CLLocationCoordinate2D, on route:Route)
+  init(_ dc:DataController, post:Int, at location:CLLocationCoordinate2D)
   {
     self.post     = post
     self.location = location
-    super.init(dc, on:route)
+    super.init(dc)
   }
   
   override func undo() { dataController.undo(insertion:self) }
@@ -46,11 +44,11 @@ class DeletionAction : RouteEditAction
   let post           : Int
   let location       : CLLocationCoordinate2D
   
-  init(_ dc:DataController, post:Int, at location:CLLocationCoordinate2D, on route:Route)
+  init(_ dc:DataController, post:Int, at location:CLLocationCoordinate2D)
   {
     self.post           = post
     self.location       = location
-    super.init(dc, on:route)
+    super.init(dc)
   }
   
   override func undo() { dataController.undo(deletion:self) }
@@ -61,10 +59,10 @@ class NewStartAction : RouteEditAction
 {
   let post : Int
   
-  init(_ dc:DataController, post:Int, on route:Route)
+  init(_ dc:DataController, post:Int)
   {
     self.post = post
-    super.init(dc,on:route)
+    super.init(dc)
   }
   
   override func undo() { dataController.undo(newStart:self) }
@@ -81,11 +79,11 @@ class RenumberPostAction : RouteEditAction
 {
   let oldPost : Int
   let newPost : Int
-  init(_ dc:DataController, from oldPost:Int, to newPost:Int, on route:Route )
+  init(_ dc:DataController, from oldPost:Int, to newPost:Int)
   {
     self.oldPost = oldPost
     self.newPost = newPost
-    super.init(dc,on:route)
+    super.init(dc)
   }
   
   override func undo() { dataController.undo(renumberPost:self) }

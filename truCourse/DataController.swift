@@ -20,6 +20,12 @@ class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate
   private(set) var trackingAuthorized = false  // phone security settings
   
   private let routes = Routes()
+  private var route : Route!
+  
+  override init()
+  {
+    route = routes.working
+  }
   
   private(set) var state : AppState = .Uninitialized
   
@@ -60,18 +66,18 @@ class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate
   
   var locked : Bool
   {
-    get { return routes.working.locked   }
-    set { routes.working.locked = locked }
+    get { return route.locked   }
+    set { route.locked = locked }
   }
   
   var canShare : Bool
   {
-    return routes.working.isEmpty == false
+    return route.isEmpty == false
   }
   
   var canSave : Bool
   {
-    return routes.working.isEmpty == false && routes.working.dirty == false
+    return route.isEmpty == false && route.dirty == false
   }
   
   // MARK: - Options
@@ -110,18 +116,16 @@ class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate
       {
         if !trackingAuthorized
         {
-          let currentRoute   = routes.working!
-          
           updateTrackingState(authorized: true, enabled: nil)
           
           if trackingEnabled == false    { state = .Paused    }
-          else if currentRoute.locked    { state = .Idle      }
+          else if route.locked           { state = .Idle      }
           else if insertionIndex != nil  { state = .Inserting }
-          else if currentRoute.isEmpty   { state = .Inserting }
+          else if route.isEmpty          { state = .Inserting }
           else                           { state = .Idle      }
         }
         
-        if routes.working.declination == nil && hasCompass
+        if route.declination == nil && hasCompass
         {
           locationManager.startUpdatingHeading()
         }
@@ -192,18 +196,18 @@ class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate
       
       candidatePost = Waypoint(self.mostRecentLocation)
 
-      let n = routes.working.count
+      let n = route.count
       if insertionIndex == nil { insertionIndex = n+1 }
       
-      if routes.working.head != nil
+      if route.head != nil
       {
         if insertionIndex! == 1
         {
-          candidatePost?.insert(before: routes.working.head!, as: .Candidate)
+          candidatePost?.insert(before: route.head!, as: .Candidate)
         }
         else
         {
-          let ref_wp = routes.working.find(post: insertionIndex! - 1)
+          let ref_wp = route.find(post: insertionIndex! - 1)
           if ref_wp == nil { fatalError("Cannot insert post #\(insertionIndex!)... route only has \(n) posts") }
           candidatePost?.insert(after: ref_wp!, as: .Candidate)
         }
@@ -268,7 +272,7 @@ class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate
           { (_:UIAlertAction)->Void in
             dvc.confirmAction(type: .ReverseRoute, action:
               {
-                let action = ReverseRouteAction(self, on:self.routes.working!)
+                let action = ReverseRouteAction(self)
                 action.redo()
                 UndoManager.shared.add(action)
               } )
@@ -287,7 +291,7 @@ class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate
           { (_:UIAlertAction)->Void in
             dvc.confirmAction(type: .NewStart(post), action:
               {
-                let action = NewStartAction(self, post:post, on:self.routes.working!)
+                let action = NewStartAction(self, post:post)
                 if self.redo(newStart: action) { UndoManager.shared.add(action) }
               } )
           } ) )
@@ -299,7 +303,7 @@ class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate
           dvc.confirmAction(type:.Insertion, action: { self.updateState(.Insert(post+1)) } )
         } ) )
     
-    if routes.working.count > 2
+    if route.count > 2
     {
       actions.append(
         UIAlertAction(title: "renumber post \(post)...", style: .default, handler:
@@ -319,9 +323,8 @@ class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate
         { (_:UIAlertAction)->Void in
           dvc.confirmAction(type:.Deletion(post), action:
             {
-              let route    = self.routes.working!
-              let location = route.find(post:post)!.location
-              let action = DeletionAction(self, post:post, at:location, on:route)
+              let location = self.route.find(post:post)!.location
+              let action = DeletionAction(self, post:post, at:location)
               if self.redo(deletion: action) { UndoManager.shared.add(action) }
             } )
         } ) )
@@ -337,15 +340,13 @@ class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate
       let cand  = candidatePost!
       let index = insertionIndex!
       
-      let route = routes.working!
-      
       route.commit(cand, at:index)
       
       candidatePost  = Waypoint(self.mostRecentLocation)
       candidatePost!.insert(after: cand, as: .Candidate)
       insertionIndex = index + 1
 
-      UndoManager.shared.add( InsertionAction(self, post:index, at:cand.location, on:route) )
+      UndoManager.shared.add( InsertionAction(self, post:index, at:cand.location) )
 
       lastRecordedPost = currentLocation
       dataViewController.updateRoute(route)
@@ -388,9 +389,8 @@ class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate
     dataViewController.confirmAction(
       type: .Deletion(insertion.post),
       action: {
-        let route = insertion.route
-        route.remove(post: insertion.post)
-        self.dataViewController.updateRoute(route)
+        self.route.remove(post: insertion.post)
+        self.dataViewController.updateRoute(self.route)
         self.lastRecordedPost = nil
         self.dataViewController.applyState()
         self.insertionIndex = insertion.post
@@ -406,8 +406,6 @@ class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate
   @discardableResult
   func redo(insertion:InsertionAction) -> Bool
   {
-    let route = insertion.route
-    
     route.insert(post: insertion.post, at: insertion.location)
     
     dataViewController.updateRoute(route)
@@ -422,8 +420,6 @@ class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate
   @discardableResult
   func undo(deletion:DeletionAction) -> Bool
   {
-    let route = deletion.route
-    
     route.insert(post: deletion.post, at: deletion.location)
     
     if insertionIndex != nil,
@@ -440,8 +436,6 @@ class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate
   @discardableResult
   func redo(deletion:DeletionAction) -> Bool
   {
-    let route = deletion.route
-    
     route.remove(post:deletion.post)
     
     if insertionIndex != nil
@@ -457,9 +451,7 @@ class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate
   @discardableResult
   func undo(newStart:NewStartAction) -> Bool
   {
-    let post  = newStart.post
-    let route = newStart.route
-    
+    let post    = newStart.post
     let n       = route.count
     let oldPost =  ( n + 1 - post)%n + 1
     
@@ -481,9 +473,7 @@ class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate
   func redo(newStart:NewStartAction) -> Bool
   {
     let post  = newStart.post
-    let route = newStart.route
-    
-    let n       = route.count
+    let n     = route.count
     
     let rval = route.restart(at: post)
     
@@ -502,16 +492,16 @@ class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate
   @discardableResult
   func undo(reverseRoute action:ReverseRouteAction) -> Bool
   {
-    return _do(reverseRoute:action.route)
+    return _reverseRoute()
   }
   
   @discardableResult
   func redo(reverseRoute action:ReverseRouteAction) -> Bool
   {
-    return _do(reverseRoute:action.route)
+    return _reverseRoute()
   }
   
-  func _do(reverseRoute route:Route) -> Bool
+  private func _reverseRoute() -> Bool
   {
     route.reverse()
     if insertionIndex != nil
@@ -528,16 +518,16 @@ class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate
   @discardableResult
   func undo(renumberPost action:RenumberPostAction)->Bool
   {
-    return _do(renumberPost:action.newPost, as:action.oldPost, on:action.route)
+    return _do(renumberPost:action.newPost, as:action.oldPost)
   }
   
   @discardableResult
   func redo(renumberPost action:RenumberPostAction)->Bool
   {
-    return _do(renumberPost:action.oldPost, as:action.newPost, on:action.route)
+    return _do(renumberPost:action.oldPost, as:action.newPost)
   }
   
-  func _do(renumberPost oldPost:Int, as newPost:Int, on route:Route) -> Bool
+  func _do(renumberPost oldPost:Int, as newPost:Int) -> Bool
   {
     let oldState = self.state
     
@@ -581,10 +571,10 @@ class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate
   
   func locationManager(_ manager: CLLocationManager, didUpdateHeading newHeading: CLHeading)
   {
-    if routes.working.declination == nil
+    if route.declination == nil
     {
-      routes.working.setDeclination(newHeading)
-      Options.shared.declination = routes.working.declination
+      route.setDeclination(newHeading)
+      Options.shared.declination = route.declination
     }
     locationManager.stopUpdatingHeading()
   }
@@ -599,8 +589,7 @@ class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate
   
   func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int
   {
-    let n = routes.working.count
-    return n - 1
+    return route.count - 1
   }
   
   func numberOfComponents(in pickerView: UIPickerView) -> Int
@@ -619,7 +608,7 @@ class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate
     let oldPost = renumberIndex!
     let newPost = (row+1 < oldPost ? row+1 : row+2)
     
-    let action = RenumberPostAction(self, from:oldPost, to:newPost, on:routes.working)
+    let action = RenumberPostAction(self, from:oldPost, to:newPost)
     
     UndoManager.shared.add(action)
     action.redo()

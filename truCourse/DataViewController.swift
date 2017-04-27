@@ -17,8 +17,8 @@ class DataViewController :
   @IBOutlet var viewTypeControl : UISegmentedControl!
   @IBOutlet var dataController  : DataController!
   
-  var visualizationControllers = [VisualizationType:UIViewController]()
-  var currentView : UIViewController!
+  private var visualizationControllers = [VisualizationType:UIViewController]()
+  private var currentView : UIViewController!
   
   private var activeToolbar        = true
   private var activeToolbarItems   : [UIBarButtonItem]!
