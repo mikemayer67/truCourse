@@ -278,6 +278,11 @@ class Waypoint
     iterate( { wp in wp.index = nextIndex; nextIndex += 1 } )
   }
   
+  func updateAll()
+  {
+    iterate( { wp in wp.update() } )
+  }
+  
   func iterate(_ task:(Waypoint)->Void )
   {
     task(self)

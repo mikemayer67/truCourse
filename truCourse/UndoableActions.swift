@@ -28,6 +28,8 @@ class InsertionAction : RouteEditAction
   let post           : Int
   let location       : CLLocationCoordinate2D
   
+  private(set) var firstUndo = true
+
   init(_ dc:DataController, post:Int, at location:CLLocationCoordinate2D)
   {
     self.post     = post
@@ -35,24 +37,61 @@ class InsertionAction : RouteEditAction
     super.init(dc)
   }
   
-  override func undo()->Bool { return dataController.undo(insertion:self) }
+  override func undo()->Bool
+  {
+    let rval = dataController.undo(insertion:self)
+    self.firstUndo = false
+    return rval
+  }
   override func redo()->Bool { return dataController.redo(insertion:self) }
 }
 
 class DeletionAction : RouteEditAction
 {
-  let post           : Int
-  let location       : CLLocationCoordinate2D
-  
-  init(_ dc:DataController, post:Int, at location:CLLocationCoordinate2D)
+  let post      : Int
+  let location  : CLLocationCoordinate2D
+  let oldIndex  : Int?
+  let newIndex  : Int?
+
+  init(_ dc:DataController, post:Int, at location:CLLocationCoordinate2D, inserting:Int?)
   {
-    self.post           = post
-    self.location       = location
+    self.post      = post
+    self.location  = location
+    
+    if let curIndex = inserting
+    {
+      self.oldIndex = curIndex
+      self.newIndex = ( post < curIndex ? curIndex - 1 : curIndex )
+    }
+    else
+    {
+      self.oldIndex = nil
+      self.newIndex = nil
+    }
+    
     super.init(dc)
   }
   
   override func undo()->Bool { return dataController.undo(deletion:self) }
   override func redo()->Bool { return dataController.redo(deletion:self) }
+  
+  func insertionIndexForRedo(ifInsertingAt curIndex:Int?) -> Int?
+  {
+    if curIndex == nil        { return nil }
+    if oldIndex == nil        { return nil }
+    if curIndex! == oldIndex! { return newIndex }
+    
+    return ( post < curIndex! ? curIndex!-1 : curIndex! )
+  }
+  
+  func insertionIndexForUndo(ifInsertingAt curIndex:Int?) -> Int?
+  {
+    if curIndex == nil        { return nil }
+    if oldIndex == nil        { return nil }
+    if curIndex! == newIndex! { return oldIndex }
+    
+    return ( post < curIndex! ? curIndex!+1 : curIndex! )
+  }
 }
 
 class NewStartAction : RouteEditAction

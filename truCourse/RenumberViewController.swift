@@ -22,7 +22,7 @@ class RenumberViewController: UIViewController, UIViewControllerAnimatedTransiti
   
   var delegate     : RenumberViewDelegate?
   var isPresenting : Bool?
-  
+    
   let transitionDuration : TimeInterval = 0.25
   
   override func viewDidLoad()

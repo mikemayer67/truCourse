@@ -112,8 +112,8 @@ class MapViewController: UIViewController, VisualizationView, MKMapViewDelegate,
     guard dataController != nil  else { return }
     guard sender.state == .began else { return }
     
-    sender.isEnabled = false
-    sender.isEnabled = true
+    sender.isEnabled = false  // cancels the long press gesture now that it's recognized
+    sender.isEnabled = true   // rather than waiting for user to let go of screen
     
     let postView = sender.view as! MKAnnotationView
     let post     = postView.annotation as! PostAnnotation
@@ -196,7 +196,7 @@ class MapViewController: UIViewController, VisualizationView, MKMapViewDelegate,
     
     mapView.userLocation.title = "(me)"
     mapView.userLocation.subtitle = nil
-    
+        
     guard let cand = candidate else
     {
       if candPrevWaypoint != nil
@@ -205,6 +205,12 @@ class MapViewController: UIViewController, VisualizationView, MKMapViewDelegate,
         candPrevWaypoint = nil
       }
       return
+    }
+    
+    if candPrevWaypoint != nil && cand.prev !== candPrevWaypoint
+    {
+      postAnnotations[candPrevWaypoint!.index!]?.updateTitle()
+      candPrevWaypoint = nil
     }
 
     mapView.userLocation.title    = cand.annotationTitle ?? "(me)"

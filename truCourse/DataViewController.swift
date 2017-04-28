@@ -12,7 +12,7 @@ import CoreLocation
 
 class DataViewController :
   UIPageViewController, UIPageViewControllerDataSource, UIPageViewControllerDelegate,
-  OptionViewControllerDelegate
+  OptionViewControllerDelegate, UndoManagerObserver
 {
   @IBOutlet var viewTypeControl : UISegmentedControl!
   @IBOutlet var dataController  : DataController!
@@ -131,9 +131,18 @@ class DataViewController :
       saveBarItem
     ]
     
+    UndoManager.shared.add(observer: self)
+    updateUndoState(using:UndoManager.shared)
+    
     applyOptions()
     
     dataController.updateState(.Start)
+  }
+  
+  func updateUndoState(using um: UndoManager)
+  {
+    undoBarItem.isEnabled  = um.hasUndo
+    redoBarItem.isEnabled  = um.hasRedo
   }
   
   override func viewDidAppear(_ animated: Bool)
@@ -274,15 +283,11 @@ class DataViewController :
     case .Paused:
       pausedToolbarItems[0]  = onBarItem
       startBarItem.isEnabled = false
-      undoBarItem.isEnabled  = UndoManager.shared.hasUndo
-      redoBarItem.isEnabled  = UndoManager.shared.hasRedo
       toolbar?.setItems(pausedToolbarItems, animated: true)
       
     case .Idle:
       pausedToolbarItems[0]  = offBarItem
       startBarItem.isEnabled = true
-      undoBarItem.isEnabled  = UndoManager.shared.hasUndo
-      redoBarItem.isEnabled  = UndoManager.shared.hasRedo
       toolbar?.setItems(pausedToolbarItems, animated: true)
       
     case .Inserting:

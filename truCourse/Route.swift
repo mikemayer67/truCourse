@@ -71,6 +71,7 @@ class Route
     
     head!.reverse()
     head!.reindex()
+    head!.updateAll()
     
     return true
   }

@@ -22,7 +22,7 @@ enum BaseUnitType : Int
   case English = 1
 }
 
-enum AppState
+enum AppState : Int
 {
   case Uninitialized
   case Disabled       // Location Service not authorized

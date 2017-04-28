@@ -20,6 +20,8 @@
 		278905E41E7961D100F1B40B /* Waypoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278905E31E7961D100F1B40B /* Waypoint.swift */; };
 		27902EEA1E821512004B6D85 /* recenter_64.png in Resources */ = {isa = PBXBuildFile; fileRef = 27902EE91E821512004B6D85 /* recenter_64.png */; };
 		2793480C1E8A829E00594B0D /* VisualizationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2793480B1E8A829E00594B0D /* VisualizationView.swift */; };
+		27A4C3CC1EB23EAA00604F1E /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 27A4C3CB1EB23EAA00604F1E /* Images.xcassets */; };
+		27A4C3CE1EB23F5600604F1E /* icon_fullsize.png in Resources */ = {isa = PBXBuildFile; fileRef = 27A4C3CD1EB23F5600604F1E /* icon_fullsize.png */; };
 		27AA19871EB0BB32003FB5F6 /* RenumberViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27AA19861EB0BB32003FB5F6 /* RenumberViewController.swift */; };
 		27AD09471EAE2847005912B3 /* Undo_ffffff_25.png in Resources */ = {isa = PBXBuildFile; fileRef = 27AD09461EAE2847005912B3 /* Undo_ffffff_25.png */; };
 		27AD09491EAE285A005912B3 /* Redo_ffffff_25.png in Resources */ = {isa = PBXBuildFile; fileRef = 27AD09481EAE2859005912B3 /* Redo_ffffff_25.png */; };
@@ -63,12 +65,10 @@
 
 /* Begin PBXFileReference section */
 		270A77711E8CC570001E605B /* InsertionPoint.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InsertionPoint.swift; sourceTree = "<group>"; };
-		2710A2E41E72FA2C004BE462 /* LocationServices.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationServices.swift; sourceTree = "<group>"; };
 		2710A2E71E735977004BE462 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		273D83811E8163B1003F5B49 /* RouteID.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteID.swift; sourceTree = "<group>"; };
 		273DCEB01E7AC11D005AE82E /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		273DCEB21E7ACC11005AE82E /* Route.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Route.swift; sourceTree = "<group>"; };
-		273DCEB61E7B38CB005AE82E /* Notification+extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Notification+extension.swift"; sourceTree = "<group>"; };
 		273DCEB91E7C1C06005AE82E /* DataController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataController.swift; sourceTree = "<group>"; };
 		2742AC9D1EAC39AB00B2EC53 /* UndoableActions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UndoableActions.swift; sourceTree = "<group>"; };
 		274B508E1EA9A7C7000A1527 /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
@@ -77,6 +77,8 @@
 		278905E31E7961D100F1B40B /* Waypoint.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Waypoint.swift; sourceTree = "<group>"; };
 		27902EE91E821512004B6D85 /* recenter_64.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = recenter_64.png; sourceTree = "<group>"; };
 		2793480B1E8A829E00594B0D /* VisualizationView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VisualizationView.swift; sourceTree = "<group>"; };
+		27A4C3CB1EB23EAA00604F1E /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		27A4C3CD1EB23F5600604F1E /* icon_fullsize.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_fullsize.png; sourceTree = "<group>"; };
 		27AA19861EB0BB32003FB5F6 /* RenumberViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RenumberViewController.swift; sourceTree = "<group>"; };
 		27AD09461EAE2847005912B3 /* Undo_ffffff_25.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Undo_ffffff_25.png; sourceTree = "<group>"; };
 		27AD09481EAE2859005912B3 /* Redo_ffffff_25.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Redo_ffffff_25.png; sourceTree = "<group>"; };
@@ -140,15 +142,6 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		273DCEBB1E7C1E6F005AE82E /* Morgue */ = {
-			isa = PBXGroup;
-			children = (
-				273DCEB61E7B38CB005AE82E /* Notification+extension.swift */,
-				2710A2E41E72FA2C004BE462 /* LocationServices.swift */,
-			);
-			name = Morgue;
-			sourceTree = "<group>";
-		};
 		278905E21E7961AC00F1B40B /* Data */ = {
 			isa = PBXGroup;
 			children = (
@@ -205,7 +198,7 @@
 				27C558331E5F872E004FF32A /* LaunchScreen.storyboard */,
 				27C558361E5F872E004FF32A /* Info.plist */,
 				27C558591E5F9578004FF32A /* FactoryDefaults.plist */,
-				273DCEBB1E7C1E6F005AE82E /* Morgue */,
+				27A4C3CB1EB23EAA00604F1E /* Images.xcassets */,
 			);
 			path = truCourse;
 			sourceTree = "<group>";
@@ -213,6 +206,7 @@
 		27C558461E5F877E004FF32A /* Icons */ = {
 			isa = PBXGroup;
 			children = (
+				27A4C3CD1EB23F5600604F1E /* icon_fullsize.png */,
 				27F26E1B1EA94E90001EF37B /* Near Me_ffffff_25.png */,
 				27F26E1F1EA95C80001EF37B /* Save_file_ffffff_25.png */,
 				2755C5DA1E84E6CC000800F5 /* Trash_ffffff_25.png */,
@@ -347,6 +341,7 @@
 				27E775461E7CB95300091C78 /* Pin_ffffff_25.png in Resources */,
 				27C558351E5F872E004FF32A /* LaunchScreen.storyboard in Resources */,
 				27BC9E171EA8590A00398773 /* TrackHeading_000000_25.png in Resources */,
+				27A4C3CC1EB23EAA00604F1E /* Images.xcassets in Resources */,
 				27B10D001E606EC1005099BD /* Back_ffffff_25.png in Resources */,
 				2755C5DB1E84E6CC000800F5 /* Trash_ffffff_25.png in Resources */,
 				27BC9E1B1EA859BC00398773 /* TrackOff_000000_25.png in Resources */,
@@ -361,6 +356,7 @@
 				27E7753E1E7CB85600091C78 /* Pause_ffffff_25.png in Resources */,
 				27BC9E191EA8596C00398773 /* TrackOn_000000_25.png in Resources */,
 				27E7754A1E7CB9B500091C78 /* Circled Play_ffffff_25.png in Resources */,
+				27A4C3CE1EB23F5600604F1E /* icon_fullsize.png in Resources */,
 				27AD09491EAE285A005912B3 /* Redo_ffffff_25.png in Resources */,
 				27C558451E5F8769004FF32A /* Waypoint Map_ffffff_25.png in Resources */,
 				27C5585B1E5F9578004FF32A /* FactoryDefaults.plist in Resources */,
