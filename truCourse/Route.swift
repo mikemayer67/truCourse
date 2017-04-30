@@ -276,22 +276,31 @@ class Route
   {
     let options = Options.shared
     
-    var message =  "  Route: \(name ?? "Unnamed")\n)"
+    var message =  "  Route: \(name ?? "Unnamed")\n"
     message.append("Created: \(created)\n")
     if lastSaved != nil { message.append("Updated: \(lastSaved!)\n") }
     message.append("\n")
     
-    message.append("  Starting Post: \(head!.location.stringForMessage)\n");
-    message.append(" Total Distance: \(self.distance)\n")
-    message.append("Course Bearings: ")
+    message.append(" Starting Post: \(head!.location.stringForMessage)\n");
+    message.append("Total Distance: ")
+    if let dist = self.distance
+    {
+      message.append(options.distanceString(for: dist))
+    }
+    else
+    {
+      message.append("n/a")
+    }
+    
+    message.append("\n\nCourse bearings are based on ")
     if(options.northType == .True)
     {
-      message.append("based on true north")
+      message.append("btrue north")
     }
     else
     {
       let decl = self.declination?.deg ?? "0°"
-      message.append("based on magnetic declination of \(decl)")
+      message.append("magnetic declination of \(decl)")
     }
     
     message.append("\n\nCourse Directions:\n")
@@ -301,7 +310,7 @@ class Route
     
     message.append("\n\nPost Locations:\n")
     head!.iterate
-      { (wp:Waypoint) in message.append("\(index): \(wp.location.stringForMessage)\n") }
+      { (wp:Waypoint) in message.append("\(wp.index!): \(wp.location.stringForMessage)\n") }
     
     return message
   }

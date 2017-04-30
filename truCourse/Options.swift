@@ -196,4 +196,42 @@ class Options
     
     return false
   }
+  
+  func distanceString(_ distance : Double!) -> String
+  {
+    var dist : String!
+    
+    if distance == nil { return "n/a" }
+    if distance == 0.0 { return "n/a" }
+    
+    switch baseUnit
+    {
+    case .English:
+      let ft = Int(distance/0.3048 + 0.5)
+      
+      if ft >= 10560
+      {
+        dist = String(format:"%d miles %d ft", ft/5280, ft%5280)
+      }
+      else if ft >= 5280
+      {
+        dist = String(format:"1 mile %d ft",ft%5280)
+      }
+      else
+      {
+        dist = String(format:"%d ft",ft)
+      }
+      
+    case .Metric:
+      if distance > 1000.0
+      {
+        dist = String(format:"%.2f km", 0.001 * distance)
+      }
+      else
+      {
+        dist = String(format:"%d m", Int(distance + 0.5) )
+      }
+    }
+    return dist
+  }
 }

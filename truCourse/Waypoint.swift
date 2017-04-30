@@ -409,36 +409,8 @@ class Waypoint
       decl = options.declination ?? 0.0
     }
     
+    let dist = options.distanceString(self.distance)
     let deg = Int( bearing! - decl + 360.5 ) % 360  // 360.5 = 360 for mod + 0.5 for rounding to nearest integer
-    
-    var dist = ""
-    switch options.baseUnit
-    {
-    case .English:
-      let ft = Int(distance!/0.3048 + 0.5)
-      if ft >= 10560
-      {
-        dist = String(format:"%d miles %d ft", ft/5280, ft%5280)
-      }
-      else if ft >= 5280
-      {
-        dist = String(format:"1 mile %d ft",ft%5280)
-      }
-      else
-      {
-        dist = String(format:"%d ft",ft)
-      }
-      
-    case .Metric:
-      if distance! > 1000.0
-      {
-        dist = String(format:"%.2f km", 0.001 * distance!)
-      }
-      else
-      {
-        dist = String(format:"%d m", Int(distance! + 0.5) )
-      }
-    }
     
     return "\(dist) @ \(deg)°"
   }
