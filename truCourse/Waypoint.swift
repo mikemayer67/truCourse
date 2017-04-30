@@ -409,7 +409,7 @@ class Waypoint
       decl = options.declination ?? 0.0
     }
     
-    let dist = options.distanceString(self.distance)
+    let dist = options.distanceString(distance)
     let deg = Int( bearing! - decl + 360.5 ) % 360  // 360.5 = 360 for mod + 0.5 for rounding to nearest integer
     
     return "\(dist) @ \(deg)°"
