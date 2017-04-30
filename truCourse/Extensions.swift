@@ -31,6 +31,34 @@ extension CLLocationDegrees
     let rval = String(format: "%4dº%02d'%02d\"", deg, min, sec)
     return rval
   }
+  
+  var deg : String
+  {
+    let neg = self < 0.0
+    var ideg = Double(Int( 10.0 * (neg ? -self : self) + 0.5 )) / 10.0
+    if neg { ideg = -ideg }
+    return "\(ideg)º"
+  }
+}
+
+extension CLLocationCoordinate2D
+{
+  var stringForMessage : String
+  {
+    var lat = self.latitude
+    var lon = self.longitude
+    
+    let south = lat < 0.0
+    let west  = lon < 0.0 || lon>=180.0
+    
+    if south { lat = -lat }
+    if west  { lon = -lon }
+    
+    let lat_str = lat.dms.appending( south ? "S" : "N" )
+    let lon_str = lon.dms.appending( west ? "W" : "E" )
+    
+    return "\(lat_str) \(lon_str)"
+  }
 }
 
 extension UIColor

@@ -10,7 +10,7 @@ import UIKit
 import Foundation
 import CoreLocation
 
-class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate, UIPickerViewDataSource, RenumberViewDelegate
+class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate, UIPickerViewDataSource, RenumberViewDelegate, UIActivityItemSource
 {
   @IBOutlet var dataViewController     : DataViewController!
             var renumberViewController : RenumberViewController?
@@ -605,5 +605,37 @@ class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate
   {
     let post = (row+1 < self.renumberIndex! ? row+1 : row+2)
     return "Post \(post)"
+  }
+  
+  // MARK: - Share Route
+  
+  func shareRoute()
+  {
+    
+    let activityVC = UIActivityViewController(activityItems: [self], applicationActivities: nil)
+    
+    activityVC.completionWithItemsHandler =
+      {
+        (activityType:UIActivityType?, completed:Bool, returnedItems:[Any]?, activityError:Error?)
+        in
+        activityVC.dismiss(animated: true, completion: nil)
+      }
+    
+    dataViewController.present(activityVC, animated: true, completion: nil)
+  }
+  
+  func activityViewControllerPlaceholderItem(_ activityViewController: UIActivityViewController) -> Any
+  {
+    return "Sample Message"
+  }
+  
+  func activityViewController(_ activityViewController: UIActivityViewController, itemForActivityType activityType: UIActivityType) -> Any?
+  {
+    return route.composeMessageToShare(for:activityType)
+  }
+  
+  func activityViewController(_ activityViewController: UIActivityViewController, subjectForActivityType activityType: UIActivityType?) -> String
+  {
+    return route.subjectForSharedMessage()
   }
 }

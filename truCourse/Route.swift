@@ -8,6 +8,7 @@
 
 import Foundation
 import CoreLocation
+import UIKit
 
 class Route
 {
@@ -49,6 +50,11 @@ class Route
   var tail : Waypoint?
   {
     return head?.prev
+  }
+  
+  var distance : CLLocationDistance?
+  {
+    return head?.totalDistance
   }
 
   func restart(at post:Int) -> Bool
@@ -220,6 +226,91 @@ class Route
   {
     let mag = heading.magneticHeading
     let tru = heading.trueHeading
-    self.declination = tru-mag
+    if mag != tru { self.declination = tru-mag }
+  }
+  
+  //MARK: - Sharing methods
+  
+  func composeMessageToShare(for activityType:UIActivityType) -> String
+  {
+    print("ActvityType: \(activityType)")
+    switch activityType
+    {
+    case UIActivityType.message, UIActivityType.postToFacebook,
+         UIActivityType.postToTwitter:
+      return composeTextMessage()
+    default:
+      return composeDetailedMessage()
+    }
+  }
+  
+  func composeTextMessage() -> String
+  {
+    var message = subjectForSharedMessage()
+    
+    message.append("\n\n")
+    message.append("Starting point (post 1):\n")
+    message.append(head!.location.stringForMessage)
+    message.append("\n\nCourse Directions:\n")
+    
+    head!.iterate
+      { (wp:Waypoint) in message.append("\(wp.messageString)\n") }
+    
+    message.append("\n")
+    
+    let options = Options.shared
+    if options.northType == .Magnetic
+    {
+      let decl = self.declination?.deg ?? "0°"
+      message.append("Bearings are based on magnetic declination of \(decl)\n")
+    }
+    else
+    {
+      message.append("Bearings are based on true north")
+    }
+    
+    return message
+  }
+  
+  func composeDetailedMessage()->String
+  {
+    let options = Options.shared
+    
+    var message =  "  Route: \(name ?? "Unnamed")\n)"
+    message.append("Created: \(created)\n")
+    if lastSaved != nil { message.append("Updated: \(lastSaved!)\n") }
+    message.append("\n")
+    
+    message.append("  Starting Post: \(head!.location.stringForMessage)\n");
+    message.append(" Total Distance: \(self.distance)\n")
+    message.append("Course Bearings: ")
+    if(options.northType == .True)
+    {
+      message.append("based on true north")
+    }
+    else
+    {
+      let decl = self.declination?.deg ?? "0°"
+      message.append("based on magnetic declination of \(decl)")
+    }
+    
+    message.append("\n\nCourse Directions:\n")
+    
+    head!.iterate
+      { (wp:Waypoint) in message.append("\(wp.detailedMessageString)\n") }
+    
+    message.append("\n\nPost Locations:\n")
+    head!.iterate
+      { (wp:Waypoint) in message.append("\(index): \(wp.location.stringForMessage)\n") }
+    
+    return message
+  }
+  
+  func subjectForSharedMessage() -> String
+  {
+    var subject = "truCourse data for "
+    if name == nil { subject.append("working route") }
+    else { subject.append(name!) }
+    return subject
   }
 }

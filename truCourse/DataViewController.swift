@@ -349,7 +349,7 @@ class DataViewController :
   
   func handleShare(_ sender: UIBarButtonItem)
   {
-    print("DVC handleShare")
+    dataController.shareRoute()
   }
   
   func handleSave(_ sender: UIBarButtonItem)

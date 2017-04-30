@@ -265,6 +265,14 @@ class Waypoint
     return count
   }
   
+  var totalDistance : CLLocationDistance?
+  {
+    if next === self { return nil }
+    var rval = 0.0
+    iterate( { wp in rval = rval + wp.distance! } )
+    return rval
+  }
+  
   func find(index:Int) -> Waypoint?
   {
     var rval : Waypoint?
@@ -366,6 +374,27 @@ class Waypoint
     if distance     == nil { return nil }
 
     return _genTitle(bearing,distance)
+  }
+  
+  var messageString : String
+  {
+    guard index    != nil else { return "" }
+    
+    let direction = _genTitle(bearing, distance) ?? "unknown"
+    
+    return "\(index!): \(direction)"
+  }
+  
+  var detailedMessageString : String
+  {
+    guard index != nil else { return "" }
+    
+    let prefix = "\(index!) to \(next!.index!)"
+    
+    
+    let direction = _genTitle(bearing, distance) ?? "unknown"
+    
+    return "\(prefix): \(direction)"
   }
   
   private func _genTitle(_ bearing : CLLocationDirection?, _ distance : CLLocationDistance?) -> String?
