@@ -60,9 +60,7 @@ class OptionsViewController: UITableViewController, UITextFieldDelegate
   {
     super.viewDidLoad()
     
-    let hasCompass = CLLocationManager.headingAvailable()
-
-    if hasCompass
+    if CLLocationManager.headingAvailable()
     {
       enable(northTypeSC, value:options.northType.rawValue )
     }

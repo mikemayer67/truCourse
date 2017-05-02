@@ -78,7 +78,8 @@ class Waypoint
   
   init(with data:NSDictionary, after:Waypoint?)
   {
-    location = data.value(forKey: "location") as! CLLocationCoordinate2D
+    location = CLLocationCoordinate2D(latitude:  data.value(forKey:"latitude")  as! CLLocationDegrees,
+                                      longitude: data.value(forKey:"longitude") as! CLLocationDegrees)
     
     if after == nil
     {
@@ -100,7 +101,8 @@ class Waypoint
   func save(into route: NSMutableArray)
   {
     let data = NSMutableDictionary()
-    data.setValue(location, forKey: "location")
+    data.setValue(location.latitude, forKey: "latitude")
+    data.setValue(location.longitude, forKey: "longitude")
     
     route.add(data)
   }

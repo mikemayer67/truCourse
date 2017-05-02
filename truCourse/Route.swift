@@ -9,6 +9,7 @@
 import Foundation
 import CoreLocation
 import UIKit
+import MapKit
 
 class Route
 {
@@ -22,8 +23,8 @@ class Route
   
   private(set) var head           : Waypoint?
   
-  var dirty  : Bool = false
   var locked : Bool = false
+  var dirty  : Bool = false
   
   // MARK: - Route Indexing
   
@@ -55,51 +56,6 @@ class Route
   var distance : CLLocationDistance?
   {
     return head?.totalDistance
-  }
-
-  func restart(at post:Int) -> Bool
-  {
-    var rval = false
-    if let wp = head?.find(index: post)
-    {
-      wp.reindex()
-      head = wp
-      rval = true
-    }
-    return rval
-  }
-  
-  @discardableResult
-  func reverse() -> Bool
-  {
-    if head == nil         { return false }
-    if head!.next === head { return false }
-    
-    head!.reverse()
-    head!.reindex()
-    head!.updateAll()
-    
-    return true
-  }
-  
-  @discardableResult
-  func renumber(post oldPost:Int, as newPost:Int) -> Bool
-  {
-    if oldPost == newPost { return true }
-    
-    guard let a = self.find(post: oldPost) else { return false }
-    guard let b = self.find(post: newPost) else { return false }
-    
-    a.unlink()
-    if oldPost < newPost { a.insert(after:b)  }
-    else                 { a.insert(before:b) }
-    
-    if      head === a { head = a.next }
-    else if head === b { head = a      }
-    
-    head!.reindex()
-    
-    return true
   }
   
   // MARK: - Constructors and Encoding
@@ -137,12 +93,12 @@ class Route
     }
     
     dirty  = false
-    locked = lastSaved != nil
+    locked = true
     
     head?.reindex()
   }
-    
-  func save(into routes:NSMutableArray)
+  
+  func routeData() -> NSDictionary
   {
     let data = NSMutableDictionary()
     
@@ -162,10 +118,70 @@ class Route
     let waypoints = NSMutableArray()
     head?.iterate() { (wp:Waypoint) in wp.save(into:waypoints) }
     if waypoints.count > 0 { data.setValue(waypoints, forKey: "waypoints") }
+
+    return data
+  }
+    
+  func save(into routes:NSMutableArray)
+  {
+    let data = routeData()
     
     routes.add(data)
     
-    dirty  = false
+    dirty = false
+  }
+  
+  // MARK: - Route editting methods
+  
+  func restart(at post:Int) -> Bool
+  {
+    var rval = false
+    if let wp = head?.find(index: post)
+    {
+      wp.reindex()
+      head = wp
+      rval = true
+      
+      dirty = true
+    }
+    return rval
+  }
+  
+  @discardableResult
+  func reverse() -> Bool
+  {
+    if head == nil         { return false }
+    if head!.next === head { return false }
+    
+    head!.reverse()
+    head!.reindex()
+    head!.updateAll()
+    
+    dirty = true
+    
+    return true
+  }
+  
+  @discardableResult
+  func renumber(post oldPost:Int, as newPost:Int) -> Bool
+  {
+    if oldPost == newPost { return true }
+    
+    guard let a = self.find(post: oldPost) else { return false }
+    guard let b = self.find(post: newPost) else { return false }
+    
+    a.unlink()
+    if oldPost < newPost { a.insert(after:b)  }
+    else                 { a.insert(before:b) }
+    
+    if      head === a { head = a.next }
+    else if head === b { head = a      }
+    
+    head!.reindex()
+    
+    dirty = true
+    
+    return true
   }
   
   func insert(post:Int, at location:CLLocationCoordinate2D)
@@ -190,6 +206,8 @@ class Route
       if ref_wp == nil  { fatalError("route must contain post #\(post-1) to add post #\(post)") }
       new_wp.insert(after: ref_wp!)
     }
+    
+    dirty = true
   }
   
   func commit(_ candidate:Waypoint, at index:Int)
@@ -200,6 +218,8 @@ class Route
       candidate.reindex()
       head = candidate
     }
+    
+    dirty = true
   }
   
   func remove(post:Int)
@@ -218,15 +238,17 @@ class Route
     
     wp!.unlink()
     head?.reindex()
+    
+    dirty = true
   }
-  
-  //MARK: - Route info
   
   func setDeclination(_ heading : CLHeading)
   {
     let mag = heading.magneticHeading
     let tru = heading.trueHeading
     if mag != tru { self.declination = tru-mag }
+    
+    dirty = true
   }
   
   //MARK: - Sharing methods

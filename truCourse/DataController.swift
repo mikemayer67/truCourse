@@ -10,6 +10,19 @@ import UIKit
 import Foundation
 import CoreLocation
 
+private func dataPath(_ filename:String) -> URL
+{
+  do
+  {
+    let path = try FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
+    return path.appendingPathComponent(filename)
+  }
+  catch
+  {
+    fatalError("Cannot create URL for \(filename)")
+  }
+}
+
 class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate, UIPickerViewDataSource, RenumberViewDelegate, UIActivityItemSource
 {
   @IBOutlet var dataViewController     : DataViewController!
@@ -17,15 +30,18 @@ class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate
   
   let locationManager = CLLocationManager()
   
+  static let routesDataFile = dataPath("routes.plist")
+  static let workingDataFile = dataPath("working.plist")
+  
   private(set) var trackingEnabled    = true   // user sets this via toolbar
   private(set) var trackingAuthorized = false  // phone security settings
   
-  private let routes = Routes()
-  private var route : Route!
+  private var route : WorkingRoute!
   
   override init()
   {
-    route = routes.working
+    Routes.shared = Routes(load:DataController.routesDataFile)
+    self.route    = WorkingRoute(load:DataController.workingDataFile)
   }
   
   private(set) var state : AppState = .Uninitialized
@@ -43,9 +59,7 @@ class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate
   
   private(set) var currentLocation  : CLLocation?
   private      var lastRecordedPost : CLLocation?
-  
-  let hasCompass = CLLocationManager.headingAvailable()
-  
+    
   private var mostRecentLocation : CLLocationCoordinate2D
   {
     let loc = currentLocation ?? locationManager.location
@@ -98,19 +112,10 @@ class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate
     switch transition
     {
     case .Start:
-      switch self.state
-      {
-      case .Uninitialized:
-        locationManager.delegate = self
-        locationManager.allowsBackgroundLocationUpdates = false
-        locationManager.requestWhenInUseAuthorization()
-        let status = CLLocationManager.authorizationStatus()
-        lastRecordedPost = nil
-        updateState(.Authorization(status))
-        return
-      default:
-        print("DC start transition sent multiple times")
-      }
+      guard self.state == .Uninitialized else { fatalError("Cannot start app multiple times") }
+      
+      self.start()
+      return
       
     case .Authorization(let status):
       if status == .authorizedAlways || status == .authorizedWhenInUse
@@ -126,10 +131,7 @@ class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate
           else                           { state = .Idle      }
         }
         
-        if route.declination == nil && hasCompass
-        {
-          locationManager.startUpdatingHeading()
-        }
+        self.updateDeclinationIfNeeded()
       }
       else
       {
@@ -208,6 +210,51 @@ class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate
     dvc.applyState()
   }
   
+  func start()
+  {
+    locationManager.delegate = self
+    locationManager.allowsBackgroundLocationUpdates = false
+    locationManager.requestWhenInUseAuthorization()
+    let status = CLLocationManager.authorizationStatus()
+    lastRecordedPost = nil
+    
+    updateState(.Authorization(status))
+    
+    if route.count == 0 { return }
+    
+    let deleteRoute =
+      {
+        (_:UIAlertAction) in
+        self.route = WorkingRoute()
+        self.dataViewController.applyState()
+      }
+    
+    let keepRoute =
+      {
+        (_:UIAlertAction) in
+        self.dataViewController.updateRoute(self.route)
+        self.dataViewController.applyState()
+      }
+    
+    let formatter = DateFormatter()
+    formatter.timeStyle = .none
+    formatter.dateStyle = .medium
+    let date = formatter.string(from: route.created)
+    formatter.timeStyle = .short
+    formatter.dateStyle = .none
+    let time = formatter.string(from: route.created)
+    
+    let alert = UIAlertController(title:nil,
+                                  message:"What do you want to do with the unsaved route started \(date) at \(time)",
+                                  preferredStyle: .alert)
+    
+    alert.addAction( UIAlertAction(title: "Delete it", style: .destructive, handler: deleteRoute) )
+    alert.addAction( UIAlertAction(title: "Continue",  style: .cancel,      handler: keepRoute) )
+    
+    dataViewController.present(alert, animated: true)
+  }
+
+  
   
   func updateTrackingState(authorized:Bool?, enabled:Bool?)
   {
@@ -236,6 +283,17 @@ class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate
     else
     {
       locationManager.stopUpdatingLocation()
+    }
+  }
+  
+  
+  func updateDeclinationIfNeeded()
+  {
+    if route.declination != nil && route.declination != 0.0 { return }
+    
+    if CLLocationManager.headingAvailable()
+    {
+      locationManager.startUpdatingHeading()
     }
   }
   
@@ -340,6 +398,8 @@ class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate
     
     lastRecordedPost = currentLocation
     dataViewController.updateRoute(route)
+    
+    updateDeclinationIfNeeded()
   }
   
   func renumber(post:Int)

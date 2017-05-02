@@ -8,70 +8,40 @@
 
 import Foundation
 
-fileprivate func routeDataFilename() throws -> URL
-{
-  var path = try FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
-  path.appendPathComponent("routes")
-  return path
-}
+
 
 class Routes
 {
-  private(set) var routes  = [Route]()
-  private(set) var working : Route!
-  
-  init()
+  static var shared : Routes!
   {
-    do
+    willSet
     {
-      let path = try routeDataFilename()
-      if let rawData = NSArray(contentsOf: path) as? [NSDictionary]
-      {
-        for routeData in rawData
-        {
-          let route = Route(with:routeData)
-          
-          if route.lastSaved == nil
-          {
-            guard working == nil else { fatalError("Saved data contains multiple routes in progress") }
-            working = route
-            Options.shared.declination = route.declination
-          }
-          else
-          {
-            routes.append(route)
-          }
-        }
-      }
-    }
-    catch {}
-    
-    if working==nil
-    {
-      working = Route()
-      Options.shared.declination = working.declination
+      guard shared == nil else { fatalError("Internal coding error... should only be set once!") }
     }
   }
   
-  func saveData()
+  private(set) var routes  = [Route]()
+  
+  init() {}
+  
+  init(load file:URL)
+  {
+    if let routesData = NSArray(contentsOf: file) as? [NSDictionary]
+    {
+      for routeData in routesData
+      {
+        let route = Route(with:routeData)
+        routes.append(route)
+      }
+    }
+  }
+  
+  func save(to file:URL)
   {
     let data = NSMutableArray()
     
-    working?.save(into:data)
-        
-    for route in routes
-    {
-      route.save(into:data)
-    }
+    routes.forEach { $0.save(into:data) }
     
-    do
-    {
-      let path = try routeDataFilename()
-      data.write(to: path, atomically: true)
-    }
-    catch
-    {
-      fatalError("Unable to save route data")
-    }
+    data.write(to: file, atomically: true)
   }
 }
