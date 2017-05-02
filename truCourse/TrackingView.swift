@@ -11,7 +11,7 @@ import MapKit
 
 @objc protocol TrackingViewDelegate
 {
-  func trackingView(_ tv: TrackingView, modeDidChange mode: MKUserTrackingMode)
+  func trackingView(_ tv: TrackingView, modeDidChange mode: Int)
 }
 
 class TrackingView: UIView
@@ -19,25 +19,47 @@ class TrackingView: UIView
   @IBOutlet weak var button   : UIButton!
   @IBOutlet weak var delegate : TrackingViewDelegate?
   
-  private var cachedMode : MKUserTrackingMode?
+  enum Mode : Int
+  {
+    case trackOff
+    case trackPosts
+    case trackFollow
+    case trackHeading
+  }
   
-  var mode = MKUserTrackingMode.none
+  private var cachedMode : Mode?
+  
+  var mode = Mode.trackOff
   {
     didSet
     {
       if mode != oldValue
       {
-        delegate?.trackingView(self, modeDidChange: mode)
+        delegate?.trackingView(self, modeDidChange: mode.rawValue)
         
         var newImage : UIImage?
         switch mode
         {
-        case .none:              newImage = UIImage(named: "TrackOff_000000_25")
-        case .follow:            newImage = UIImage(named: "TrackOn_000000_25")
-        case .followWithHeading: newImage = UIImage(named: "TrackHeading_000000_25")
+        case .trackOff:      newImage = UIImage(named: "TrackOff_000000_25")
+        case .trackPosts:    newImage = UIImage(named: "TrackPosts_000000_25")
+        case .trackFollow:   newImage = UIImage(named: "TrackOn_000000_25")
+        case .trackHeading:  newImage = UIImage(named: "TrackHeading_000000_25")
         }
         
         button.setImage(newImage, for: .normal)
+      }
+    }
+  }
+  
+  var mkTrackingMode : MKUserTrackingMode
+    {
+    get {
+      switch self.mode
+      {
+      case .trackOff:      return .none
+      case .trackPosts:    return .none
+      case .trackFollow:   return .follow
+      case .trackHeading:  return .followWithHeading
       }
     }
   }
@@ -80,9 +102,10 @@ class TrackingView: UIView
   {
     switch self.mode
     {
-    case .none:              self.mode = .follow
-    case .follow:            self.mode = .followWithHeading
-    case .followWithHeading: self.mode = .none
+    case .trackOff:       self.mode = .trackPosts
+    case .trackPosts:     self.mode = .trackFollow
+    case .trackFollow:    self.mode = .trackHeading
+    case .trackHeading:   self.mode = .trackOff
     }
   }
 }

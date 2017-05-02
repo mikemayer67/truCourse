@@ -532,7 +532,7 @@
                                     </tableViewCell>
                                 </cells>
                             </tableViewSection>
-                            <tableViewSection headerTitle="EMAIL" footerTitle="Default address to send route by email (optional)" id="ja3-bW-CMX">
+                            <tableViewSection headerTitle="EMAIL" footerTitle="Default address to send route by email (optional)  [Not currently implemented]" id="ja3-bW-CMX">
                                 <cells>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="OCv-Tn-zv4">
                                         <rect key="frame" x="0.0" y="767" width="320" height="44"/>

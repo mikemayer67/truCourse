@@ -33,15 +33,10 @@ class WorkingRoute : Route
     let file = DataController.workingDataFile
     
     let rval = data.write(to:file, atomically:true)
-    print("save -> \(rval)")
   }
   
   override var dirty : Bool
   {
-    didSet
-    {
-      print("Updated working route")
-      self.save()
-    }
+    didSet { self.save() }
   }
 }

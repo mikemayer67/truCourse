@@ -180,6 +180,15 @@ class DataViewController :
   {
     currentView.update(candidate:nil)
   }
+  
+  func viewPosts()
+  {
+    if let mvc = visualizationControllers[.MapView] as? MapViewController
+    {
+      mvc.trackingView.mode = .trackPosts
+      mvc.viewPosts()
+    }
+  }
 
   // MARK: - Page View Data Source
   

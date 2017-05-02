@@ -54,16 +54,16 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "truCourse/DataController.swift"
-            timestampString = "515397707.783192"
+            filePath = "truCourse/DataViewController.swift"
+            timestampString = "515426673.678799"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "640"
-            endingLineNumber = "640"
-            landmarkName = "locationManager(_:didUpdateHeading:)"
+            startingLineNumber = "186"
+            endingLineNumber = "186"
+            landmarkName = "viewPosts()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

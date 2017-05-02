@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		270A77721E8CC570001E605B /* InsertionPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 270A77711E8CC570001E605B /* InsertionPoint.swift */; };
 		2710A2E81E735977004BE462 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2710A2E71E735977004BE462 /* MapKit.framework */; };
+		2720DA361EB8A6F800B4E6D3 /* WorkingRegion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2720DA351EB8A6F800B4E6D3 /* WorkingRegion.swift */; };
+		2720DA381EB8B23C00B4E6D3 /* TrackPosts_000000_25.png in Resources */ = {isa = PBXBuildFile; fileRef = 2720DA371EB8B23C00B4E6D3 /* TrackPosts_000000_25.png */; };
 		273D83821E8163B1003F5B49 /* RouteID.swift in Sources */ = {isa = PBXBuildFile; fileRef = 273D83811E8163B1003F5B49 /* RouteID.swift */; };
 		273DCEB11E7AC11D005AE82E /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 273DCEB01E7AC11D005AE82E /* Constants.swift */; };
 		273DCEB31E7ACC11005AE82E /* Route.swift in Sources */ = {isa = PBXBuildFile; fileRef = 273DCEB21E7ACC11005AE82E /* Route.swift */; };
@@ -67,6 +69,8 @@
 /* Begin PBXFileReference section */
 		270A77711E8CC570001E605B /* InsertionPoint.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InsertionPoint.swift; sourceTree = "<group>"; };
 		2710A2E71E735977004BE462 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
+		2720DA351EB8A6F800B4E6D3 /* WorkingRegion.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WorkingRegion.swift; sourceTree = "<group>"; };
+		2720DA371EB8B23C00B4E6D3 /* TrackPosts_000000_25.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = TrackPosts_000000_25.png; sourceTree = "<group>"; };
 		273D83811E8163B1003F5B49 /* RouteID.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteID.swift; sourceTree = "<group>"; };
 		273DCEB01E7AC11D005AE82E /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		273DCEB21E7ACC11005AE82E /* Route.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Route.swift; sourceTree = "<group>"; };
@@ -155,6 +159,7 @@
 				273D83811E8163B1003F5B49 /* RouteID.swift */,
 				2742AC9D1EAC39AB00B2EC53 /* UndoableActions.swift */,
 				2749E0801EB6E44B00B34C0E /* WorkingRoute.swift */,
+				2720DA351EB8A6F800B4E6D3 /* WorkingRegion.swift */,
 			);
 			name = Data;
 			sourceTree = "<group>";
@@ -220,6 +225,7 @@
 				27BC9E1A1EA859BC00398773 /* TrackOff_000000_25.png */,
 				27BC9E181EA8596C00398773 /* TrackOn_000000_25.png */,
 				27BC9E161EA8590A00398773 /* TrackHeading_000000_25.png */,
+				2720DA371EB8B23C00B4E6D3 /* TrackPosts_000000_25.png */,
 				27C5583E1E5F8769004FF32A /* Settings_ffffff_25.png */,
 				27C5583F1E5F8769004FF32A /* Signpost_ffffff_25.png */,
 				27C558401E5F8769004FF32A /* Waypoint Map_ffffff_25.png */,
@@ -361,6 +367,7 @@
 				27E7754A1E7CB9B500091C78 /* Circled Play_ffffff_25.png in Resources */,
 				27A4C3CE1EB23F5600604F1E /* icon_fullsize.png in Resources */,
 				27AD09491EAE285A005912B3 /* Redo_ffffff_25.png in Resources */,
+				2720DA381EB8B23C00B4E6D3 /* TrackPosts_000000_25.png in Resources */,
 				27C558451E5F8769004FF32A /* Waypoint Map_ffffff_25.png in Resources */,
 				27C5585B1E5F9578004FF32A /* FactoryDefaults.plist in Resources */,
 				27E7754C1E7CB9CE00091C78 /* Circled Pause_ffffff_25.png in Resources */,
@@ -391,6 +398,7 @@
 				27C5585E1E5F97B2004FF32A /* OptionsViewController.swift in Sources */,
 				274B508F1EA9A7C7000A1527 /* Extensions.swift in Sources */,
 				27E0985A1EB0219D00FA21D3 /* UndoManager.swift in Sources */,
+				2720DA361EB8A6F800B4E6D3 /* WorkingRegion.swift in Sources */,
 				27F74D7A1EA4E7AA008D172A /* PostAnnotation.swift in Sources */,
 				2742AC9E1EAC39AB00B2EC53 /* UndoableActions.swift in Sources */,
 				278905E41E7961D100F1B40B /* Waypoint.swift in Sources */,

@@ -24,6 +24,8 @@ class MapViewController: UIViewController, VisualizationView, MKMapViewDelegate,
   
   private var candPrevWaypoint : Waypoint?
   
+  private(set) var workingRegion = WorkingRegion()
+  
    var _visualizationType : VisualizationType { return .MapView }
    var _hasSelection      : Bool              { return false    }
   
@@ -33,11 +35,11 @@ class MapViewController: UIViewController, VisualizationView, MKMapViewDelegate,
     // Do any additional setup after loading the view.
     
     trackingView.delegate = self
-    trackingView.mode = .follow
+    trackingView.mode = .trackFollow
     
     mapView.mapType           = .standard
     mapView.showsUserLocation = true
-    mapView.setUserTrackingMode(trackingView.mode, animated: true)
+    mapView.setUserTrackingMode(trackingView.mkTrackingMode, animated: true)
     mapView.showsScale        = true
     
     mapView.remove { (gr:UIGestureRecognizer)->Bool in return gr is UILongPressGestureRecognizer }
@@ -68,20 +70,27 @@ class MapViewController: UIViewController, VisualizationView, MKMapViewDelegate,
     default:
       trackingView.resume()
       mapView.showsUserLocation = true
-      mapView.setUserTrackingMode(trackingView.mode, animated: true)
+      mapView.setUserTrackingMode(trackingView.mkTrackingMode, animated: true)
     }
   }
   
-  func trackingView(_ tv: TrackingView, modeDidChange mode: MKUserTrackingMode)
+  func trackingView(_ tv: TrackingView, modeDidChange newMode: Int)
   {
-    mapView.setUserTrackingMode(trackingView.mode, animated: true)
+    mapView.setUserTrackingMode(tv.mkTrackingMode, animated: true)
+   
+    if tv.mode == .trackPosts { self.viewPosts() }
   }
   
   // MARK: - Map View delegate methods
   
   func mapView(_ mapView: MKMapView, didChange mode: MKUserTrackingMode, animated: Bool)
   {
-    trackingView.mode = mode
+    switch(mode)
+    {
+    case .none:              trackingView.mode = .trackOff
+    case .follow:            trackingView.mode = .trackFollow
+    case .followWithHeading: trackingView.mode = .trackHeading
+    }
   }
   
   func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView?
@@ -146,9 +155,14 @@ class MapViewController: UIViewController, VisualizationView, MKMapViewDelegate,
     var existingPosts = postAnnotations
     postAnnotations.removeAll()
     
+    var waypoints = [Waypoint]()
+    
     head?.iterate(
       { (wp:Waypoint) in
         coords.append(wp.location)
+        
+        waypoints.append(wp)
+        
         if wp.cand != nil { cand = wp.cand }
         
         if let post = existingPosts.removeValue(forKey: wp.index!)
@@ -164,6 +178,9 @@ class MapViewController: UIViewController, VisualizationView, MKMapViewDelegate,
         }
       }
     )
+    
+    workingRegion.update(posts: waypoints)
+    if trackingView.mode == .trackPosts { self.viewPosts() }
     
     for (_,post) in existingPosts
     {
@@ -226,6 +243,11 @@ class MapViewController: UIViewController, VisualizationView, MKMapViewDelegate,
     
     postAnnotations[prev.index!]?.updateTitle()
     candPrevWaypoint = prev
+  }
+  
+  func viewPosts()
+  {
+    mapView.region = workingRegion.posts
   }
   
   func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer
