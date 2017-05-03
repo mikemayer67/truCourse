@@ -57,12 +57,12 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "truCourse/DataViewController.swift"
-            timestampString = "515426673.678799"
+            filePath = "truCourse/MapViewController.swift"
+            timestampString = "515473232.044262"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "186"
-            endingLineNumber = "186"
+            startingLineNumber = "249"
+            endingLineNumber = "249"
             landmarkName = "viewPosts()"
             landmarkType = "7">
          </BreakpointContent>

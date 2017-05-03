@@ -24,8 +24,6 @@ class MapViewController: UIViewController, VisualizationView, MKMapViewDelegate,
   
   private var candPrevWaypoint : Waypoint?
   
-  private(set) var workingRegion = WorkingRegion()
-  
    var _visualizationType : VisualizationType { return .MapView }
    var _hasSelection      : Bool              { return false    }
   
@@ -85,6 +83,7 @@ class MapViewController: UIViewController, VisualizationView, MKMapViewDelegate,
   
   func mapView(_ mapView: MKMapView, didChange mode: MKUserTrackingMode, animated: Bool)
   {
+    print("mapView: newMode:\(mode.rawValue) oldMode:\(trackingView.mode)")
     switch(mode)
     {
     case .none:              trackingView.mode = .trackOff
@@ -179,7 +178,6 @@ class MapViewController: UIViewController, VisualizationView, MKMapViewDelegate,
       }
     )
     
-    workingRegion.update(posts: waypoints)
     if trackingView.mode == .trackPosts { self.viewPosts() }
     
     for (_,post) in existingPosts
@@ -247,7 +245,10 @@ class MapViewController: UIViewController, VisualizationView, MKMapViewDelegate,
   
   func viewPosts()
   {
-    mapView.region = workingRegion.posts
+    var annotations = [MKAnnotation]()
+    postAnnotations.forEach { (_,value) in annotations.append(value) }
+    annotations.append(mapView.userLocation)
+    mapView.showAnnotations(annotations, animated: true)
   }
   
   func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer

@@ -32,7 +32,7 @@ class WorkingRoute : Route
     let data = routeData()
     let file = DataController.workingDataFile
     
-    let rval = data.write(to:file, atomically:true)
+    data.write(to:file, atomically:true)
   }
   
   override var dirty : Bool

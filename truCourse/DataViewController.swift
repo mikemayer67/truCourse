@@ -181,12 +181,15 @@ class DataViewController :
     currentView.update(candidate:nil)
   }
   
-  func viewPosts()
+  func viewPostsOnMap(updateTrackingMode:Bool)
   {
     if let mvc = visualizationControllers[.MapView] as? MapViewController
     {
-      mvc.trackingView.mode = .trackPosts
-      mvc.viewPosts()
+      if updateTrackingMode || mvc.trackingView.mode == .trackPosts
+      {
+        mvc.trackingView.mode = .trackPosts
+        mvc.viewPosts()
+      }
     }
   }
 

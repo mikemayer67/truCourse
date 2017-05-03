@@ -35,6 +35,7 @@ class TrackingView: UIView
     {
       if mode != oldValue
       {
+        print("Tracking mode updated from \(oldValue) to \(mode)")
         delegate?.trackingView(self, modeDidChange: mode.rawValue)
         
         var newImage : UIImage?
