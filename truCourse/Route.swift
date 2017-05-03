@@ -255,7 +255,6 @@ class Route
   
   func composeMessageToShare(for activityType:UIActivityType) -> String
   {
-    print("ActvityType: \(activityType)")
     switch activityType
     {
     case UIActivityType.message, UIActivityType.postToFacebook,

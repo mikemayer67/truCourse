@@ -27,6 +27,8 @@ class MapViewController: UIViewController, VisualizationView, MKMapViewDelegate,
    var _visualizationType : VisualizationType { return .MapView }
    var _hasSelection      : Bool              { return false    }
   
+  // MARK: - Load/Visibility methods
+  
   override func viewDidLoad() {
     super.viewDidLoad()
     
@@ -41,6 +43,20 @@ class MapViewController: UIViewController, VisualizationView, MKMapViewDelegate,
     mapView.showsScale        = true
     
     mapView.remove { (gr:UIGestureRecognizer)->Bool in return gr is UILongPressGestureRecognizer }
+  }
+  
+  override func viewWillDisappear(_ animated: Bool)
+  {
+    print("MVC about to disappear")
+    super.viewWillDisappear(animated)
+    pauseTrackingTimer()
+  }
+  
+  override func viewDidAppear(_ animated: Bool)
+  {
+    print ("MVC did appear")
+    super.viewDidAppear(animated)
+    if trackingView.mode == .trackPosts { startTrackingTimer() }
   }
 
   // MARK: - Options
@@ -72,18 +88,49 @@ class MapViewController: UIViewController, VisualizationView, MKMapViewDelegate,
     }
   }
   
+  // MARK: - TrackingView delegate
+  
   func trackingView(_ tv: TrackingView, modeDidChange newMode: Int)
   {
     mapView.setUserTrackingMode(tv.mkTrackingMode, animated: true)
    
-    if tv.mode == .trackPosts { self.viewPosts() }
+    if tv.mode == .trackPosts
+    {
+      self.viewPosts()
+      startTrackingTimer()
+    }
+    else
+    {
+      pauseTrackingTimer()
+    }
+  }
+  
+  var trackingTimer : Timer?
+  
+  func startTrackingTimer()
+  {
+    if trackingTimer != nil { return }
+    
+    trackingTimer = Timer.scheduledTimer(timeInterval: 5.0, target: self, selector: #selector(fireTrackingTimer(_:)), userInfo: nil, repeats: true)
+  }
+  
+  func fireTrackingTimer(_ timer:Timer) -> Void
+  {
+    self.viewPosts()
+  }
+  
+  func pauseTrackingTimer()
+  {
+    if trackingTimer == nil { return }
+    
+    trackingTimer?.invalidate()
+    trackingTimer = nil
   }
   
   // MARK: - Map View delegate methods
   
   func mapView(_ mapView: MKMapView, didChange mode: MKUserTrackingMode, animated: Bool)
   {
-    print("mapView: newMode:\(mode.rawValue) oldMode:\(trackingView.mode)")
     switch(mode)
     {
     case .none:              trackingView.mode = .trackOff
