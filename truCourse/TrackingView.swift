@@ -64,24 +64,25 @@ class TrackingView: UIView
     }
   }
   
-  func pause()
+  var paused : Bool = false
   {
-    if button.isEnabled
+    didSet
     {
-      button.isEnabled = false
-      cachedMode = mode
-    }
-  }
-  
-  func resume()
-  {
-    if button.isEnabled == false
-    {
-      button.isEnabled = true
-      if cachedMode != nil
+      if paused != oldValue
       {
-        mode = cachedMode!;
-        cachedMode = nil
+        if paused
+        {
+          self.cachedMode = self.mode
+          if self.mode == .trackHeading || self.mode == .trackFollow { self.mode = .trackOff }
+        }
+        else
+        {
+          if self.cachedMode != nil
+          {
+            self.mode = self.cachedMode!
+            self.cachedMode = nil
+          }
+        }
       }
     }
   }
@@ -103,7 +104,7 @@ class TrackingView: UIView
     switch self.mode
     {
     case .trackOff:       self.mode = .trackPosts
-    case .trackPosts:     self.mode = .trackFollow
+    case .trackPosts:     self.mode = (paused ? .trackOff : .trackFollow)
     case .trackFollow:    self.mode = .trackHeading
     case .trackHeading:   self.mode = .trackOff
     }

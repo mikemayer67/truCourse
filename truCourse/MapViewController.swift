@@ -76,14 +76,13 @@ class MapViewController: UIViewController, VisualizationView, MKMapViewDelegate,
     switch state
     {
     case .Uninitialized, .Disabled, .Paused:
-      trackingView.pause()
+      trackingView.paused = true
       mapView.showsUserLocation = false
-      mapView.setUserTrackingMode(.none, animated: false)
     default:
-      trackingView.resume()
       mapView.showsUserLocation = true
-      mapView.setUserTrackingMode(trackingView.mkTrackingMode, animated: true)
+      trackingView.paused = false
     }
+    mapView.setUserTrackingMode(trackingView.mkTrackingMode, animated: true)
   }
   
   // MARK: - TrackingView delegate
@@ -318,7 +317,7 @@ class MapViewController: UIViewController, VisualizationView, MKMapViewDelegate,
     
     var annotations = [MKAnnotation]()
     postAnnotations.forEach { (_,value) in annotations.append(value) }
-    annotations.append(mapView.userLocation)
+    if mapView.showsUserLocation { annotations.append(mapView.userLocation) }
     regionChangeState = .PostTrackingRequestedChange
     mapView.showAnnotations(annotations, animated: true)
   }
