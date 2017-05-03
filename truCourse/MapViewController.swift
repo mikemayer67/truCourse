@@ -47,14 +47,12 @@ class MapViewController: UIViewController, VisualizationView, MKMapViewDelegate,
   
   override func viewWillDisappear(_ animated: Bool)
   {
-    print("MVC about to disappear")
     super.viewWillDisappear(animated)
     pauseTrackingTimer()
   }
   
   override func viewDidAppear(_ animated: Bool)
   {
-    print ("MVC did appear")
     super.viewDidAppear(animated)
     if trackingView.mode == .trackPosts { startTrackingTimer() }
   }
@@ -160,6 +158,30 @@ class MapViewController: UIViewController, VisualizationView, MKMapViewDelegate,
     }
     
     return rval
+  }
+  
+  enum RegionChangeState : Int
+  {
+    case MapViewIsInControl
+    case PostTrackingRequestedChange
+    case PostTrackingIsChanging
+  }
+  
+  var regionChangeState = RegionChangeState.MapViewIsInControl
+  
+  func mapView(_ mapView: MKMapView, regionWillChangeAnimated animated: Bool)
+  {
+    if regionChangeState == .PostTrackingRequestedChange { regionChangeState = .PostTrackingIsChanging }
+  }
+  
+  func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool)
+  {
+    if trackingView.mode == .trackPosts,
+        regionChangeState != .PostTrackingIsChanging
+    {
+      trackingView.mode = .trackOff
+    }
+    regionChangeState = .MapViewIsInControl
   }
   
   func handlePopup(_ sender:UILongPressGestureRecognizer)
@@ -292,9 +314,12 @@ class MapViewController: UIViewController, VisualizationView, MKMapViewDelegate,
   
   func viewPosts()
   {
+    trackingView.mode = .trackPosts
+    
     var annotations = [MKAnnotation]()
     postAnnotations.forEach { (_,value) in annotations.append(value) }
     annotations.append(mapView.userLocation)
+    regionChangeState = .PostTrackingRequestedChange
     mapView.showAnnotations(annotations, animated: true)
   }
   
