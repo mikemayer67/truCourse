@@ -366,7 +366,7 @@ class DataViewController :
   
   func handleSave(_ sender: UIBarButtonItem)
   {
-    print("DVC handleSave")
+    dataController.saveRoute()
   }
   
   // MARK: - Confirmation Dialog

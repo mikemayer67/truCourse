@@ -20,7 +20,7 @@ class Routes
     }
   }
   
-  private(set) var routes  = [Route]()
+  private(set) var routes  = [Int:Route]()
   
   init() {}
   
@@ -31,7 +31,7 @@ class Routes
       for routeData in routesData
       {
         let route = Route(with:routeData)
-        routes.append(route)
+        routes[route.routeID] = route
       }
     }
   }
@@ -40,8 +40,20 @@ class Routes
   {
     let data = NSMutableArray()
     
-    routes.forEach { $0.save(into:data) }
+    routes.forEach { (_,route) in route.save(into:data) }
     
     data.write(to: file, atomically: true)
+  }
+  
+  func add(_ route : Route)
+  {
+    routes[route.routeID] = route
+    
+    save(to:DataController.routesDataFile)
+  }
+  
+  subscript(id:Int) -> Route?
+  {
+    get { return routes[id] }
   }
 }

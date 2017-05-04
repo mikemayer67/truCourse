@@ -131,6 +131,17 @@ class Route
     dirty = false
   }
   
+  func save(withName name: String, description: String?, lock: Bool)
+  {
+    self.name        = name
+    self.description = description
+    self.locked      = lock
+    self.dirty       = false
+    self.lastSaved   = Date()
+    
+    Routes.shared.add(self)
+  }
+  
   // MARK: - Route editting methods
   
   func restart(at post:Int) -> Bool

@@ -10,6 +10,8 @@
 		270A77721E8CC570001E605B /* InsertionPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 270A77711E8CC570001E605B /* InsertionPoint.swift */; };
 		2710A2E81E735977004BE462 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2710A2E71E735977004BE462 /* MapKit.framework */; };
 		2720DA381EB8B23C00B4E6D3 /* TrackPosts_000000_25.png in Resources */ = {isa = PBXBuildFile; fileRef = 2720DA371EB8B23C00B4E6D3 /* TrackPosts_000000_25.png */; };
+		27377C951EBA1509003504EF /* RouteInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27377C941EBA1509003504EF /* RouteInfoViewController.swift */; };
+		27377C971EBA1586003504EF /* PopupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27377C961EBA1586003504EF /* PopupViewController.swift */; };
 		273D83821E8163B1003F5B49 /* RouteID.swift in Sources */ = {isa = PBXBuildFile; fileRef = 273D83811E8163B1003F5B49 /* RouteID.swift */; };
 		273DCEB11E7AC11D005AE82E /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 273DCEB01E7AC11D005AE82E /* Constants.swift */; };
 		273DCEB31E7ACC11005AE82E /* Route.swift in Sources */ = {isa = PBXBuildFile; fileRef = 273DCEB21E7ACC11005AE82E /* Route.swift */; };
@@ -69,6 +71,8 @@
 		270A77711E8CC570001E605B /* InsertionPoint.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InsertionPoint.swift; sourceTree = "<group>"; };
 		2710A2E71E735977004BE462 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		2720DA371EB8B23C00B4E6D3 /* TrackPosts_000000_25.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = TrackPosts_000000_25.png; sourceTree = "<group>"; };
+		27377C941EBA1509003504EF /* RouteInfoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteInfoViewController.swift; sourceTree = "<group>"; };
+		27377C961EBA1586003504EF /* PopupViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PopupViewController.swift; sourceTree = "<group>"; };
 		273D83811E8163B1003F5B49 /* RouteID.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteID.swift; sourceTree = "<group>"; };
 		273DCEB01E7AC11D005AE82E /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		273DCEB21E7ACC11005AE82E /* Route.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Route.swift; sourceTree = "<group>"; };
@@ -196,6 +200,7 @@
 				27B10CFD1E6060E3005099BD /* MainController.swift */,
 				27AA19831EB07055003FB5F6 /* SupportClasses */,
 				27DB65E21E60E2D100498C12 /* DataViews */,
+				278905E21E7961AC00F1B40B /* Data */,
 				27DB65E11E60E2B500498C12 /* Options */,
 				27C558461E5F877E004FF32A /* Icons */,
 				27C558531E5F885B004FF32A /* Main.storyboard */,
@@ -260,8 +265,9 @@
 				27C5584A1E5F8790004FF32A /* MapViewController.swift */,
 				27F74D791EA4E7AA008D172A /* PostAnnotation.swift */,
 				27D509461EA8D227002A5920 /* TrackingView.swift */,
+				27377C961EBA1586003504EF /* PopupViewController.swift */,
 				27AA19861EB0BB32003FB5F6 /* RenumberViewController.swift */,
-				278905E21E7961AC00F1B40B /* Data */,
+				27377C941EBA1509003504EF /* RouteInfoViewController.swift */,
 			);
 			name = DataViews;
 			sourceTree = "<group>";
@@ -384,6 +390,7 @@
 				27AA19871EB0BB32003FB5F6 /* RenumberViewController.swift in Sources */,
 				27C5584F1E5F8790004FF32A /* LatLonViewController.swift in Sources */,
 				27C5584D1E5F8790004FF32A /* AppDelegate.swift in Sources */,
+				27377C951EBA1509003504EF /* RouteInfoViewController.swift in Sources */,
 				27C5584E1E5F8790004FF32A /* BearingViewController.swift in Sources */,
 				27C558521E5F8790004FF32A /* Types.swift in Sources */,
 				273D83821E8163B1003F5B49 /* RouteID.swift in Sources */,
@@ -400,6 +407,7 @@
 				278905E41E7961D100F1B40B /* Waypoint.swift in Sources */,
 				27C558511E5F8790004FF32A /* DataViewController.swift in Sources */,
 				27D509471EA8D227002A5920 /* TrackingView.swift in Sources */,
+				27377C971EBA1586003504EF /* PopupViewController.swift in Sources */,
 				273DCEBA1E7C1C06005AE82E /* DataController.swift in Sources */,
 				27C558501E5F8790004FF32A /* MapViewController.swift in Sources */,
 				27C558561E5F8ABB004FF32A /* Options.swift in Sources */,

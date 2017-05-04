@@ -15,15 +15,12 @@ protocol RenumberViewDelegate : UIPickerViewDelegate, UIPickerViewDataSource
 }
 
 
-class RenumberViewController: UIViewController, UIViewControllerAnimatedTransitioning, UIViewControllerTransitioningDelegate
+class RenumberViewController: PopupViewController
 {
   @IBOutlet weak var pickerView: UIPickerView!
   @IBOutlet weak var titleLabel: UILabel!
   
-  var delegate     : RenumberViewDelegate?
-  var isPresenting : Bool?
-    
-  let transitionDuration : TimeInterval = 0.25
+  weak var delegate : RenumberViewDelegate?
   
   override func viewDidLoad()
   {
@@ -38,11 +35,6 @@ class RenumberViewController: UIViewController, UIViewControllerAnimatedTransiti
     titleLabel.text = delegate?.title(for:self)
   }
   
-  override func didReceiveMemoryWarning() {
-    super.didReceiveMemoryWarning()
-    // Dispose of any resources that can be recreated.
-  }
-  
   @IBAction func handle_cancel(_ sender: UIButton)
   {
     self.dismiss(animated: true)
@@ -55,61 +47,4 @@ class RenumberViewController: UIViewController, UIViewControllerAnimatedTransiti
     
     self.dismiss(animated: true)
   }
-  
-  // MARK: - Transitioning Delegate
-  
-  func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning?
-  {
-    isPresenting = true
-    return self
-  }
-  
-  func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning?
-  {
-    isPresenting = false
-    return self
-  }
-  
-  func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval
-  {
-    return transitionDuration
-  }
-  
-  func animateTransition(using transitionContext: UIViewControllerContextTransitioning)
-  {
-    let fromVC   = transitionContext.viewController(forKey: .from)!
-    let toVC     = transitionContext.viewController(forKey: .to)!
-    let cv       = transitionContext.containerView
-    let fromView = fromVC.view!
-    let toView   = toVC.view!
-    
-    if self.isPresenting!
-    {
-      cv.addSubview(toView)
-      toView.frame = cv.frame
-      toView.alpha = 0.0
-      
-      toView.transform = CGAffineTransform(scaleX: 1.0, y: 0.01)
-      
-      UIView.animate(withDuration: transitionDuration, animations:
-        {
-          toView.alpha = 1.0
-          toView.transform = CGAffineTransform.identity
-        },
-        completion: { _ in transitionContext.completeTransition(true) }
-      )
-    }
-    else
-    {
-      UIView.animate(withDuration: transitionDuration, animations:
-        {
-          fromView.alpha = 0.0
-          fromView.transform = CGAffineTransform(scaleX: 1.0, y: 0.01)
-        },
-        completion: { _ in transitionContext.completeTransition(true) }
-      )
-    }
-  }
-  
-  
 }

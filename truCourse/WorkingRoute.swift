@@ -23,8 +23,6 @@ class WorkingRoute : Route
     {
       super.init()
     }
-    
-    locked = false
   }
   
   func save()

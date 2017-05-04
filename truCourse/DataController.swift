@@ -23,7 +23,7 @@ private func dataPath(_ filename:String) -> URL
   }
 }
 
-class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate, UIPickerViewDataSource, RenumberViewDelegate, UIActivityItemSource
+class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate, UIPickerViewDataSource, RenumberViewDelegate, UIActivityItemSource, RouteInfoViewDelegate
 {
   @IBOutlet var dataViewController     : DataViewController!
             var renumberViewController : RenumberViewController?
@@ -36,7 +36,7 @@ class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate
   private(set) var trackingEnabled    = true   // user sets this via toolbar
   private(set) var trackingAuthorized = false  // phone security settings
   
-  private var route : WorkingRoute!
+  private(set) var route : WorkingRoute!
   
   override init()
   {
@@ -82,7 +82,7 @@ class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate
   var locked : Bool
   {
     get { return route.locked   }
-    set { route.locked = locked }
+    set { route.locked = newValue }
   }
   
   var canShare : Bool
@@ -92,7 +92,10 @@ class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate
   
   var canSave : Bool
   {
-    return route.isEmpty == false && route.dirty == false
+    if route.isEmpty   == true { return false }
+    if route.dirty     == true { return true }
+    if route.lastSaved == nil  { return true }
+    return false
   }
   
   // MARK: - Options
@@ -698,5 +701,45 @@ class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate
   func activityViewController(_ activityViewController: UIActivityViewController, subjectForActivityType activityType: UIActivityType?) -> String
   {
     return route.subjectForSharedMessage()
+  }
+  
+  // MARK: - Save Route
+  
+  func saveRoute()
+  {
+    let existingRoute = Routes.shared[route.routeID]
+    
+    if existingRoute != nil
+    {
+      print("Overwrite existing route ???")
+    }
+    else
+    {
+      updateRouteInfo(for:route)
+    }
+  }
+  
+  func updateRouteInfo(for route:Route)
+  {
+    let rc = UIStoryboard.init(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "RouteInfoViewController") as! RouteInfoViewController
+    
+    rc.delegate = self
+    rc.modalPresentationStyle = .overCurrentContext
+    rc.transitioningDelegate  = rc
+    rc.modalPresentationCapturesStatusBarAppearance = true
+    rc.setNeedsStatusBarAppearanceUpdate()
+    dataViewController.definesPresentationContext = true
+    
+    dataViewController.parent!.present(rc, animated: true)
+  }
+  
+  func route(for controller: RouteInfoViewController) -> Route?
+  {
+    return route
+  }
+  
+  func saveRoute(withName name: String, description: String?, keepOpen: Bool)
+  {
+    route.save(withName:name, description:description, lock:keepOpen==false)
   }
 }
