@@ -55,4 +55,11 @@ extension Route
       }
     }
   }
+  
+  class func uniqueID() -> Int
+  {
+    let id = Route.nextRouteID
+    Route.nextRouteID += 1
+    return id
+  }
 }

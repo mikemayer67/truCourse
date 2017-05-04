@@ -711,15 +711,33 @@ class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate
     
     if existingRoute != nil
     {
-      print("Overwrite existing route ???")
+      promptOverwriteOrNew()
     }
     else
     {
-      updateRouteInfo(for:route)
+      updateRouteInfo()
     }
   }
   
-  func updateRouteInfo(for route:Route)
+  func promptOverwriteOrNew()
+  {
+    let prompt = UIAlertController(title:"Existing Route", message: "What do you want to do with \(route.name!)", preferredStyle: .alert)
+    prompt.addAction(UIAlertAction(title: "Replace it", style: .default,
+                                   handler: { _ in
+                                     self.route.save(replacing: true, lock:true)
+                                     self.updateState(.Pause)
+                                   } ) )
+    prompt.addAction(UIAlertAction(title: "Save as new...", style: .default,
+                                   handler: { _ in
+                                     self.updateRouteInfo()
+                                   } ) )
+    prompt.addAction(UIAlertAction(title: "Cancel", style: .cancel) )
+    
+    dataViewController.present(prompt, animated: true)
+    
+  }
+  
+  func updateRouteInfo()
   {
     let rc = UIStoryboard.init(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "RouteInfoViewController") as! RouteInfoViewController
     
@@ -740,6 +758,12 @@ class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate
   
   func saveRoute(withName name: String, description: String?, keepOpen: Bool)
   {
-    route.save(withName:name, description:description, lock:keepOpen==false)
+    let lock = keepOpen == false
+    route.save(withName:name, description:description, replacing:false, lock:lock)
+    
+    if lock
+    {
+      updateState(.Pause)
+    }
   }
 }

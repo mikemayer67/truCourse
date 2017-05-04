@@ -23,6 +23,8 @@ class WorkingRoute : Route
     {
       super.init()
     }
+    
+    UndoManager.shared.clear()
   }
   
   func save()

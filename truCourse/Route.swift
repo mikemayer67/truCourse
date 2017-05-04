@@ -98,6 +98,12 @@ class Route
     head?.reindex()
   }
   
+  func getNewID() -> Void
+  {
+    routeID = Route.nextRouteID
+    Route.nextRouteID += 1
+  }
+  
   func routeData() -> NSDictionary
   {
     let data = NSMutableDictionary()
@@ -131,10 +137,21 @@ class Route
     dirty = false
   }
   
-  func save(withName name: String, description: String?, lock: Bool)
+  func save(withName name: String, description: String?, replacing: Bool, lock: Bool)
   {
     self.name        = name
     self.description = description
+    
+    self.save(replacing:replacing, lock:lock)
+  }
+  
+  func save(replacing: Bool, lock:Bool)
+  {
+    if replacing == false
+    {
+      self.routeID = Route.uniqueID()
+    }
+    
     self.locked      = lock
     self.dirty       = false
     self.lastSaved   = Date()
