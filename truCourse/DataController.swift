@@ -42,6 +42,8 @@ class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate
   {
     Routes.shared = Routes(load:DataController.routesDataFile)
     self.route    = WorkingRoute(load:DataController.workingDataFile)
+    
+    if self.route.dirty == false { self.route = WorkingRoute() }
   }
   
   private(set) var state : AppState = .Uninitialized
@@ -248,8 +250,10 @@ class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate
     formatter.dateStyle = .none
     let time = formatter.string(from: route.created)
     
+    let name = route.name ?? "unsaved route"
+    
     let alert = UIAlertController(title:nil,
-                                  message:"What do you want to do with the unsaved route started \(date) at \(time)",
+                                  message:"What do you want to do with '\(name)' started \(date) at \(time)",
                                   preferredStyle: .alert)
     
     alert.addAction( UIAlertAction(title: "Delete it", style: .destructive, handler: deleteRoute) )
@@ -411,9 +415,6 @@ class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate
     let rc = UIStoryboard.init(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "RenumberViewController") as! RenumberViewController
     
     rc.delegate = self
-    rc.modalPresentationStyle = .overCurrentContext
-    rc.transitioningDelegate  = rc
-    rc.modalPresentationCapturesStatusBarAppearance = true
     rc.setNeedsStatusBarAppearanceUpdate()
     dataViewController.definesPresentationContext = true
     
@@ -705,65 +706,64 @@ class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate
   
   // MARK: - Save Route
   
+  enum SaveState
+  {
+    case Saving
+    case SavingAs
+    case Replacing
+  }
+  
+  var saveState = SaveState.Saving
+  
   func saveRoute()
   {
     let existingRoute = Routes.shared[route.routeID]
     
-    if existingRoute != nil
+    if existingRoute == nil
     {
-      promptOverwriteOrNew()
+      updateRouteInfoAndSave(as:.Saving)
     }
     else
     {
-      updateRouteInfo()
+      let prompt = UIAlertController(title:"Existing Route",
+                                     message: "What do you want to do with \(route.name!)",
+                                     preferredStyle: .alert)
+      
+      prompt.addAction(UIAlertAction(title: "Replace it", style: .default,
+                                     handler: { _ in self.updateRouteInfoAndSave(as:.Replacing) } ) )
+      
+      prompt.addAction(UIAlertAction(title: "Save as new...", style: .default,
+                                     handler: { _ in self.updateRouteInfoAndSave(as:.SavingAs) } ) )
+      
+      prompt.addAction(UIAlertAction(title: "Cancel", style: .cancel) )
+      
+      dataViewController.present(prompt, animated: true)
     }
   }
   
-  func promptOverwriteOrNew()
+  func updateRouteInfoAndSave(as state:SaveState)
   {
-    let prompt = UIAlertController(title:"Existing Route", message: "What do you want to do with \(route.name!)", preferredStyle: .alert)
-    prompt.addAction(UIAlertAction(title: "Replace it", style: .default,
-                                   handler: { _ in
-                                     self.route.save(replacing: true, lock:true)
-                                     self.updateState(.Pause)
-                                   } ) )
-    prompt.addAction(UIAlertAction(title: "Save as new...", style: .default,
-                                   handler: { _ in
-                                     self.updateRouteInfo()
-                                   } ) )
-    prompt.addAction(UIAlertAction(title: "Cancel", style: .cancel) )
     
-    dataViewController.present(prompt, animated: true)
-    
-  }
-  
-  func updateRouteInfo()
-  {
     let rc = UIStoryboard.init(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "RouteInfoViewController") as! RouteInfoViewController
     
     rc.delegate = self
-    rc.modalPresentationStyle = .overCurrentContext
-    rc.transitioningDelegate  = rc
-    rc.modalPresentationCapturesStatusBarAppearance = true
     rc.setNeedsStatusBarAppearanceUpdate()
     dataViewController.definesPresentationContext = true
     
+    saveState = state
     dataViewController.parent!.present(rc, animated: true)
+  }
+  
+  func updateRouteInfo(withName name: String, description: String?, keepOpen: Bool)
+  {
+    route.save(withName:name, description:description, withNewID:(saveState == .SavingAs))
+    route.locked = (keepOpen==false)
+    
+    if keepOpen == false && state == .Inserting { updateState(.Pause) }
   }
   
   func route(for controller: RouteInfoViewController) -> Route?
   {
     return route
-  }
-  
-  func saveRoute(withName name: String, description: String?, keepOpen: Bool)
-  {
-    let lock = keepOpen == false
-    route.save(withName:name, description:description, replacing:false, lock:lock)
-    
-    if lock
-    {
-      updateState(.Pause)
-    }
   }
 }

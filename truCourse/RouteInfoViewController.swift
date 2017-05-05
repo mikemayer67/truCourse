@@ -11,7 +11,7 @@ import UIKit
 protocol RouteInfoViewDelegate
 {
   func route(for controller:RouteInfoViewController) -> Route?
-  func saveRoute(withName name:String, description:String?, keepOpen:Bool)
+  func updateRouteInfo(withName name:String, description:String?, keepOpen:Bool)
 }
 
 class RouteInfoViewController: PopupViewController, UITextFieldDelegate, UITextViewDelegate
@@ -143,7 +143,7 @@ class RouteInfoViewController: PopupViewController, UITextFieldDelegate, UITextV
   @IBAction func handleSave(_ sender: UIButton)
   {
     self.dismiss(animated: true)
-    delegate?.saveRoute(withName: name!, description: desc, keepOpen: keepOpenSwitch.isOn)
+    delegate?.updateRouteInfo(withName: name!, description: desc, keepOpen: keepOpenSwitch.isOn)
   }
   
   @IBAction func handleBackgroundTouch(_ sender: UIControl)

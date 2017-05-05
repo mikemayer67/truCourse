@@ -21,6 +21,8 @@ class Route
   private(set) var lastSaved      : Date?
   private(set) var declination    : CLLocationDegrees?
   
+  var saveDirtyState : Bool { return false }
+  
   private(set) var head           : Waypoint?
   
   var locked : Bool = false
@@ -92,7 +94,15 @@ class Route
       }
     }
     
-    dirty  = false
+    if let dirty = routeData.value(forKey: "dirty") as? Int
+    {
+      self.dirty = dirty != 0
+    }
+    else
+    {
+      self.dirty = false
+    }
+    
     locked = true
     
     head?.reindex()
@@ -124,6 +134,12 @@ class Route
     let waypoints = NSMutableArray()
     head?.iterate() { (wp:Waypoint) in wp.save(into:waypoints) }
     if waypoints.count > 0 { data.setValue(waypoints, forKey: "waypoints") }
+    
+    if saveDirtyState
+    {
+      let value = dirty ? 1 : 0
+      data.setValue(value, forKey: "dirty")
+    }
 
     return data
   }
@@ -137,22 +153,18 @@ class Route
     dirty = false
   }
   
-  func save(withName name: String, description: String?, replacing: Bool, lock: Bool)
+  func save(withName name: String, description: String?, withNewID:Bool)
   {
     self.name        = name
     self.description = description
     
-    self.save(replacing:replacing, lock:lock)
+    self.save(withNewID:withNewID)
   }
   
-  func save(replacing: Bool, lock:Bool)
+  func save(withNewID: Bool)
   {
-    if replacing == false
-    {
-      self.routeID = Route.uniqueID()
-    }
+    if withNewID { self.routeID = Route.uniqueID() }
     
-    self.locked      = lock
     self.dirty       = false
     self.lastSaved   = Date()
     

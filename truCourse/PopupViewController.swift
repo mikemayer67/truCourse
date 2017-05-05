@@ -16,15 +16,13 @@ class PopupViewController: UIViewController, UIViewControllerAnimatedTransitioni
   let transitionDuration : TimeInterval = 0.25
 
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    override func viewDidLoad()
+    {
+      super.viewDidLoad()
+      
+      self.modalPresentationStyle = .overCurrentContext
+      self.modalPresentationCapturesStatusBarAppearance = true
+      self.transitioningDelegate = self
     }
 
   // MARK: - Transitioning Delegate
