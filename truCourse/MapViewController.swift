@@ -67,6 +67,10 @@ class MapViewController: UIViewController, VisualizationView, MKMapViewDelegate,
     mapView.showsScale = options.showScale
     
     for (_,post) in postAnnotations { post.updateTitle() }
+    
+    if      options.autoScale == false       { pauseTrackingTimer() }
+    else if trackingView.mode != .trackPosts { pauseTrackingTimer() }
+    else                                     { startTrackingTimer() }
   }
   
   // MARK: - State
@@ -107,8 +111,14 @@ class MapViewController: UIViewController, VisualizationView, MKMapViewDelegate,
   func startTrackingTimer()
   {
     if trackingTimer != nil { return }
+    if Options.shared.autoScale == false { return }
     
-    trackingTimer = Timer.scheduledTimer(timeInterval: 5.0, target: self, selector: #selector(fireTrackingTimer(_:)), userInfo: nil, repeats: true)
+    self.viewPosts()
+    trackingTimer = Timer.scheduledTimer(timeInterval: 3.0,
+                                         target: self,
+                                         selector: #selector(fireTrackingTimer(_:)),
+                                         userInfo: nil,
+                                         repeats: true)
   }
   
   func fireTrackingTimer(_ timer:Timer) -> Void

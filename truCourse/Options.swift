@@ -48,6 +48,7 @@ class Options
   var declination      : CLLocationDegrees?
   
   var mapType          : MKMapType
+  var autoScale        : Bool
   var showScale        : Bool
   var northType        : NorthType
   var baseUnit         : BaseUnitType
@@ -55,8 +56,6 @@ class Options
   var postSepFrac      : Double
   var canShakeUndo     : Bool
   var shakeUndoTimeout : Double?
-  
-  var emailAddress     : String?
   
   var locationAccuracy : CLLocationAccuracy
   {
@@ -121,16 +120,15 @@ class Options
   init()
   {
     let dv = Options.defaults
-    mapType          = MKMapType(         rawValue: UInt(dv.integer(forKey: "mapType" )))!
-    showScale        = dv.bool(forKey:   "showScale")
-    northType        = NorthType(         rawValue: dv.integer(forKey: "northType"     ))!
-    baseUnit         = BaseUnitType(      rawValue: dv.integer(forKey: "baseUnit"      ))!
-    locAccFrac       = dv.double(forKey: "locationAccuracyFrac")
-    postSepFrac      = dv.double(forKey: "postSeparationFrac")
-    canShakeUndo     = dv.bool(forKey:   "shakeUndo")
-    shakeUndoTimeout = dv.double(forKey: "shakeUndoTimeout")
-    
-    emailAddress = Options.defaults.string(forKey: "emailAddress")
+    mapType          = MKMapType(          rawValue: UInt(dv.integer(forKey: "mapType" )))!
+    autoScale        = dv.bool(forKey:    "autoScale")
+    showScale        = dv.bool(forKey:    "showScale")
+    northType        = NorthType(          rawValue: dv.integer(forKey: "northType"     ))!
+    baseUnit         = BaseUnitType(       rawValue: dv.integer(forKey: "baseUnit"      ))!
+    locAccFrac       = dv.double(forKey:  "locationAccuracyFrac")
+    postSepFrac      = dv.double(forKey:  "postSeparationFrac")
+    canShakeUndo     = dv.bool(forKey:    "shakeUndo")
+    shakeUndoTimeout = dv.double(forKey:  "shakeUndoTimeout")
   }
   
   func updateDefaults()
@@ -138,6 +136,7 @@ class Options
     let dv = Options.defaults
     
     dv.set( mapType.rawValue,        forKey: "mapType"              )
+    dv.set( autoScale,               forKey: "autoScale"            )
     dv.set( showScale,               forKey: "showScale"            )
     dv.set( northType.rawValue,      forKey: "northType"            )
     dv.set( baseUnit.rawValue,       forKey: "baseUnit"             )
@@ -145,54 +144,21 @@ class Options
     dv.set( postSepFrac,             forKey: "postSeparationFrac"   )
     dv.set( canShakeUndo,            forKey: "shakeUndo"            )
     
-    if shakeUndoTimeout == nil
-    {
-      dv.removeObject(forKey: "shakeUndoTimeout")
-    }
-    else
-    {
-      dv.set( shakeUndoTimeout!, forKey: "shakeUndoTimeout" )
-    }
-    
-    if emailAddress == nil
-    {
-      Options.defaults.removeObject(forKey: "emailAddress")
-    }
-    else
-    {
-      Options.defaults.set(NSString(string:emailAddress!), forKey: "emailAddress")
-    }
-  }
-  
-  func setEmailAddress(_ address:String?)
-  {
-    let regex_pattern = "^[a-z0-9._%+-]+@[a-z0-9.-]+[.][a-z]{2,4}$"
-    let regex = try! NSRegularExpression(pattern: regex_pattern, options: [.caseInsensitive])
-    
-    self.emailAddress = nil
-    
-    if let x = address, x.isEmpty == false
-    {
-      let range = NSMakeRange(0,NSString(string:x).length)
-      if regex.numberOfMatches(in: x, options:[], range:range) == 1
-      {
-        self.emailAddress = x
-      }
-    }
+    if shakeUndoTimeout == nil { dv.removeObject(forKey: "shakeUndoTimeout") }
+    else                       { dv.set( shakeUndoTimeout!, forKey: "shakeUndoTimeout" ) }
   }
   
   func differ(from x:Options) -> Bool
   {
-    if mapType          != x.mapType      { return true }
-    if showScale        != x.showScale    { return true }
-    if northType        != x.northType    { return true }
-    if baseUnit         != x.baseUnit     { return true }
-    if locAccFrac       != x.locAccFrac   { return true }
-    if postSepFrac      != x.postSepFrac  { return true }
-    if canShakeUndo     != x.canShakeUndo { return true }
+    if mapType          != x.mapType          { return true }
+    if autoScale        != x.autoScale        { return true }
+    if showScale        != x.showScale        { return true }
+    if northType        != x.northType        { return true }
+    if baseUnit         != x.baseUnit         { return true }
+    if locAccFrac       != x.locAccFrac       { return true }
+    if postSepFrac      != x.postSepFrac      { return true }
+    if canShakeUndo     != x.canShakeUndo     { return true }
     if shakeUndoTimeout != x.shakeUndoTimeout { return true }
-    
-    if (emailAddress != nil || x.emailAddress != nil) && (emailAddress != x.emailAddress) { return true }
     
     return false
   }

@@ -34,8 +34,7 @@ class WorkingRoute : Route
     let data = routeData()
     let file = DataController.workingDataFile
     
-    let rc = data.write(to:file, atomically:true)
-    print ("save rc: \(rc)")
+    data.write(to:file, atomically:true)
   }
   
   override func save(withNewID: Bool)

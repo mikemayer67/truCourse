@@ -20,6 +20,7 @@ class OptionsViewController: UITableViewController, UITextFieldDelegate
   @IBOutlet weak var cancelButton        : UIButton!
   
   @IBOutlet weak var mapTypeSC           : UISegmentedControl!
+  @IBOutlet weak var autoScaleSwitch     : UISwitch!
   @IBOutlet weak var showScaleSwitch     : UISwitch!
   @IBOutlet weak var northTypeSC         : UISegmentedControl!
   @IBOutlet weak var baseUnitSC          : UISegmentedControl!
@@ -30,9 +31,6 @@ class OptionsViewController: UITableViewController, UITextFieldDelegate
   @IBOutlet weak var shakeUndoSwitch     : UISwitch!
   @IBOutlet weak var shakeUndoSlider     : UISlider!
   @IBOutlet weak var shakeUndoText       : UILabel!
-  
-  @IBOutlet weak var emailCell           : UITableViewCell!
-  @IBOutlet weak var emailField          : UITextField!
   
   let undoTimeoutValues : [Double?] = [ 1.0, 2.0, 3.0, 5.0, 10.0, 15.0, 30.0, 60.0, 120.0, 300.0, nil ]
   
@@ -81,6 +79,7 @@ class OptionsViewController: UITableViewController, UITextFieldDelegate
       mapTypeSC.selectedSegmentIndex = 0
     }
     
+    autoScaleSwitch.isOn         = options.autoScale
     showScaleSwitch.isOn         = options.showScale
     
     baseUnitSC.selectedSegmentIndex  = options.baseUnit.rawValue
@@ -96,12 +95,8 @@ class OptionsViewController: UITableViewController, UITextFieldDelegate
     shakeUndoSlider.minimumValue = 0.0
     shakeUndoSlider.maximumValue = Float(undoTimeoutValues.count - 1)
     shakeUndoText.isHidden       = options.canShakeUndo == false
-    
     self.shakeUndoTimeout        = options.shakeUndoTimeout
     
-    emailField.text              = options.emailAddress
-    
-    updateEmailAddressColor(valid:true)
     checkState()
   }
   
@@ -153,6 +148,12 @@ class OptionsViewController: UITableViewController, UITextFieldDelegate
     default: options.mapType = .standard
     }
     
+    checkState()
+  }
+  
+  @IBAction func handleAutoScale(_ sender : UISwitch)
+  {
+    options.autoScale = sender.isOn
     checkState()
   }
   
@@ -216,42 +217,6 @@ class OptionsViewController: UITableViewController, UITextFieldDelegate
     checkState()
   }
   
-  func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool
-  {
-    updateEmailAddressColor(valid: true)
-    return true
-  }
-  
-  func textFieldShouldReturn(_ textField: UITextField) -> Bool
-  {
-    emailField.resignFirstResponder()
-    
-    if let address = textField.text, address.isEmpty == false
-    {
-      self.options.setEmailAddress(address)
-      updateEmailAddressColor( valid: self.options.emailAddress != nil )
-    }
-    else
-    {
-      self.options.emailAddress = nil
-      updateEmailAddressColor(valid: true)
-    }
-    
-    checkState()
-    return true
-  }
-  
-  func updateEmailAddressColor(valid:Bool) -> Void
-  {
-    let errColor = UIColor(red: 0.75, green: 0.0, blue: 0.0, alpha: 1.0)
-    
-    let bg = ( valid ? nil : errColor )
-    let fg = ( valid ? UIColor.black : errColor )
-    
-    emailCell.backgroundColor = bg
-    emailField.textColor = fg
-  }
-  
   @IBAction func handleCancel(_ sender : UIButton)
   {
     close()
@@ -288,7 +253,7 @@ class OptionsViewController: UITableViewController, UITextFieldDelegate
   
   override func numberOfSections(in tableView: UITableView) -> Int
   {
-    return 4
+    return 3
   }
   
   override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String?
@@ -306,7 +271,6 @@ class OptionsViewController: UITableViewController, UITextFieldDelegate
         return "Route (declination not available)"
       }
     case 2: return "Undo"
-    case 3: return "Email"
     default: return nil
     }
   }

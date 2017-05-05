@@ -41,13 +41,29 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "truCourse/Options.swift"
-            timestampString = "514350282.194326"
+            filePath = "truCourse/DataController.swift"
+            timestampString = "515700895.802061"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "169"
-            endingLineNumber = "169"
-            landmarkName = "setEmailAddress(_:)"
+            startingLineNumber = "496"
+            endingLineNumber = "496"
+            landmarkName = "redo(deletion:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "truCourse/DataController.swift"
+            timestampString = "515700905.613612"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "487"
+            endingLineNumber = "487"
+            landmarkName = "undo(deletion:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

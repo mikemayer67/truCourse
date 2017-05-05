@@ -208,9 +208,19 @@ class Waypoint
   {
     if prev == nil { return }
     
-    if prev!.cand === self
+    if prev!.cand === self  // current node is the candidate
     {
       prev!.cand = nil
+      prev!.update()
+    }
+    else if prev === self   // current node is ONLY node in route
+    {
+      if cand != nil
+      {
+        cand!.prev = nil
+        cand!.next = nil
+        cand!.update()
+      }
     }
     else
     {
@@ -230,10 +240,9 @@ class Waypoint
       next!.prev = prev
       
       next!._updateIndices(from: prev!)
+      prev!.update()
     }
     
-    prev!.update()
-
     prev = nil
     next = nil
   }
