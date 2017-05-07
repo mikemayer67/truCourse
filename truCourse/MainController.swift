@@ -33,6 +33,12 @@ class MainController : UINavigationController, UINavigationControllerDelegate
     {
       animator = OptionsViewAnimator(self, operator: operation)
     }
+
+    else if ( toVC   is RoutesViewController && operation == .push ) ||
+            ( fromVC is RoutesViewController && operation == .pop )
+    {
+      animator = RoutesViewAnimator(self, operator: operation)
+    }
     
     return animator
   }
@@ -45,6 +51,10 @@ class MainController : UINavigationController, UINavigationControllerDelegate
     {
       ovc.delegate = dataViewController
       ovc.checkState()
+    }
+    else if let rvc = viewController as? RoutesViewController
+    {
+      rvc.delegate = self.dataViewController.dataController
     }
   }
 }

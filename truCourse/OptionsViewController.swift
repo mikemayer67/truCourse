@@ -14,7 +14,7 @@ protocol OptionViewControllerDelegate : NSObjectProtocol
   func optionViewController(updatedOptions:Options)
 }
 
-class OptionsViewController: UITableViewController, UITextFieldDelegate
+class OptionsViewController: UITableViewController
 {
   @IBOutlet weak var updateButton        : UIButton!
   @IBOutlet weak var cancelButton        : UIButton!

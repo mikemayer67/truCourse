@@ -7,7 +7,7 @@
 //
 
 import Foundation
-
+import UIKit
 
 
 class Routes
@@ -21,6 +21,11 @@ class Routes
   }
   
   private(set) var routes  = [Int:Route]()
+  
+  var count : Int
+  {
+    return routes.count
+  }
   
   init() {}
   
@@ -49,6 +54,12 @@ class Routes
   {
     routes[route.routeID] = route
     
+    save(to:DataController.routesDataFile)
+  }
+  
+  func drop(_ route : Route)
+  {
+    routes.removeValue(forKey: route.routeID)
     save(to:DataController.routesDataFile)
   }
   

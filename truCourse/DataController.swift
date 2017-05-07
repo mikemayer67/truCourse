@@ -23,7 +23,7 @@ private func dataPath(_ filename:String) -> URL
   }
 }
 
-class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate, UIPickerViewDataSource, RenumberViewDelegate, UIActivityItemSource, RouteInfoViewDelegate
+class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate, UIPickerViewDataSource, RenumberViewDelegate, UIActivityItemSource, RouteInfoViewDelegate, RoutesViewControllerDelegate
 {
   @IBOutlet var dataViewController     : DataViewController!
             var renumberViewController : RenumberViewController?
@@ -765,5 +765,12 @@ class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate
   func route(for controller: RouteInfoViewController) -> Route?
   {
     return route
+  }
+  
+  // MARK: - Routes view controller delegate
+  
+  func routesViewController(selectedNewRoute route: Route?)
+  {
+    print("Selected route: \(route?.routeID ?? -1)")
   }
 }
