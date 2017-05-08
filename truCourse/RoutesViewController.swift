@@ -31,33 +31,6 @@ extension Double
   }
 }
 
-func detailDist(_ dist : Double) -> String
-{
-  switch Options.shared.baseUnit
-  {
-  case .English:
-    let feet = Int( dist / 0.3048 + 0.5 )
-    if feet <= 5000 { return "\(feet.detailString) ft" }
-    else
-    {
-      let miles = ( Double(feet) / 5280.0 )
-      return "\(miles.detailString) mile"
-    }
-    
-  case .Metric:
-    if dist < 1000.0
-    {
-      let m = Int( dist + 0.5 )
-      return "\(m.detailString) m"
-    }
-    else
-    {
-      let km = 0.001 * dist
-      return "\(km.detailString) km"
-    }
-  }
-}
-
 enum RouteSortType : Int
 {
   case proximity = 0
@@ -140,6 +113,7 @@ class RoutesViewController: UITableViewController
     
     setOrderTitles()
     sortRoutes()
+    tableView.reloadData()
     
     navigationController?.toolbar?.setItems(sortItems, animated: true)
   }
@@ -276,6 +250,8 @@ class RoutesViewController: UITableViewController
   
   override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell
   {
+    let options = Options.shared
+    
     let row = indexPath.row
     let identifier = ( row == 0  ? "NewRouteCell" : "StoredRouteCell" )
     
@@ -295,14 +271,14 @@ class RoutesViewController: UITableViewController
       var detailText = ""
       
       if let dist = route.distance {
-        detailText.append( detailDist(dist))
+        detailText.append( options.shortDistanceString(dist))
         detailText.append( " long, ")
       }
       
       if let here = delegate?.getCurrentLocation()
       {
         let proximity = route.proximity(to: here)
-        detailText.append( detailDist( proximity ) )
+        detailText.append( options.shortDistanceString(proximity ) )
         detailText.append( " away, " )
       }
       
@@ -361,14 +337,17 @@ class RoutesViewController: UITableViewController
   override func tableView(_ tableView: UITableView, didDeselectRowAt    indexPath: IndexPath) { checkSelectionState() }
   override func tableView(_ tableView: UITableView, didUnhighlightRowAt indexPath: IndexPath) { checkSelectionState() }
   
-  /*
-   // MARK: - Navigation
-   
-   // In a storyboard-based application, you will often want to do a little preparation before navigation
-   override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-   // Get the new view controller using segue.destinationViewController.
-   // Pass the selected object to the new view controller.
-   }
-   */
-  
+  override func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath)
+  {    
+    let sb = self.storyboard!
+    
+    let dvc = sb.instantiateViewController(withIdentifier: "routeDetailViewController") as! RouteDetailViewController
+    
+    let route = routes[indexPath.row-1]
+    
+    dvc.route = route
+    dvc.here  = delegate?.getCurrentLocation()
+    
+    self.present(dvc, animated: true )
+  }
 }

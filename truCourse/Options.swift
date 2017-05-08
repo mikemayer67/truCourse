@@ -200,4 +200,31 @@ class Options
     }
     return dist
   }
+  
+  func shortDistanceString(_ dist : Double) -> String
+  {
+    switch baseUnit
+    {
+    case .English:
+      let feet = Int( dist / 0.3048 + 0.5 )
+      if feet <= 5000 { return "\(feet.detailString) ft" }
+      else
+      {
+        let miles = ( Double(feet) / 5280.0 )
+        return "\(miles.detailString) mile"
+      }
+      
+    case .Metric:
+      if dist < 1000.0
+      {
+        let m = Int( dist + 0.5 )
+        return "\(m.detailString) m"
+      }
+      else
+      {
+        let km = 0.001 * dist
+        return "\(km.detailString) km"
+      }
+    }
+  }
 }

@@ -43,6 +43,23 @@ extension CLLocationDegrees
 
 extension CLLocationCoordinate2D
 {
+  var stringForDetails : String
+  {
+    var lat = self.latitude
+    var lon = self.longitude
+    
+    let south = lat < 0.0
+    let west  = lon < 0.0 || lon>=180.0
+    
+    if south { lat = -lat }
+    if west  { lon = -lon }
+    
+    let lat_str = lat.dms.appending( south ? "S" : "N" )
+    let lon_str = lon.dms.appending( west ? "W" : "E" )
+    
+    return "\(lat_str) \(lon_str)"
+  }
+  
   var stringForMessage : String
   {
     var lat = self.latitude
@@ -58,6 +75,22 @@ extension CLLocationCoordinate2D
     let lon_str = lon.dms.appending( west ? "W" : "E" )
     
     return "\(lat_str) \(lon_str)"
+  }
+  
+  var latitudeString : String
+  {
+    let lat = self.latitude
+    if lat > 0.0      { return "\(lat.dms) N" }
+    else if lat < 0.0 { return "\((-lat).dms) S" }
+    else              { return "\(lat.dms)" }
+  }
+  
+  var longitudeString : String
+  {
+    let lon = self.longitude
+    if lon > 0.0      { return "\(lon.dms) E" }
+    else if lon < 0.0 { return "\((-lon).dms) W" }
+    else              { return "\(lon.dms)" }
   }
 }
 

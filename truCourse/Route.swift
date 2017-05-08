@@ -68,6 +68,11 @@ class Route
     return location.distance(from: start)
   }
   
+  var firstPostLocation : CLLocationCoordinate2D?
+  {
+    return head?.location
+  }
+  
   // MARK: - Constructors and Encoding
 
   init()

@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		270A77721E8CC570001E605B /* InsertionPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 270A77711E8CC570001E605B /* InsertionPoint.swift */; };
 		2710A2E81E735977004BE462 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2710A2E71E735977004BE462 /* MapKit.framework */; };
+		2717BC211EC02D1400082BD7 /* RouteDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2717BC201EC02D1400082BD7 /* RouteDetailViewController.swift */; };
 		2720DA381EB8B23C00B4E6D3 /* TrackPosts_000000_25.png in Resources */ = {isa = PBXBuildFile; fileRef = 2720DA371EB8B23C00B4E6D3 /* TrackPosts_000000_25.png */; };
 		27377C951EBA1509003504EF /* RouteInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27377C941EBA1509003504EF /* RouteInfoViewController.swift */; };
 		27377C971EBA1586003504EF /* PopupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27377C961EBA1586003504EF /* PopupViewController.swift */; };
@@ -74,6 +75,7 @@
 /* Begin PBXFileReference section */
 		270A77711E8CC570001E605B /* InsertionPoint.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InsertionPoint.swift; sourceTree = "<group>"; };
 		2710A2E71E735977004BE462 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
+		2717BC201EC02D1400082BD7 /* RouteDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteDetailViewController.swift; sourceTree = "<group>"; };
 		2720DA371EB8B23C00B4E6D3 /* TrackPosts_000000_25.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = TrackPosts_000000_25.png; sourceTree = "<group>"; };
 		27377C941EBA1509003504EF /* RouteInfoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteInfoViewController.swift; sourceTree = "<group>"; };
 		27377C961EBA1586003504EF /* PopupViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PopupViewController.swift; sourceTree = "<group>"; };
@@ -288,6 +290,7 @@
 				27E7754D1E7CC16600091C78 /* Routes.swift */,
 				27ED92181EBD1E890004028E /* RoutesViewController.swift */,
 				27ED921A1EBD52AC0004028E /* RoutesViewAnimator.swift */,
+				2717BC201EC02D1400082BD7 /* RouteDetailViewController.swift */,
 			);
 			name = Routes;
 			sourceTree = "<group>";
@@ -413,6 +416,7 @@
 				27AA19871EB0BB32003FB5F6 /* RenumberViewController.swift in Sources */,
 				27C5584F1E5F8790004FF32A /* LatLonViewController.swift in Sources */,
 				27C5584D1E5F8790004FF32A /* AppDelegate.swift in Sources */,
+				2717BC211EC02D1400082BD7 /* RouteDetailViewController.swift in Sources */,
 				27ED92191EBD1E890004028E /* RoutesViewController.swift in Sources */,
 				27377C951EBA1509003504EF /* RouteInfoViewController.swift in Sources */,
 				27C5584E1E5F8790004FF32A /* BearingViewController.swift in Sources */,
