@@ -392,6 +392,22 @@ class DataViewController :
         message = "Please confirm deleting post \(post)"
       }
       
+    case .NewWorkingRoute(let oldRoute, let newRoute):
+      
+      if oldRoute.dirty
+      {
+        title = "Discard Unsaved Route"
+        
+        let oldName = ( oldRoute.name == nil ? "working route" : oldRoute.name!)
+        let newName = ( newRoute == nil      ? "new route"     : newRoute!.name!)
+        
+        message = "Loading \(newName) will result in unsaved changes to \(oldName)"
+      }
+      else
+      {
+        confirmationRequired = false
+      }
+      
     default:
       
       if dataController.locked

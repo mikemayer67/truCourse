@@ -774,8 +774,18 @@ class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate
   
   // MARK: - Routes view controller delegate
   
-  func routesViewController(selectedNewRoute route: Route?)
+  func routesViewController(selectedNewRoute newRoute: Route?)
   {
-    print("Selected route: \(route?.routeID ?? -1)")
+    let action =
+    {
+      self.route = ( newRoute == nil ? WorkingRoute() : WorkingRoute(from:newRoute!) )
+      if self.state == .Inserting { self.updateState(.Pause) }
+      self.insertionIndex = nil
+      self.renumberIndex  = nil
+      self.lastRecordedPost = nil
+      self.dataViewController.updateRoute(self.route)
+    }
+    
+    dataViewController.confirmAction(type: .NewWorkingRoute(route, newRoute), action: action )
   }
 }

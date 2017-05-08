@@ -98,6 +98,42 @@ class Waypoint
     prev!.update()
   }
   
+  var clone : Waypoint
+  {    
+    let rval          = Waypoint(self.location)
+    rval.index        = self.index
+    rval.bearing      = self.bearing
+    rval.distance     = self.distance
+    rval.candBearing  = self.candBearing
+    rval.candDistance = self.candDistance
+    
+    rval.next         = rval
+    rval.prev         = rval
+    
+    
+    var a = rval
+    
+    var src = self.next
+    while src !== self
+    {
+      guard src != nil else { fatalError("Attempting to clone invalid Waypoint ring") }
+      
+      let b          = Waypoint(src!.location)
+      b.index        = src!.index
+      b.bearing      = src!.bearing
+      b.distance     = src!.distance
+      b.candBearing  = src!.candBearing
+      b.candDistance = src!.candDistance
+      
+      b.insert(after:a)
+      
+      a   = b
+      src = src!.next
+    }
+    
+    return rval
+  }
+  
   func save(into route: NSMutableArray)
   {
     let data = NSMutableDictionary()

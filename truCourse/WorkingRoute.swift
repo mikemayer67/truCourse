@@ -29,6 +29,11 @@ class WorkingRoute : Route
     UndoManager.shared.clear()
   }
   
+  override init( from ref : Route )
+  {
+    super.init(from: ref)
+  }
+  
   func save()
   {
     let data = routeData()

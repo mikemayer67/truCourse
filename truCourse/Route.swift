@@ -83,6 +83,21 @@ class Route
     Route.nextRouteID += 1
   }
   
+  init( from ref : Route )
+  {
+    self.name        = ref.name
+    self.description = ref.description
+    
+    self.routeID     = ref.routeID
+    self.created     = ref.created
+    self.lastSaved   = ref.lastSaved
+    self.declination = ref.declination
+    
+    self.head        = ref.head?.clone
+    self.locked      = true
+    self.dirty       = false
+  }
+  
   init( with routeData : NSDictionary )
   {
     routeID     = routeData.value(forKey: "routeID")     as! Int

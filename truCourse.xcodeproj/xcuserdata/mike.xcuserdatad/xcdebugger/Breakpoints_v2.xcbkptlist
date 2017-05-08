@@ -41,29 +41,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "truCourse/DataController.swift"
-            timestampString = "515870531.391066"
+            filePath = "truCourse/DataViewController.swift"
+            timestampString = "515970639.390731"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "501"
-            endingLineNumber = "501"
-            landmarkName = "redo(deletion:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "truCourse/DataController.swift"
-            timestampString = "515870531.391066"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "492"
-            endingLineNumber = "492"
-            landmarkName = "undo(deletion:)"
+            startingLineNumber = "191"
+            endingLineNumber = "191"
+            landmarkName = "viewPostsOnMap(updateTrackingMode:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

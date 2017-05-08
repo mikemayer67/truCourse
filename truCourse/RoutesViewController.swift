@@ -196,22 +196,24 @@ class RoutesViewController: UITableViewController
   
   @IBAction func handleApply(_ sender: UIButton)
   {
-    if let row = tableView.indexPathForSelectedRow?.row
+    let row = tableView.indexPathForSelectedRow?.row
+    
+    close()
+    
+    if row != nil
     {
-      if row == 0
+      if row! == 0
       {
         delegate?.routesViewController(selectedNewRoute: nil )
       }
       else
       {
-        let route = routes[row-1]
+        let route = routes[row!-1]
         delegate?.routesViewController(selectedNewRoute: route )
       }
     }
     
     delete.forEach { route in Routes.shared.drop(route) }
-    
-    close()
   }
   
   func close()

@@ -71,4 +71,5 @@ enum ActionType
   case ReverseRoute
   case RenumberPost(Int)
   case MovePost(Int)
+  case NewWorkingRoute(Route,Route?)
 }
