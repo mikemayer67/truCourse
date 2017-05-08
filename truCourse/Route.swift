@@ -60,6 +60,14 @@ class Route
     return head?.totalDistance
   }
   
+  func proximity(to location:CLLocation)->CLLocationDistance
+  {
+    guard head?.location != nil else { return 0.0 }
+    
+    let start = CLLocation(latitude: head!.location.latitude, longitude: head!.location.longitude)
+    return location.distance(from: start)
+  }
+  
   // MARK: - Constructors and Encoding
 
   init()

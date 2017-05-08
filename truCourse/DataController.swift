@@ -70,6 +70,11 @@ class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate
     return coord
   }
   
+  func getCurrentLocation() -> CLLocation?
+  {
+    return currentLocation ?? locationManager.location
+  }
+  
   var okToRecord : Bool
   {
     if lastRecordedPost == nil { return true  }

@@ -55,7 +55,6 @@ class RoutesViewAnimator: NSObject, UIViewControllerAnimatedTransitioning
       
       srcView.layer.anchorPoint = CGPoint(x:0.0,y:0.0)
       srcView.layer.position    = finalFrame.origin
-      nav.toolbar?.alpha = 0.0
       
       anim = { srcView.transform = srcView.transform.scaledBy(x: 0.01, y: 1.0) }
     }
