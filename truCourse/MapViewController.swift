@@ -9,7 +9,7 @@
 import UIKit
 import MapKit
 
-class MapViewController: UIViewController, VisualizationView, MKMapViewDelegate, TrackingViewDelegate
+class MapViewController: UIViewController, VisualizationView, MKMapViewDelegate
 {
   @IBOutlet weak var mapView        : MKMapView!
   @IBOutlet weak var trackingView   : TrackingView!
@@ -34,13 +34,14 @@ class MapViewController: UIViewController, VisualizationView, MKMapViewDelegate,
     
     // Do any additional setup after loading the view.
     
-    trackingView.delegate = self
-    trackingView.mode = .trackFollow
+    trackingView.mapViewController = self
     
     mapView.mapType           = .standard
     mapView.showsUserLocation = true
-    mapView.setUserTrackingMode(trackingView.mkTrackingMode, animated: true)
+    mapView.setUserTrackingMode(.follow, animated: true)
     mapView.showsScale        = true
+    
+    trackingView.initTrackingMode(.follow)
     
     mapView.remove { (gr:UIGestureRecognizer)->Bool in return gr is UILongPressGestureRecognizer }
   }
@@ -48,13 +49,13 @@ class MapViewController: UIViewController, VisualizationView, MKMapViewDelegate,
   override func viewWillDisappear(_ animated: Bool)
   {
     super.viewWillDisappear(animated)
-    pauseTrackingTimer()
+    trackingView.pauseAutoScaling()
   }
   
   override func viewDidAppear(_ animated: Bool)
   {
     super.viewDidAppear(animated)
-    if trackingView.mode == .trackPosts { startTrackingTimer() }
+    trackingView.resumeAutoScaling()
   }
 
   // MARK: - Options
@@ -68,9 +69,8 @@ class MapViewController: UIViewController, VisualizationView, MKMapViewDelegate,
     
     for (_,post) in postAnnotations { post.updateTitle() }
     
-    if      options.autoScale == false       { pauseTrackingTimer() }
-    else if trackingView.mode != .trackPosts { pauseTrackingTimer() }
-    else                                     { startTrackingTimer() }
+    if options.autoScale { trackingView.resumeAutoScaling() }
+    else                 { trackingView.pauseAutoScaling()  }
   }
   
   // MARK: - State
@@ -86,65 +86,27 @@ class MapViewController: UIViewController, VisualizationView, MKMapViewDelegate,
       mapView.showsUserLocation = true
       trackingView.paused = false
     }
-    mapView.setUserTrackingMode(trackingView.mkTrackingMode, animated: true)
   }
   
-  // MARK: - TrackingView delegate
+  // MARK: - MapView delegate methods passed through to the TrackingView
   
-  func trackingView(_ tv: TrackingView, modeDidChange newMode: Int)
+  func mapView(_ mapView: MKMapView, regionWillChangeAnimated animated: Bool)
   {
-    mapView.setUserTrackingMode(tv.mkTrackingMode, animated: true)
-   
-    if tv.mode == .trackPosts
-    {
-      self.viewPosts()
-      startTrackingTimer()
-    }
-    else
-    {
-      pauseTrackingTimer()
-    }
+    trackingView.regionWillChange()
   }
   
-  var trackingTimer : Timer?
-  
-  func startTrackingTimer()
+  func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool)
   {
-    if trackingTimer != nil { return }
-    if Options.shared.autoScale == false { return }
-    
-    self.viewPosts()
-    trackingTimer = Timer.scheduledTimer(timeInterval: 3.0,
-                                         target: self,
-                                         selector: #selector(fireTrackingTimer(_:)),
-                                         userInfo: nil,
-                                         repeats: true)
+    trackingView.regionDidChange()
   }
-  
-  func fireTrackingTimer(_ timer:Timer) -> Void
-  {
-    self.viewPosts()
-  }
-  
-  func pauseTrackingTimer()
-  {
-    if trackingTimer == nil { return }
-    
-    trackingTimer?.invalidate()
-    trackingTimer = nil
-  }
-  
-  // MARK: - Map View delegate methods
   
   func mapView(_ mapView: MKMapView, didChange mode: MKUserTrackingMode, animated: Bool)
   {
-    switch(mode)
-    {
-    case .none:              trackingView.mode = .trackOff
-    case .follow:            trackingView.mode = .trackFollow
-    case .followWithHeading: trackingView.mode = .trackHeading
-    }
+    trackingView.userTrackingModeChanged(to:mode)
   }
+  
+  
+  // MARK: - Handled MapView delegate methods
   
   func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView?
   {
@@ -167,30 +129,6 @@ class MapViewController: UIViewController, VisualizationView, MKMapViewDelegate,
     }
     
     return rval
-  }
-  
-  enum RegionChangeState : Int
-  {
-    case MapViewIsInControl
-    case PostTrackingRequestedChange
-    case PostTrackingIsChanging
-  }
-  
-  var regionChangeState = RegionChangeState.MapViewIsInControl
-  
-  func mapView(_ mapView: MKMapView, regionWillChangeAnimated animated: Bool)
-  {
-    if regionChangeState == .PostTrackingRequestedChange { regionChangeState = .PostTrackingIsChanging }
-  }
-  
-  func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool)
-  {
-    if trackingView.mode == .trackPosts,
-        regionChangeState != .PostTrackingIsChanging
-    {
-      trackingView.mode = .trackOff
-    }
-    regionChangeState = .MapViewIsInControl
   }
   
   func handlePopup(_ sender:UILongPressGestureRecognizer)
@@ -256,7 +194,7 @@ class MapViewController: UIViewController, VisualizationView, MKMapViewDelegate,
       }
     )
     
-    if trackingView.mode == .trackPosts { self.viewPosts() }
+    trackingView.routeDidChange()
     
     for (_,post) in existingPosts
     {
@@ -321,14 +259,22 @@ class MapViewController: UIViewController, VisualizationView, MKMapViewDelegate,
     candPrevWaypoint = prev
   }
   
-  func viewPosts()
+//  func viewPosts()
+//  {
+//    trackingView.mode = .trackPosts
+//    
+//    var annotations = [MKAnnotation]()
+//    postAnnotations.forEach { (_,value) in annotations.append(value) }
+//    if mapView.showsUserLocation { annotations.append(mapView.userLocation) }
+//    regionChangeState = .PostTrackingRequestedChange
+//    mapView.showAnnotations(annotations, animated: true)
+//  }
+  
+  func showAllPosts()
   {
-    trackingView.mode = .trackPosts
-    
     var annotations = [MKAnnotation]()
     postAnnotations.forEach { (_,value) in annotations.append(value) }
     if mapView.showsUserLocation { annotations.append(mapView.userLocation) }
-    regionChangeState = .PostTrackingRequestedChange
     mapView.showAnnotations(annotations, animated: true)
   }
   

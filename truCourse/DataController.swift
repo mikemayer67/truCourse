@@ -244,7 +244,6 @@ class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate
         (_:UIAlertAction) in
         self.dataViewController.updateRoute(self.route)
         self.dataViewController.applyState()
-        self.dataViewController.viewPostsOnMap(updateTrackingMode: true)
       }
     
     let formatter = DateFormatter()
