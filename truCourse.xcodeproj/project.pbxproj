@@ -46,7 +46,7 @@
 		27C5584E1E5F8790004FF32A /* BearingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27C558481E5F8790004FF32A /* BearingViewController.swift */; };
 		27C5584F1E5F8790004FF32A /* LatLonViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27C558491E5F8790004FF32A /* LatLonViewController.swift */; };
 		27C558501E5F8790004FF32A /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27C5584A1E5F8790004FF32A /* MapViewController.swift */; };
-		27C558511E5F8790004FF32A /* DataViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27C5584B1E5F8790004FF32A /* DataViewController.swift */; };
+		27C558511E5F8790004FF32A /* DataPageController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27C5584B1E5F8790004FF32A /* DataPageController.swift */; };
 		27C558521E5F8790004FF32A /* Types.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27C5584C1E5F8790004FF32A /* Types.swift */; };
 		27C558541E5F885B004FF32A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 27C558531E5F885B004FF32A /* Main.storyboard */; };
 		27C558561E5F8ABB004FF32A /* Options.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27C558551E5F8ABB004FF32A /* Options.swift */; };
@@ -114,7 +114,7 @@
 		27C558481E5F8790004FF32A /* BearingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BearingViewController.swift; sourceTree = "<group>"; };
 		27C558491E5F8790004FF32A /* LatLonViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LatLonViewController.swift; sourceTree = "<group>"; };
 		27C5584A1E5F8790004FF32A /* MapViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
-		27C5584B1E5F8790004FF32A /* DataViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataViewController.swift; sourceTree = "<group>"; };
+		27C5584B1E5F8790004FF32A /* DataPageController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataPageController.swift; sourceTree = "<group>"; };
 		27C5584C1E5F8790004FF32A /* Types.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Types.swift; sourceTree = "<group>"; };
 		27C558531E5F885B004FF32A /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		27C558551E5F8ABB004FF32A /* Options.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Options.swift; sourceTree = "<group>"; };
@@ -270,7 +270,7 @@
 		27DB65E21E60E2D100498C12 /* DataViews */ = {
 			isa = PBXGroup;
 			children = (
-				27C5584B1E5F8790004FF32A /* DataViewController.swift */,
+				27C5584B1E5F8790004FF32A /* DataPageController.swift */,
 				2793480B1E8A829E00594B0D /* VisualizationView.swift */,
 				27C558491E5F8790004FF32A /* LatLonViewController.swift */,
 				27C558481E5F8790004FF32A /* BearingViewController.swift */,
@@ -433,7 +433,7 @@
 				27F74D7A1EA4E7AA008D172A /* PostAnnotation.swift in Sources */,
 				2742AC9E1EAC39AB00B2EC53 /* UndoableActions.swift in Sources */,
 				278905E41E7961D100F1B40B /* Waypoint.swift in Sources */,
-				27C558511E5F8790004FF32A /* DataViewController.swift in Sources */,
+				27C558511E5F8790004FF32A /* DataPageController.swift in Sources */,
 				27D509471EA8D227002A5920 /* TrackingView.swift in Sources */,
 				27377C971EBA1586003504EF /* PopupViewController.swift in Sources */,
 				273DCEBA1E7C1C06005AE82E /* DataController.swift in Sources */,

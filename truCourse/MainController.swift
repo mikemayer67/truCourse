@@ -10,7 +10,7 @@ import UIKit
 
 class MainController : UINavigationController, UINavigationControllerDelegate
 {
-  weak var dataViewController : DataViewController!
+  weak var dataPageController : DataPageController!
   
   override func viewDidLoad()
   {
@@ -49,12 +49,12 @@ class MainController : UINavigationController, UINavigationControllerDelegate
   {
     if let ovc = viewController as? OptionsViewController
     {
-      ovc.delegate = dataViewController
+      ovc.delegate = dataPageController
       ovc.checkState()
     }
     else if let rvc = viewController as? RoutesViewController
     {
-      rvc.delegate = self.dataViewController.dataController
+      rvc.delegate = self.dataPageController.dataController
     }
   }
 }

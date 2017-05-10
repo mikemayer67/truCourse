@@ -1,5 +1,5 @@
 //
-//  DataViewController.swift
+//  DataPageController.swift
 //  truCourse
 //
 //  Created by Mike Mayer on 2/22/17.
@@ -10,7 +10,7 @@ import UIKit
 import CoreGraphics
 import CoreLocation
 
-class DataViewController :
+class DataPageController :
   UIPageViewController, UIPageViewControllerDataSource, UIPageViewControllerDelegate,
   OptionViewControllerDelegate, UndoManagerObserver
 {
@@ -60,7 +60,7 @@ class DataViewController :
     currentView = visualizationControllers[VisualizationType.MapView]
     
     self.navigationController!.navigationBar.tintColor = UIColor.white
-    (self.navigationController as! MainController).dataViewController = self
+    (self.navigationController as! MainController).dataPageController = self
     
     self.dataSource = self
     self.delegate = self

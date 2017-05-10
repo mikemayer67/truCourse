@@ -25,7 +25,7 @@ private func dataPath(_ filename:String) -> URL
 
 class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate, UIPickerViewDataSource, RenumberViewDelegate, UIActivityItemSource, RouteInfoViewDelegate, RoutesViewControllerDelegate
 {
-  @IBOutlet var dataViewController     : DataViewController!
+  @IBOutlet var dataPageController     : DataPageController!
             var renumberViewController : RenumberViewController?
   
   let locationManager = CLLocationManager()
@@ -117,7 +117,7 @@ class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate
   
   func updateState(_ transition:AppStateTransition)
   {
-    let dvc = self.dataViewController!
+    let dvc = self.dataPageController!
 
     switch transition
     {
@@ -236,14 +236,14 @@ class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate
       {
         (_:UIAlertAction) in
         self.route = WorkingRoute()
-        self.dataViewController.applyState()
+        self.dataPageController.applyState()
       }
     
     let keepRoute =
       {
         (_:UIAlertAction) in
-        self.dataViewController.updateRoute(self.route)
-        self.dataViewController.applyState()
+        self.dataPageController.updateRoute(self.route)
+        self.dataPageController.applyState()
       }
     
     let formatter = DateFormatter()
@@ -263,7 +263,7 @@ class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate
     alert.addAction( UIAlertAction(title: "Delete it", style: .destructive, handler: deleteRoute) )
     alert.addAction( UIAlertAction(title: "Continue",  style: .cancel,      handler: keepRoute) )
     
-    dataViewController.present(alert, animated: true)
+    dataPageController.present(alert, animated: true)
   }
 
   
@@ -313,7 +313,7 @@ class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate
   
   func popupActions(for post:Int) -> [UIAlertAction]?
   {
-    let dvc = self.dataViewController!
+    let dvc = self.dataPageController!
     
     var actions = [UIAlertAction]()
     
@@ -409,7 +409,7 @@ class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate
     UndoManager.shared.add( InsertionAction(self, post:index, at:cand.location) )
     
     lastRecordedPost = currentLocation
-    dataViewController.updateRoute(route)
+    dataPageController.updateRoute(route)
     
     updateDeclinationIfNeeded()
   }
@@ -420,11 +420,11 @@ class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate
     
     rc.delegate = self
     rc.setNeedsStatusBarAppearanceUpdate()
-    dataViewController.definesPresentationContext = true
+    dataPageController.definesPresentationContext = true
     
     self.renumberIndex = post
     
-    dataViewController.parent!.present(rc, animated: true)
+    dataPageController.parent!.present(rc, animated: true)
   }
   
   func renumberView(_ vc: RenumberViewController, didSelect row: Int)
@@ -448,9 +448,9 @@ class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate
       self.candidatePost = nil
       
       self.route.remove(post: insertion.post)
-      self.dataViewController.updateRoute(self.route)
+      self.dataPageController.updateRoute(self.route)
       self.lastRecordedPost = nil
-      self.dataViewController.applyState()
+      self.dataPageController.applyState()
       self.insertionIndex = insertion.post
       
       if wasInserting { self.updateState(.Insert(insertion.post)) }
@@ -458,7 +458,7 @@ class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate
     
     if insertion.firstUndo
     {
-      dataViewController.confirmAction(
+      dataPageController.confirmAction(
         type: .Deletion(insertion.post),
         action: action,
         failure: { UndoManager.shared.cancel(undo:insertion) } )
@@ -476,10 +476,10 @@ class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate
   {
     route.insert(post: insertion.post, at: insertion.location)
     
-    dataViewController.updateRoute(route)
+    dataPageController.updateRoute(route)
     
     lastRecordedPost = nil
-    dataViewController.applyState()
+    dataPageController.applyState()
     insertionIndex = insertion.post + 1
     
     return true
@@ -490,7 +490,7 @@ class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate
   {
     route.insert(post: deletion.post, at: deletion.location)
     insertionIndex = deletion.insertionIndexForUndo(ifInsertingAt: insertionIndex)
-    dataViewController.updateRoute(route)
+    dataPageController.updateRoute(route)
     return true
   }
   
@@ -499,7 +499,7 @@ class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate
   {
     route.remove(post:deletion.post)
     insertionIndex = deletion.insertionIndexForRedo(ifInsertingAt: insertionIndex)
-    dataViewController.updateRoute(route)
+    dataPageController.updateRoute(route)
     return true
   }
   
@@ -519,7 +519,7 @@ class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate
         insertionIndex = (insertionIndex! - oldPost + n ) % n + 1
       }
       
-      dataViewController.updateRoute(route)
+      dataPageController.updateRoute(route)
     }
     return rval
   }
@@ -537,7 +537,7 @@ class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate
       insertionIndex = (insertionIndex! - post + n ) % n + 1
     }
     
-    dataViewController.updateRoute(route)
+    dataPageController.updateRoute(route)
     
     return true
   }
@@ -564,7 +564,7 @@ class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate
       insertionIndex = (n+3) - insertionIndex!
     }
     
-    dataViewController.updateRoute(route)
+    dataPageController.updateRoute(route)
     
     return true
   }
@@ -592,7 +592,7 @@ class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate
     
     if ok && wasInserting { updateState(.Insert(insertionIndex)) }
         
-    dataViewController.updateRoute(route)
+    dataPageController.updateRoute(route)
     
     return ok
   }
@@ -614,7 +614,7 @@ class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate
     guard let wp = route.find(post: post) else { return false }
     
     wp.location = location
-    dataViewController.updateRoute(route)
+    dataPageController.updateRoute(route)
     
     return true
   }
@@ -636,10 +636,10 @@ class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate
     if let cand = candidatePost
     {
       cand.location = currentLocation!.coordinate
-      dataViewController.updateCandidate(cand)
+      dataPageController.updateCandidate(cand)
     }
     
-    dataViewController.handleLocationUpdate()
+    dataPageController.handleLocationUpdate()
   }
   
   func locationManager(_ manager: CLLocationManager, didUpdateHeading newHeading: CLHeading)
@@ -690,7 +690,7 @@ class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate
         activityVC.dismiss(animated: true, completion: nil)
       }
     
-    dataViewController.present(activityVC, animated: true, completion: nil)
+    dataPageController.present(activityVC, animated: true, completion: nil)
   }
   
   func activityViewControllerPlaceholderItem(_ activityViewController: UIActivityViewController) -> Any
@@ -741,7 +741,7 @@ class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate
       
       prompt.addAction(UIAlertAction(title: "Cancel", style: .cancel) )
       
-      dataViewController.present(prompt, animated: true)
+      dataPageController.present(prompt, animated: true)
     }
   }
   
@@ -752,10 +752,10 @@ class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate
     
     rc.delegate = self
     rc.setNeedsStatusBarAppearanceUpdate()
-    dataViewController.definesPresentationContext = true
+    dataPageController.definesPresentationContext = true
     
     saveState = state
-    dataViewController.parent!.present(rc, animated: true)
+    dataPageController.parent!.present(rc, animated: true)
   }
   
   func updateRouteInfo(withName name: String, description: String?, keepOpen: Bool)
@@ -782,9 +782,9 @@ class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate
       self.insertionIndex = nil
       self.renumberIndex  = nil
       self.lastRecordedPost = nil
-      self.dataViewController.updateRoute(self.route)
+      self.dataPageController.updateRoute(self.route)
     }
     
-    dataViewController.confirmAction(type: .NewWorkingRoute(route, newRoute), action: action )
+    dataPageController.confirmAction(type: .NewWorkingRoute(route, newRoute), action: action )
   }
 }
