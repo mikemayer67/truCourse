@@ -8,37 +8,32 @@
 
 import UIKit
 
-class LatLonViewController: UITableViewController, VisualizationView
+class LatLonViewController: UITableViewController, DataViewController
 {
-  weak var dataController : DataController?
+  weak var dataController : DataController!
   
-  var _visualizationType : VisualizationType { return .LatLonView }
+  var viewType : DataViewType { return .LatLonView }
   
-  var _hasSelection: Bool
+  var hasSelection: Bool
   {
     return self.tableView.indexPathForSelectedRow != nil
   }
   
-  override func viewDidLoad() {
+  override func viewDidLoad()
+  {
     super.viewDidLoad()
-    
-    // Uncomment the following line to preserve selection between presentations
-    // self.clearsSelectionOnViewWillAppear = false
-    
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem()
   }
   
   // MARK: - Options
   
-  func _applyOptions()
+  func applyOptions()
   {
     print("Don't forget to implement LatLonViewController.applyOptions")
   }
   
   // MARK: - State
   
-  func _applyState(_ state: AppState)
+  func applyState(_ state: AppState)
   {
     print("Don't forget to implement LatLonViewController.applyState \(state)")
   }
@@ -57,69 +52,13 @@ class LatLonViewController: UITableViewController, VisualizationView
   
   // MARK: - Route update
   
-  func _updateRoute(_ route: Route)
+  func updateRoute(_ route: Route)
   {
     print("LatLonView::updateRoute(\(route))")
   }
   
-  func _updateCandidate(_ cand: Waypoint?)
+  func updateCandidate(_ cand: Waypoint?)
   {
     print("LatLonView::updateCandidate(\(cand))")
   }
-  
-  /*
-   override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-   let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
-   
-   // Configure the cell...
-   
-   return cell
-   }
-   */
-  
-  /*
-   // Override to support conditional editing of the table view.
-   override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-   // Return false if you do not want the specified item to be editable.
-   return true
-   }
-   */
-  
-  /*
-   // Override to support editing the table view.
-   override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-   if editingStyle == .delete {
-   // Delete the row from the data source
-   tableView.deleteRows(at: [indexPath], with: .fade)
-   } else if editingStyle == .insert {
-   // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-   }
-   }
-   */
-  
-  /*
-   // Override to support rearranging the table view.
-   override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
-   
-   }
-   */
-  
-  /*
-   // Override to support conditional rearranging of the table view.
-   override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-   // Return false if you do not want the item to be re-orderable.
-   return true
-   }
-   */
-  
-  /*
-   // MARK: - Navigation
-   
-   // In a storyboard-based application, you will often want to do a little preparation before navigation
-   override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-   // Get the new view controller using segue.destinationViewController.
-   // Pass the selected object to the new view controller.
-   }
-   */
-  
 }

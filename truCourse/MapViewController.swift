@@ -9,12 +9,12 @@
 import UIKit
 import MapKit
 
-class MapViewController: UIViewController, VisualizationView, MKMapViewDelegate
+class MapViewController: UIViewController, DataViewController, MKMapViewDelegate
 {
   @IBOutlet weak var mapView        : MKMapView!
   @IBOutlet weak var trackingView   : TrackingView!
   
-  weak var dataController : DataController?
+  weak var dataController : DataController!
   
   private var routeOverlay    : MKOverlay?
   private var candOverlay     : MKOverlay?
@@ -24,8 +24,8 @@ class MapViewController: UIViewController, VisualizationView, MKMapViewDelegate
   
   private var candPrevWaypoint : Waypoint?
   
-   var _visualizationType : VisualizationType { return .MapView }
-   var _hasSelection      : Bool              { return false    }
+   var viewType     : DataViewType { return .MapView }
+   var hasSelection : Bool         { return false    }
   
   // MARK: - Load/Visibility methods
   
@@ -60,7 +60,7 @@ class MapViewController: UIViewController, VisualizationView, MKMapViewDelegate
 
   // MARK: - Options
   
-  func _applyOptions()
+  func applyOptions()
   {
     let options = Options.shared
     
@@ -75,7 +75,7 @@ class MapViewController: UIViewController, VisualizationView, MKMapViewDelegate
   
   // MARK: - State
   
-  func _applyState(_ state: AppState)
+  func applyState(_ state: AppState)
   {
     switch state
     {
@@ -133,7 +133,6 @@ class MapViewController: UIViewController, VisualizationView, MKMapViewDelegate
   
   func handlePopup(_ sender:UILongPressGestureRecognizer)
   {
-    guard dataController != nil  else { return }
     guard sender.state == .began else { return }
     
     sender.isEnabled = false  // cancels the long press gesture now that it's recognized
@@ -143,7 +142,7 @@ class MapViewController: UIViewController, VisualizationView, MKMapViewDelegate
     let post     = postView.annotation as! PostAnnotation
     let index    = post.waypoint.index!
     
-    let actions = dataController!.popupActions(for: index)
+    let actions = dataController.popupActions(for: index)
     
     if actions == nil { return }
     
@@ -160,7 +159,7 @@ class MapViewController: UIViewController, VisualizationView, MKMapViewDelegate
   
   // MARK: - Route update
   
-  func _updateRoute(_ route: Route)
+  func updateRoute(_ route: Route)
   {
     let head = route.head
     var cand : Waypoint?
@@ -214,10 +213,10 @@ class MapViewController: UIViewController, VisualizationView, MKMapViewDelegate
       routeOverlay = nil
     }
     
-    if cand != nil { _updateCandidate(cand!) }
+    if cand != nil { updateCandidate(cand!) }
   }
   
-  func _updateCandidate(_ candidate: Waypoint?)
+  func updateCandidate(_ candidate: Waypoint?)
   {
     if candOverlay != nil
     {
@@ -259,16 +258,6 @@ class MapViewController: UIViewController, VisualizationView, MKMapViewDelegate
     candPrevWaypoint = prev
   }
   
-//  func viewPosts()
-//  {
-//    trackingView.mode = .trackPosts
-//    
-//    var annotations = [MKAnnotation]()
-//    postAnnotations.forEach { (_,value) in annotations.append(value) }
-//    if mapView.showsUserLocation { annotations.append(mapView.userLocation) }
-//    regionChangeState = .PostTrackingRequestedChange
-//    mapView.showAnnotations(annotations, animated: true)
-//  }
   
   func showAllPosts()
   {
