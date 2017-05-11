@@ -22,13 +22,13 @@ extension CLLocationDegrees
   var dms : String
   {
     let neg = self < 0.0
-    var sec   = Int(3600.0 * (neg ? -self : self) + 0.5)
-    var min = Int(sec/60)
-    sec %= 60
+    var sec   = Int(36000.0 * (neg ? -self : self) + 0.5)
+    var min = Int(sec/600)
+    sec %= 600
     var deg = Int(min/60)
     min %= 60
     if neg { deg = -deg }
-    let rval = String(format: "%4dº%02d'%02d\"", deg, min, sec)
+    let rval = String(format: "%4dº%02d'%04.1f\"", deg, min, 0.1*Double(sec))
     return rval
   }
   

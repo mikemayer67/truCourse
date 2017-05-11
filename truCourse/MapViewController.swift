@@ -43,6 +43,22 @@ class MapViewController: UIViewController, DataViewController, MKMapViewDelegate
     trackingView.initTrackingMode(.follow)
     
     mapView.remove { (gr:UIGestureRecognizer)->Bool in return gr is UILongPressGestureRecognizer }
+    
+    let panGR = UIPanGestureRecognizer(target: trackingView, action: #selector(TrackingView.userDraggedMap(_:)))
+    panGR.delegate = trackingView
+    mapView.addGestureRecognizer(panGR)
+    
+    let tapGR = UITapGestureRecognizer(target: trackingView, action: #selector(TrackingView.userDraggedMap(_:)))
+    tapGR.numberOfTapsRequired = 1
+    tapGR.numberOfTouchesRequired = 2
+    tapGR.delegate = trackingView
+    mapView.addGestureRecognizer(tapGR)
+    
+    let dtapGR = UITapGestureRecognizer(target: trackingView, action: #selector(TrackingView.userDraggedMap(_:)))
+    dtapGR.numberOfTouchesRequired = 1
+    dtapGR.numberOfTapsRequired = 2
+    dtapGR.delegate = trackingView
+    mapView.addGestureRecognizer(dtapGR)
   }
   
   override func viewWillDisappear(_ animated: Bool)
@@ -88,16 +104,6 @@ class MapViewController: UIViewController, DataViewController, MKMapViewDelegate
   }
   
   // MARK: - MapView delegate methods passed through to the TrackingView
-  
-  func mapView(_ mapView: MKMapView, regionWillChangeAnimated animated: Bool)
-  {
-    trackingView.regionWillChange()
-  }
-  
-  func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool)
-  {
-    trackingView.regionDidChange()
-  }
   
   func mapView(_ mapView: MKMapView, didChange mode: MKUserTrackingMode, animated: Bool)
   {

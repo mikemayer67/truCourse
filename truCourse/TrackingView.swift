@@ -9,22 +9,13 @@
 import UIKit
 import MapKit
 
-enum RegionChangeState : Int
-{
-  case MapViewIsInControl
-  case ChangeRequested
-  case ChangingAsRequested
-}
-
-class TrackingView: UIView
+class TrackingView: UIView, UIGestureRecognizerDelegate
 {
   @IBOutlet weak var button   : UIButton!
   
   weak var mapViewController  : MapViewController!
   
   private var timer : Timer?
-  
-  private var regionState = RegionChangeState.MapViewIsInControl
   
   private var _mode         = MKUserTrackingMode.none
   private var autoScaling = false
@@ -147,40 +138,14 @@ class TrackingView: UIView
   }
   
   // MARK: - Show All Posts
-  
-  func regionWillChange()
-  {
-    print("\nRegion will change: \(regionState) \(_mode) \(autoScaling)")
-    if regionState == .ChangeRequested { regionState = .ChangingAsRequested }
-  }
-  
-  func regionDidChange()
-  {
-    print("Region did change: \(regionState) \(_mode.rawValue) \(autoScaling)")
-    switch regionState
-    {
-    case .MapViewIsInControl:
-      print("Disabling auto scaling")
-      autoScaling = false
-      updateIcon()
-      pauseAutoScaling()
-      
-    case .ChangeRequested,.ChangingAsRequested:
-      print("Resuming AutoScaling if \(autoScaling)")
-      regionState = .MapViewIsInControl
-      resumeAutoScaling()
-    }
-  }
 
   func routeDidChange()
   {
-    guard _mode == .none  else { return } // mapview is adjusting visible region
-    showAllPosts()
+    if _mode == .none && autoScaling { showAllPosts() }
   }
   
   func showAllPosts()
   {
-    regionState = .ChangeRequested
     mapViewController.showAllPosts()
   }
   
@@ -188,26 +153,54 @@ class TrackingView: UIView
   
   func resumeAutoScaling()
   {
-    guard autoScaling         else { return }  // auto-scaling not currently on
-    guard _mode == .none      else { return }  // auto-scaling only when mapview is not adjusting region
-    
-    showAllPosts()
-    
-    // only start timer if allowed by options (and not already running)
-    
-    guard Options.shared.autoScale  else { return }  // auto-scaling not currently enabled
-    guard timer == nil              else { return }  // auto-scaling already running
-    
-    timer = Timer.scheduledTimer(timeInterval: 3.0,
-                                       target: self,
-                                     selector: #selector(showAllPosts),
-                                     userInfo: nil,
-                                      repeats: true)
+    if _mode == .none && autoScaling
+    {
+      showAllPosts()
+      
+      // only start timer if allowed by options (and not already running)
+      
+      guard Options.shared.autoScale  else { return }  // auto-scaling not currently enabled
+      guard timer == nil              else { return }  // auto-scaling already running
+      
+      timer = Timer.scheduledTimer(timeInterval: 3.0,
+                                   target: self,
+                                   selector: #selector(showAllPosts),
+                                   userInfo: nil,
+                                   repeats: true)
+    }
   }
   
   func pauseAutoScaling()
   {
     timer?.invalidate()
     timer = nil
+  }
+  
+  
+  // MARK: - User gestures in Map
+  
+  func gestureRecognizer(_ sender: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool
+  {
+    return true
+  }
+  
+  func userDraggedMap(_ gr:UIGestureRecognizer)
+  {
+    if _mode == .none && autoScaling
+    {
+      autoScaling = false
+      pauseAutoScaling()
+      updateIcon()
+    }
+  }
+  
+  func userTappedMap(_ sender: UITapGestureRecognizer)
+  {
+    if _mode == .none && autoScaling
+    {
+      autoScaling = false
+      pauseAutoScaling()
+      updateIcon()
+    }
   }
 }

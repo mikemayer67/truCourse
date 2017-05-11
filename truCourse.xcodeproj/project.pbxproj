@@ -277,8 +277,8 @@
 				27C5584A1E5F8790004FF32A /* MapViewController.swift */,
 				27F74D791EA4E7AA008D172A /* PostAnnotation.swift */,
 				27D509461EA8D227002A5920 /* TrackingView.swift */,
-				27377C961EBA1586003504EF /* PopupViewController.swift */,
 				27AA19861EB0BB32003FB5F6 /* RenumberViewController.swift */,
+				27377C961EBA1586003504EF /* PopupViewController.swift */,
 				27377C941EBA1509003504EF /* RouteInfoViewController.swift */,
 			);
 			name = DataViews;
