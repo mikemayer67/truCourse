@@ -236,6 +236,7 @@ class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate
       {
         (_:UIAlertAction) in
         self.route = WorkingRoute()
+        self.dataPageController.updateRoute(self.route)
         self.dataPageController.applyState()
       }
     

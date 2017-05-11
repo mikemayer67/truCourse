@@ -12,8 +12,6 @@ class BearingViewController: UITableViewController, DataViewController
 {
   weak var dataController : DataController!
   
-  var viewType : DataViewType { return .BearingView }
-
   var hasSelection: Bool
   {
     return self.tableView.indexPathForSelectedRow != nil

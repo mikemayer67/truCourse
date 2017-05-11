@@ -24,7 +24,6 @@ class MapViewController: UIViewController, DataViewController, MKMapViewDelegate
   
   private var candPrevWaypoint : Waypoint?
   
-   var viewType     : DataViewType { return .MapView }
    var hasSelection : Bool         { return false    }
   
   // MARK: - Load/Visibility methods

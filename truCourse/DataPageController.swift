@@ -31,18 +31,24 @@ class DataPageController :
   private var shareBarItem          : UIBarButtonItem!
   private var saveBarItem           : UIBarButtonItem!
   
-  private var mapViewController     : MapViewController!
-  private var bearingViewController : BearingViewController!
-  private var latLonViewController  : LatLonViewController!
+  private var mapVC                 : MapViewController!
+  private var bearingVC             : BearingViewController!
+  private var latlonVC              : LatLonViewController!
   
-  private var dataViewControllers   : [DataViewController]!
-  private var uiViewControllers     : [UIViewController]!
+  private var allDataVC             : [DataViewController]!
   
-  private var currentDataView       : DataViewController!
-  private var currentUIView         : UIViewController
+  private var dataVC                : DataViewController!
   {
-    get { return currentDataView as! UIViewController }
-    set { currentDataView = newValue as! DataViewController }
+    didSet
+    {
+      if dataVC !== oldValue { dataVC.updateRoute(dataController.route) }
+    }
+  }
+  
+  private var uiVC                  : UIViewController
+  {
+    get { return dataVC as! UIViewController }
+    set { dataVC = newValue as! DataViewController }
   }
   
   private var lastRecordTime       : Date?
@@ -55,23 +61,29 @@ class DataPageController :
         
     let sb = self.storyboard!
     
-    mapViewController     = sb.instantiateViewController(withIdentifier: "mapViewController")     as! MapViewController
-    bearingViewController = sb.instantiateViewController(withIdentifier: "bearingViewController") as! BearingViewController
-    latLonViewController  = sb.instantiateViewController(withIdentifier: "latLonViewController")  as! LatLonViewController
+    mapVC     = sb.instantiateViewController(withIdentifier: "mapViewController")     as! MapViewController
+    bearingVC = sb.instantiateViewController(withIdentifier: "bearingViewController") as! BearingViewController
+    latlonVC  = sb.instantiateViewController(withIdentifier: "latLonViewController")  as! LatLonViewController
     
-    dataViewControllers = [ mapViewController, bearingViewController, latLonViewController ]
-    uiViewControllers   = [ mapViewController, bearingViewController, latLonViewController ]
+    allDataVC = [ mapVC, bearingVC, latlonVC ]
     
-    dataViewControllers.forEach { $0.dataController = self.dataController }
+    allDataVC.forEach { $0.dataController = self.dataController }
     
-    currentDataView = mapViewController
+    for i in 0...(allDataVC.count-1)
+    {
+      let dvc = allDataVC[i]
+      dvc.dataController = self.dataController
+      (dvc as! UIViewController).view.tag = i
+    }
+        
+    dataVC = mapVC
     
     self.navigationController!.navigationBar.tintColor = UIColor.white
     (self.navigationController as! MainController).dataPageController = self
     
     self.dataSource = self
     self.delegate = self
-    self.setViewControllers([currentUIView], direction: .forward, animated: false, completion: nil)
+    self.setViewControllers([uiVC], direction: .forward, animated: false, completion: nil)
     
     activeToolbarItems = self.toolbarItems
     
@@ -167,70 +179,43 @@ class DataPageController :
 
   func applyOptions()
   {
-    dataViewControllers.forEach { $0.applyOptions() }
+    allDataVC.forEach { $0.applyOptions() }
   }
   
   // MARK: - Passtroughs to View Controller
   
   func updateRoute(_ route:Route)
   {
-    currentDataView.updateRoute(route)
+    dataVC.updateRoute(route)
     self.applyState()
   }
   
   func updateCandidate(_ candidate:Waypoint)
   {
-    currentDataView.updateCandidate(candidate)
+    dataVC.updateCandidate(candidate)
   }
   
   func removeCandidate()
   {
-    currentDataView.updateCandidate(nil)
+    dataVC.updateCandidate(nil)
   }
 
   // MARK: - Page View Data Source
   
-  func dataViewController(for index: Int) -> DataViewController?
-  {
-    return dataViewController(for:DataViewType(rawValue:index))
-  }
-  
-  func dataViewController(for type: DataViewType?) -> DataViewController?
-  {
-    guard type == nil else { return nil }
-    
-    switch type!
-    {
-    case .map:     return mapViewController
-    case .bearing: return bearingViewController
-    case .latlon:  return latLonViewController
-    }
-  }
-  
-  func uiViewController(for index: Int) -> UIViewController?
-  {
-    return dataViewController(for:index) as? UIViewController
-  }
-  
-  func uiViewController(for type: DataViewType) -> UIViewController?
-  {
-    return dataViewController(for:type) as? UIViewController
-  }
-  
   @IBAction func setCurrentViewType(_ sender: UISegmentedControl)
   {
-    let curIndex = currentDataView.viewType.rawValue
+    let curIndex = uiVC.view.tag
     let newIndex = sender.selectedSegmentIndex
     
-    let newVC = dataViewController(for:newIndex)
+    let newVC = allDataVC[newIndex]
     
-    if( newVC !== currentDataView)
+    if( newVC !== dataVC)
     {
       let delta = newIndex - curIndex
 
-      currentDataView = newVC
+      dataVC = newVC
 
-      self.setViewControllers([newVC as! UIViewController],
+      self.setViewControllers( [uiVC],
                               direction: ( (delta == 1)||(delta == -2) ? .forward : .reverse),
                               animated: true)
       
@@ -241,16 +226,15 @@ class DataPageController :
   func pageViewController(_ pageViewController: UIPageViewController,
                           viewControllerAfter vc: UIViewController ) -> UIViewController?
   {
-    let nextIndex = (vc as! DataViewController).viewType.next()
-    return uiViewController(for: nextIndex)
+    let n = allDataVC.count
+    return allDataVC[ (vc.view.tag + 1) % n ] as? UIViewController
   }
   
   func pageViewController(_ pageViewController: UIPageViewController,
                           viewControllerBefore vc: UIViewController ) -> UIViewController?
   {
-    let prevIndex = (vc as! DataViewController).viewType.prev()
-    return uiViewController(for: prevIndex)
-    
+    let n = allDataVC.count
+    return allDataVC[ (vc.view.tag + n-1) % n ] as? UIViewController
   }
   
   // MARK: - Page View Delegate
@@ -263,8 +247,8 @@ class DataPageController :
   {
     if finished && completed
     {
-      currentUIView  = viewControllers![0]
-      viewTypeControl.selectedSegmentIndex = currentDataView.viewType.rawValue
+      uiVC = viewControllers![0]
+      viewTypeControl.selectedSegmentIndex = uiVC.view.tag
     }
   }
 
@@ -336,7 +320,7 @@ class DataPageController :
 
     }
     
-    currentDataView.applyState(state)
+    dataVC.applyState(state)
   }
   
   func handleLocationUpdate()

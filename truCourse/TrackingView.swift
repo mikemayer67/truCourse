@@ -150,19 +150,25 @@ class TrackingView: UIView
   
   func regionWillChange()
   {
+    print("\nRegion will change: \(regionState) \(_mode) \(autoScaling)")
     if regionState == .ChangeRequested { regionState = .ChangingAsRequested }
   }
   
   func regionDidChange()
   {
+    print("Region did change: \(regionState) \(_mode.rawValue) \(autoScaling)")
     switch regionState
     {
     case .MapViewIsInControl:
+      print("Disabling auto scaling")
       autoScaling = false
       updateIcon()
+      pauseAutoScaling()
       
     case .ChangeRequested,.ChangingAsRequested:
+      print("Resuming AutoScaling if \(autoScaling)")
       regionState = .MapViewIsInControl
+      resumeAutoScaling()
     }
   }
 

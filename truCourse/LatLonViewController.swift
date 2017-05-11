@@ -12,8 +12,6 @@ class LatLonViewController: UITableViewController, DataViewController
 {
   weak var dataController : DataController!
   
-  var viewType : DataViewType { return .LatLonView }
-  
   var hasSelection: Bool
   {
     return self.tableView.indexPathForSelectedRow != nil
