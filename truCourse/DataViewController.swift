@@ -13,9 +13,7 @@ protocol DataViewController : class
   var ui               : UIViewController { get }
   var hasSelection     : Bool             { get }
   var tag              : Int              { get }
-  
-  var dataController   : DataController!  { get set }
-  
+    
   func applyOptions()
   func applyState(_ state:AppState)
   func updateRoute(_ route:Route)

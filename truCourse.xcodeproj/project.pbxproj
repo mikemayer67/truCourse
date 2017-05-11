@@ -37,14 +37,16 @@
 		27BC9E171EA8590A00398773 /* TrackHeading_000000_25.png in Resources */ = {isa = PBXBuildFile; fileRef = 27BC9E161EA8590A00398773 /* TrackHeading_000000_25.png */; };
 		27BC9E191EA8596C00398773 /* TrackOn_000000_25.png in Resources */ = {isa = PBXBuildFile; fileRef = 27BC9E181EA8596C00398773 /* TrackOn_000000_25.png */; };
 		27BC9E1B1EA859BC00398773 /* TrackOff_000000_25.png in Resources */ = {isa = PBXBuildFile; fileRef = 27BC9E1A1EA859BC00398773 /* TrackOff_000000_25.png */; };
+		27BCD9961EC4224D00FC33C8 /* dots_000000_25.png in Resources */ = {isa = PBXBuildFile; fileRef = 27BCD9951EC4224D00FC33C8 /* dots_000000_25.png */; };
+		27BCD9981EC4721000FC33C8 /* UserLocationxcf.png in Resources */ = {isa = PBXBuildFile; fileRef = 27BCD9971EC4721000FC33C8 /* UserLocationxcf.png */; };
+		27BCD99A1EC4728200FC33C8 /* ListViewCells.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27BCD9991EC4728200FC33C8 /* ListViewCells.swift */; };
 		27C558351E5F872E004FF32A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 27C558331E5F872E004FF32A /* LaunchScreen.storyboard */; };
 		27C558411E5F8769004FF32A /* Globe_ffffff_25.png in Resources */ = {isa = PBXBuildFile; fileRef = 27C5583C1E5F8769004FF32A /* Globe_ffffff_25.png */; };
 		27C558431E5F8769004FF32A /* Settings_ffffff_25.png in Resources */ = {isa = PBXBuildFile; fileRef = 27C5583E1E5F8769004FF32A /* Settings_ffffff_25.png */; };
 		27C558441E5F8769004FF32A /* Signpost_ffffff_25.png in Resources */ = {isa = PBXBuildFile; fileRef = 27C5583F1E5F8769004FF32A /* Signpost_ffffff_25.png */; };
 		27C558451E5F8769004FF32A /* Waypoint Map_ffffff_25.png in Resources */ = {isa = PBXBuildFile; fileRef = 27C558401E5F8769004FF32A /* Waypoint Map_ffffff_25.png */; };
 		27C5584D1E5F8790004FF32A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27C558471E5F8790004FF32A /* AppDelegate.swift */; };
-		27C5584E1E5F8790004FF32A /* BearingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27C558481E5F8790004FF32A /* BearingViewController.swift */; };
-		27C5584F1E5F8790004FF32A /* LatLonViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27C558491E5F8790004FF32A /* LatLonViewController.swift */; };
+		27C5584E1E5F8790004FF32A /* ListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27C558481E5F8790004FF32A /* ListViewController.swift */; };
 		27C558501E5F8790004FF32A /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27C5584A1E5F8790004FF32A /* MapViewController.swift */; };
 		27C558511E5F8790004FF32A /* DataPageController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27C5584B1E5F8790004FF32A /* DataPageController.swift */; };
 		27C558521E5F8790004FF32A /* Types.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27C5584C1E5F8790004FF32A /* Types.swift */; };
@@ -103,6 +105,9 @@
 		27BC9E161EA8590A00398773 /* TrackHeading_000000_25.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = TrackHeading_000000_25.png; sourceTree = "<group>"; };
 		27BC9E181EA8596C00398773 /* TrackOn_000000_25.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = TrackOn_000000_25.png; sourceTree = "<group>"; };
 		27BC9E1A1EA859BC00398773 /* TrackOff_000000_25.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = TrackOff_000000_25.png; sourceTree = "<group>"; };
+		27BCD9951EC4224D00FC33C8 /* dots_000000_25.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = dots_000000_25.png; sourceTree = "<group>"; };
+		27BCD9971EC4721000FC33C8 /* UserLocationxcf.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = UserLocationxcf.png; sourceTree = "<group>"; };
+		27BCD9991EC4728200FC33C8 /* ListViewCells.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ListViewCells.swift; sourceTree = "<group>"; };
 		27C558271E5F872E004FF32A /* truCourse.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = truCourse.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		27C558341E5F872E004FF32A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		27C558361E5F872E004FF32A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -111,8 +116,7 @@
 		27C5583F1E5F8769004FF32A /* Signpost_ffffff_25.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Signpost_ffffff_25.png; sourceTree = "<group>"; };
 		27C558401E5F8769004FF32A /* Waypoint Map_ffffff_25.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Waypoint Map_ffffff_25.png"; sourceTree = "<group>"; };
 		27C558471E5F8790004FF32A /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		27C558481E5F8790004FF32A /* BearingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BearingViewController.swift; sourceTree = "<group>"; };
-		27C558491E5F8790004FF32A /* LatLonViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LatLonViewController.swift; sourceTree = "<group>"; };
+		27C558481E5F8790004FF32A /* ListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ListViewController.swift; sourceTree = "<group>"; };
 		27C5584A1E5F8790004FF32A /* MapViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 		27C5584B1E5F8790004FF32A /* DataPageController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataPageController.swift; sourceTree = "<group>"; };
 		27C5584C1E5F8790004FF32A /* Types.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Types.swift; sourceTree = "<group>"; };
@@ -225,6 +229,7 @@
 		27C558461E5F877E004FF32A /* Icons */ = {
 			isa = PBXGroup;
 			children = (
+				27BCD9971EC4721000FC33C8 /* UserLocationxcf.png */,
 				27B10CFF1E606EC1005099BD /* Back_ffffff_25.png */,
 				27E7754B1E7CB9CE00091C78 /* Circled Pause_ffffff_25.png */,
 				27E775491E7CB9B500091C78 /* Circled Play_ffffff_25.png */,
@@ -253,6 +258,7 @@
 				27ED921C1EBEC9790004028E /* Waypoint Map_000000_25.png */,
 				27C558401E5F8769004FF32A /* Waypoint Map_ffffff_25.png */,
 				27E7752F1E7CA95700091C78 /* World Map_ffffff_25.png */,
+				27BCD9951EC4224D00FC33C8 /* dots_000000_25.png */,
 			);
 			name = Icons;
 			sourceTree = "<group>";
@@ -272,14 +278,14 @@
 			children = (
 				27C5584B1E5F8790004FF32A /* DataPageController.swift */,
 				2793480B1E8A829E00594B0D /* DataViewController.swift */,
-				27C558491E5F8790004FF32A /* LatLonViewController.swift */,
-				27C558481E5F8790004FF32A /* BearingViewController.swift */,
+				27C558481E5F8790004FF32A /* ListViewController.swift */,
 				27C5584A1E5F8790004FF32A /* MapViewController.swift */,
 				27F74D791EA4E7AA008D172A /* PostAnnotation.swift */,
 				27D509461EA8D227002A5920 /* TrackingView.swift */,
 				27AA19861EB0BB32003FB5F6 /* RenumberViewController.swift */,
 				27377C961EBA1586003504EF /* PopupViewController.swift */,
 				27377C941EBA1509003504EF /* RouteInfoViewController.swift */,
+				27BCD9991EC4728200FC33C8 /* ListViewCells.swift */,
 			);
 			name = DataViews;
 			sourceTree = "<group>";
@@ -382,6 +388,7 @@
 				27BC9E1B1EA859BC00398773 /* TrackOff_000000_25.png in Resources */,
 				27AD09471EAE2847005912B3 /* Undo_ffffff_25.png in Resources */,
 				27E775481E7CB99800091C78 /* Pin 2_ffffff_25.png in Resources */,
+				27BCD9981EC4721000FC33C8 /* UserLocationxcf.png in Resources */,
 				27F26E1C1EA94E90001EF37B /* Near Me_ffffff_25.png in Resources */,
 				27ED921D1EBEC9790004028E /* Waypoint Map_000000_25.png in Resources */,
 				27B101E51E82A41C0014C588 /* Off_ffffff_25.png in Resources */,
@@ -396,6 +403,7 @@
 				27A4C3CE1EB23F5600604F1E /* icon_fullsize.png in Resources */,
 				27AD09491EAE285A005912B3 /* Redo_ffffff_25.png in Resources */,
 				2720DA381EB8B23C00B4E6D3 /* TrackPosts_000000_25.png in Resources */,
+				27BCD9961EC4224D00FC33C8 /* dots_000000_25.png in Resources */,
 				27C558451E5F8769004FF32A /* Waypoint Map_ffffff_25.png in Resources */,
 				27C5585B1E5F9578004FF32A /* FactoryDefaults.plist in Resources */,
 				27E7754C1E7CB9CE00091C78 /* Circled Pause_ffffff_25.png in Resources */,
@@ -414,16 +422,16 @@
 				2749E0811EB6E44B00B34C0E /* WorkingRoute.swift in Sources */,
 				2793480C1E8A829E00594B0D /* DataViewController.swift in Sources */,
 				27AA19871EB0BB32003FB5F6 /* RenumberViewController.swift in Sources */,
-				27C5584F1E5F8790004FF32A /* LatLonViewController.swift in Sources */,
 				27C5584D1E5F8790004FF32A /* AppDelegate.swift in Sources */,
 				2717BC211EC02D1400082BD7 /* RouteDetailViewController.swift in Sources */,
 				27ED92191EBD1E890004028E /* RoutesViewController.swift in Sources */,
 				27377C951EBA1509003504EF /* RouteInfoViewController.swift in Sources */,
-				27C5584E1E5F8790004FF32A /* BearingViewController.swift in Sources */,
+				27C5584E1E5F8790004FF32A /* ListViewController.swift in Sources */,
 				27C558521E5F8790004FF32A /* Types.swift in Sources */,
 				273D83821E8163B1003F5B49 /* RouteID.swift in Sources */,
 				273DCEB31E7ACC11005AE82E /* Route.swift in Sources */,
 				277689631E61159C00F25FE3 /* OptionsViewAnimator.swift in Sources */,
+				27BCD99A1EC4728200FC33C8 /* ListViewCells.swift in Sources */,
 				27B10CFE1E6060E3005099BD /* MainController.swift in Sources */,
 				27E7754E1E7CC16600091C78 /* Routes.swift in Sources */,
 				273DCEB11E7AC11D005AE82E /* Constants.swift in Sources */,

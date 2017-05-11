@@ -1,5 +1,5 @@
 //
-//  BearingViewController.swift
+//  ListViewController.swift
 //  truCourse
 //
 //  Created by Mike Mayer on 2/22/17.
@@ -8,10 +8,8 @@
 
 import UIKit
 
-class BearingViewController: UITableViewController, DataViewController
-{
-  weak var dataController : DataController!
-  
+class ListViewController: UITableViewController, DataViewController
+{  
   var hasSelection: Bool
   {
     return self.tableView.indexPathForSelectedRow != nil
@@ -26,14 +24,14 @@ class BearingViewController: UITableViewController, DataViewController
   
   func applyOptions()
   {
-    print("Don't forget to implement BearingViewController.applyOptions")
+    print("Don't forget to implement ListViewController.applyOptions")
   }
   
   // MARK: - State
   
   func applyState(_ state: AppState)
   {
-    print("Don't forget to implement BearingViewController.applyState \(state)")
+    print("Don't forget to implement ListViewController.applyState \(state)")
   }
   
   // MARK: - Table view data source
@@ -52,11 +50,17 @@ class BearingViewController: UITableViewController, DataViewController
   
   func updateRoute(_ route: Route)
   {
-    print("BearingView::updateRoute(\(route))")
+    print("ListView::updateRoute(\(route))")
   }
   
   func updateCandidate(_ cand: Waypoint?)
   {
-    print("BearingView::updateCandidate(\(cand))")
+    print("ListView::updateCandidate(\(cand))")
   }
+  
+  // MARK: - Popup Actions
+  
+  @IBAction func handlePopupMenu(_ sender: UIButton) {
+  }
+  
 }

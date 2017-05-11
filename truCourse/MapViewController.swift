@@ -13,9 +13,7 @@ class MapViewController: UIViewController, DataViewController, MKMapViewDelegate
 {
   @IBOutlet weak var mapView        : MKMapView!
   @IBOutlet weak var trackingView   : TrackingView!
-  
-  weak var dataController : DataController!
-  
+    
   private var routeOverlay    : MKOverlay?
   private var candOverlay     : MKOverlay?
   private var postAnnotations = [Int:PostAnnotation]()
@@ -147,7 +145,7 @@ class MapViewController: UIViewController, DataViewController, MKMapViewDelegate
     let post     = postView.annotation as! PostAnnotation
     let index    = post.waypoint.index!
     
-    let actions = dataController.popupActions(for: index)
+    let actions = DataController.shared.popupActions(for: index)
     
     if actions == nil { return }
     

@@ -25,6 +25,8 @@ private func dataPath(_ filename:String) -> URL
 
 class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate, UIPickerViewDataSource, RenumberViewDelegate, UIActivityItemSource, RouteInfoViewDelegate, RoutesViewControllerDelegate
 {
+  static var shared = DataController()
+  
   @IBOutlet var dataPageController     : DataPageController!
             var renumberViewController : RenumberViewController?
   
@@ -327,7 +329,7 @@ class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate
             { (_:UIAlertAction)->Void in
               dvc.confirmAction(type: .ReverseRoute, action:
                 {
-                  let action = ReverseRouteAction(self)
+                  let action = ReverseRouteAction()
                   if action.redo() { UndoManager.shared.add(action) }
                 } )
             } ) )
@@ -346,7 +348,7 @@ class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate
           { (_:UIAlertAction)->Void in
             dvc.confirmAction(type: .NewStart(post), action:
               {
-                let action = NewStartAction(self, post:post)
+                let action = NewStartAction(post:post)
                 if self.redo(newStart: action) { UndoManager.shared.add(action) }
               } )
           } ) )
@@ -368,7 +370,7 @@ class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate
           dvc.confirmAction(type: .MovePost(post), action:
             {
               guard let oldLocation = self.route.find(post:post)?.location else { return }
-              let   action = MovePostAction(self, post: post, from: oldLocation, to: newLocation)
+              let   action = MovePostAction(post: post, from: oldLocation, to: newLocation)
               if action.redo() { UndoManager.shared.add(action) }
             } )
       } ) )
@@ -388,7 +390,7 @@ class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate
           dvc.confirmAction(type:.Deletion(post), action:
             {
               let location = self.route.find(post:post)!.location
-              let action = DeletionAction(self, post:post, at:location, inserting:self.insertionIndex )
+              let action = DeletionAction(post:post, at:location, inserting:self.insertionIndex )
               if self.redo(deletion: action) { UndoManager.shared.add(action) }
             } )
         } ) )
@@ -407,7 +409,7 @@ class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate
     candidatePost!.insert(after: cand, as: .Candidate)
     insertionIndex = index + 1
     
-    UndoManager.shared.add( InsertionAction(self, post:index, at:cand.location) )
+    UndoManager.shared.add( InsertionAction(post:index, at:cand.location) )
     
     lastRecordedPost = currentLocation
     dataPageController.updateRoute(route)
@@ -433,7 +435,7 @@ class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate
     let oldPost = self.renumberIndex!
     let newPost = (row+1 < oldPost ? row+1 : row+2)
     
-    let action = RenumberPostAction(self, from:oldPost, to:newPost)
+    let action = RenumberPostAction(from:oldPost, to:newPost)
     
     if action.redo() { UndoManager.shared.add(action) }
   }

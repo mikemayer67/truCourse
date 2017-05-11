@@ -15,7 +15,6 @@ class DataPageController :
   OptionViewControllerDelegate, UndoManagerObserver
 {
   @IBOutlet var viewTypeControl : UISegmentedControl!
-  @IBOutlet var dataController  : DataController!
   
   private var activeToolbar         = true
   private var activeToolbarItems    : [UIBarButtonItem]!
@@ -32,8 +31,8 @@ class DataPageController :
   private var saveBarItem           : UIBarButtonItem!
   
   private var mapVC                 : MapViewController!
-  private var bearingVC             : BearingViewController!
-  private var latlonVC              : LatLonViewController!
+  private var bearingVC             : ListViewController!
+  private var latlonVC              : ListViewController!
   
   private var allDataVC             : [DataViewController]!
   
@@ -41,7 +40,7 @@ class DataPageController :
   {
     didSet
     {
-      if dataVC !== oldValue { dataVC.updateRoute(dataController.route) }
+      if dataVC !== oldValue { dataVC.updateRoute(DataController.shared.route) }
     }
   }
   
@@ -55,24 +54,27 @@ class DataPageController :
       
   private(set) var route : Route?
   
+  // MARK: - View methods
+  
   override func viewDidLoad()
   {
     super.viewDidLoad()
-        
+    
+    DataController.shared.dataPageController = self
+    
     let sb = self.storyboard!
     
-    mapVC     = sb.instantiateViewController(withIdentifier: "mapViewController")     as! MapViewController
-    bearingVC = sb.instantiateViewController(withIdentifier: "bearingViewController") as! BearingViewController
-    latlonVC  = sb.instantiateViewController(withIdentifier: "latLonViewController")  as! LatLonViewController
+    mapVC     = sb.instantiateViewController(withIdentifier: "mapViewController")  as! MapViewController
+    bearingVC = sb.instantiateViewController(withIdentifier: "listViewController") as! ListViewController
+    latlonVC  = sb.instantiateViewController(withIdentifier: "listViewController") as! ListViewController
+    
+    latlonVC.tableView.separatorColor = UIColor.red
     
     allDataVC = [ mapVC, bearingVC, latlonVC ]
-    
-    allDataVC.forEach { $0.dataController = self.dataController }
     
     for i in 0...(allDataVC.count-1)
     {
       let dvc = allDataVC[i]
-      dvc.dataController = self.dataController
       (dvc as! UIViewController).view.tag = i
     }
         
@@ -155,7 +157,7 @@ class DataPageController :
     
     applyOptions()
     
-    dataController.updateState(.Start)
+    DataController.shared.updateState(.Start)
   }
   
   func updateUndoState(using um: UndoManager)
@@ -169,7 +171,7 @@ class DataPageController :
     super.viewDidAppear(animated)
     
     let toolbar = navigationController?.toolbar
-    switch dataController.state
+    switch DataController.shared.state
     {
     case .Disabled:       toolbar?.setItems(inactiveToolbarItems, animated: true)
     case .Paused, .Idle:  toolbar?.setItems(pausedToolbarItems,   animated: true)
@@ -284,17 +286,17 @@ class DataPageController :
     Options.shared = updatedOptions
     
     applyOptions()
-    dataController.updateOptions()
+    DataController.shared.updateOptions()
   }
   
   // MARK: - Toolbar handler
   
   func applyState()
   {
-    let state = dataController.state
+    let state = DataController.shared.state
     
-    shareBarItem.isEnabled = dataController.canShare
-    saveBarItem.isEnabled  = dataController.canSave
+    shareBarItem.isEnabled = DataController.shared.canShare
+    saveBarItem.isEnabled  = DataController.shared.canSave
     
     let toolbar = navigationController?.toolbar
     
@@ -315,7 +317,7 @@ class DataPageController :
       toolbar?.setItems(pausedToolbarItems, animated: true)
       
     case .Inserting:
-      recordBarItem.isEnabled = dataController.okToRecord
+      recordBarItem.isEnabled = DataController.shared.okToRecord
       toolbar?.setItems(activeToolbarItems, animated: true)
 
     }
@@ -325,10 +327,10 @@ class DataPageController :
   
   func handleLocationUpdate()
   {
-    switch dataController.state
+    switch DataController.shared.state
     {
     case .Inserting:
-      recordBarItem.isEnabled = dataController.okToRecord
+      recordBarItem.isEnabled = DataController.shared.okToRecord
     default:
       break;
     }
@@ -336,28 +338,28 @@ class DataPageController :
   
   func handleOn(_ sender: UIBarButtonItem)
   {
-    dataController.updateState(.Enabled(true))
+    DataController.shared.updateState(.Enabled(true))
   }
   
   func handleOff(_ sender: UIBarButtonItem)
   {
-    dataController.updateState(.Enabled(false))
+    DataController.shared.updateState(.Enabled(false))
   }
   
   func handleStart(_ sender: UIBarButtonItem)
   {
     self.confirmAction(type: .Insertion,
-                       action: { self.dataController.updateState(.Insert(nil)) } )
+                       action: { DataController.shared.updateState(.Insert(nil)) } )
   }
   
   func handlePause(_ sender: UIBarButtonItem)
   {
-    dataController.updateState(.Pause)
+    DataController.shared.updateState(.Pause)
   }
   
   func handleRecord(_ sender: UIBarButtonItem)
   {
-    dataController.record()
+    DataController.shared.record()
     lastRecordTime = Date()
   }
   
@@ -373,12 +375,12 @@ class DataPageController :
   
   func handleShare(_ sender: UIBarButtonItem)
   {
-    dataController.shareRoute()
+    DataController.shared.shareRoute()
   }
   
   func handleSave(_ sender: UIBarButtonItem)
   {
-    dataController.saveRoute()
+    DataController.shared.saveRoute()
   }
   
   // MARK: - Confirmation Dialog
@@ -393,7 +395,7 @@ class DataPageController :
     {
     case .Deletion(let post):
       
-      if dataController.locked
+      if DataController.shared.locked
       {
         title = "Unlock and Delete Post \(post)"
         message = "Please confirm deleting post \(post) from the saved route.  (This will unlock the route for future modifications)"
@@ -422,7 +424,7 @@ class DataPageController :
       
     default:
       
-      if dataController.locked
+      if DataController.shared.locked
       {
         title = "Unlock route"
         message = "Please confirm updating the saved route"

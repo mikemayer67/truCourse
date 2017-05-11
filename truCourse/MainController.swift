@@ -54,7 +54,7 @@ class MainController : UINavigationController, UINavigationControllerDelegate
     }
     else if let rvc = viewController as? RoutesViewController
     {
-      rvc.delegate = self.dataPageController.dataController
+      rvc.delegate = DataController.shared
     }
   }
 }
