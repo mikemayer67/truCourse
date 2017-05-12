@@ -9,7 +9,9 @@
 import UIKit
 
 class ListViewController: UITableViewController, DataViewController
-{  
+{
+  @IBOutlet weak var listTableView : ListView!
+  
   var hasSelection: Bool
   {
     return self.tableView.indexPathForSelectedRow != nil
@@ -24,43 +26,51 @@ class ListViewController: UITableViewController, DataViewController
   
   func applyOptions()
   {
-    print("Don't forget to implement ListViewController.applyOptions")
+    tableView.reloadData()
   }
   
   // MARK: - State
   
   func applyState(_ state: AppState)
   {
-    print("Don't forget to implement ListViewController.applyState \(state)")
-  }
-  
-  // MARK: - Table view data source
-  
-  override func numberOfSections(in tableView: UITableView) -> Int {
-    // #warning Incomplete implementation, return the number of sections
-    return 0
-  }
-  
-  override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    // #warning Incomplete implementation, return the number of rows
-    return 0
+    tableView.reloadData()
   }
   
   // MARK: - Route update
   
   func updateRoute(_ route: Route)
   {
-    print("ListView::updateRoute(\(route))")
+    tableView.reloadData()
   }
   
   func updateCandidate(_ cand: Waypoint?)
   {
-    print("ListView::updateCandidate(\(cand))")
+    let dc = DataController.shared
+    
+    if let ip = dc.insertionIndex
+    {
+      var rows = [ IndexPath(row:ip-1, section:0) ]
+      
+      if listTableView.type == .bearing
+      {
+        if ip == 1 { rows.append( IndexPath(row:dc.route.tail!.index!, section:0) ) }
+        else       { rows.append( IndexPath(row:ip-2,                  section:0) ) }
+      }
+      
+      rows.forEach { print("update row \($0.row)") }
+      
+      tableView.reloadRows(at: rows, with: .fade)
+    }
+    else
+    {
+      tableView.reloadData()
+    }
   }
   
   // MARK: - Popup Actions
   
-  @IBAction func handlePopupMenu(_ sender: UIButton) {
+  @IBAction func handlePopupMenu(_ sender: UIButton)
+  {
   }
   
 }

@@ -68,7 +68,14 @@ class DataPageController :
     bearingVC = sb.instantiateViewController(withIdentifier: "listViewController") as! ListViewController
     latlonVC  = sb.instantiateViewController(withIdentifier: "listViewController") as! ListViewController
     
-    latlonVC.tableView.separatorColor = UIColor.red
+    let latlonView = latlonVC.tableView as! ListView
+    latlonView.separatorColor = UIColor.red
+    latlonView.dataSource = DataController.shared
+    latlonView.type = .latlon
+    
+    let bearingView = bearingVC.tableView as! ListView
+    bearingView.dataSource = DataController.shared
+    bearingView.type = .bearing
     
     allDataVC = [ mapVC, bearingVC, latlonVC ]
     

@@ -99,6 +99,9 @@ class NewStartAction : RouteEditAction
 
 class ReverseRouteAction : RouteEditAction
 {
+  var insertionIndex : Int?
+  
+  init(insertionIndex index:Int?) { self.insertionIndex = index }
   override func undo()->Bool { return DataController.shared.undo(reverseRoute:self) }
   override func redo()->Bool { return DataController.shared.redo(reverseRoute:self) }
 }

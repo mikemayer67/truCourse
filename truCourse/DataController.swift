@@ -23,7 +23,7 @@ private func dataPath(_ filename:String) -> URL
   }
 }
 
-class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate, UIPickerViewDataSource, RenumberViewDelegate, UIActivityItemSource, RouteInfoViewDelegate, RoutesViewControllerDelegate
+class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate, UIPickerViewDataSource, RenumberViewDelegate, UIActivityItemSource, RouteInfoViewDelegate, RoutesViewControllerDelegate, UITableViewDataSource
 {
   static var shared = DataController()
   
@@ -329,7 +329,7 @@ class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate
             { (_:UIAlertAction)->Void in
               dvc.confirmAction(type: .ReverseRoute, action:
                 {
-                  let action = ReverseRouteAction()
+                  let action = ReverseRouteAction(insertionIndex: self.insertionIndex)
                   if action.redo() { UndoManager.shared.add(action) }
                 } )
             } ) )
@@ -548,23 +548,31 @@ class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate
   @discardableResult
   func undo(reverseRoute action:ReverseRouteAction) -> Bool
   {
-    return _reverseRoute()
+    guard route.reverse() else { return false }
+    
+    insertionIndex = action.insertionIndex
+    
+    dataPageController.updateRoute(route)
+    
+    return true
   }
   
   @discardableResult
   func redo(reverseRoute action:ReverseRouteAction) -> Bool
   {
-    return _reverseRoute()
-  }
-  
-  private func _reverseRoute() -> Bool
-  {
     guard route.reverse() else { return false }
     
-    if insertionIndex != nil
+    if action.insertionIndex != nil
     {
-      let n = route.count
-      insertionIndex = (n+3) - insertionIndex!
+      if action.insertionIndex == 1
+      {
+        insertionIndex = 2
+      }
+      else
+      {
+        let n = route.count
+        insertionIndex = (n+3) - action.insertionIndex!
+      }
     }
     
     dataPageController.updateRoute(route)
@@ -789,5 +797,107 @@ class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate
     }
     
     dataPageController.confirmAction(type: .NewWorkingRoute(route, newRoute), action: action )
+  }
+  
+  // MARK: - List view data source
+  
+  func numberOfSections(in tableView: UITableView) -> Int { return 1 }
+  
+  func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int
+  {
+    return route.totalCount
+  }
+  
+  func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell
+  {
+    // Examples:
+    //   insertionIndex = 4
+    //     post: 1 2 3 + 4 5 6
+    //     row:  1 2 3 4 5 6 7
+    //   insertionIndex = 1
+    //     post: + 1 2 3 4 5 6
+    //     row:  1 2 3 4 5 6 7
+    //   insertionIndex = 7
+    //     post: 1 2 3 4 5 6 +
+    //     row:  1 2 3 4 5 6 7
+    //   insertionIndex = nil
+    //     post: 1 2 3 4 5 6
+    //     row:  1 2 3 4 5 6
+    
+    
+    let row = indexPath.row + 1  // swith to 1 based row indexing
+    let lvt = tableView as! ListView
+    
+    // Triage what exactly is in this row
+    
+    var isPost       = true
+    var hasCandidate = false
+    var post         = row
+    
+    if let ip = insertionIndex
+    {
+      if row == ip
+      {
+        isPost = false   // candidate
+      }
+      else if (ip==1 && row == 1 + route.tail!.index!) || (row == ip-1)
+      {
+        hasCandidate = true
+        if row > ip { post -= 1 }
+      }
+      else
+      {
+        if row > ip { post -= 1 }
+      }
+    }
+    
+    var postText : String!
+    var candText : String!
+    
+    let wp = ( isPost ? route.find(post:post) : nil )
+    
+    if isPost
+    {
+      if lvt.type == .bearing
+      {
+        postText = wp?.annotationTitle
+        if hasCandidate
+        {
+          let cell = tableView.dequeueReusableCell(withIdentifier: "forkCell") as? ListViewForkCell ??
+          ListViewForkCell(style: .default, reuseIdentifier: "forkCell")
+          
+          cell.postText.text = postText
+          cell.candText.text = wp?.annotationSubtitle
+          
+          return cell
+        }
+      }
+      else
+      {
+        postText = wp?.location.stringForDetails
+      }
+      
+      let cell = tableView.dequeueReusableCell(withIdentifier: "postCell") as? ListViewPostCell ??
+        ListViewPostCell(style: .default, reuseIdentifier: "postCell")
+      
+      cell.postText.text = postText
+      
+      return cell
+    }
+    else
+    {
+      switch lvt.type!
+      {
+      case .latlon:  candText = candidatePost?.location.stringForDetails
+      case .bearing: candText = candidatePost?.annotationTitle
+      }
+      
+      let cell = tableView.dequeueReusableCell(withIdentifier: "candCell") as? ListViewCandCell ??
+        ListViewCandCell(style: .default, reuseIdentifier: "candCell")
+      
+      cell.candText.text = candText
+      
+      return cell
+    }
   }
 }

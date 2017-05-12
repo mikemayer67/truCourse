@@ -293,11 +293,14 @@ class Waypoint
     
     if let cand = self.next!.cand
     {
-      self.cand = cand
-      self.next!.cand = nil
-      cand.next = self.next
-      cand.prev = self
-      cand.update()
+      if self === cand.next   // only true if candidate has not already been reversed
+      {
+        self.cand = cand
+        self.next!.cand = nil
+        cand.next = self.next
+        cand.prev = self
+        cand.update()
+      }
     }
     
     self.update()
@@ -311,6 +314,18 @@ class Waypoint
     iterate( { _ in count += 1 } )
     return count
   }
+  
+  var lengthPlusCand : Int
+  {
+    var count = 0
+    iterate { wp in
+      count += 1
+      if wp.cand != nil { count += 1 }
+    }
+    return count
+  }
+  
+  
   
   var totalDistance : CLLocationDistance?
   {

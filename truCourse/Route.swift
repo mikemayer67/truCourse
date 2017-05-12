@@ -40,6 +40,11 @@ class Route
     return head?.length ?? 0
   }
   
+  var totalCount : Int
+  {
+    return head?.lengthPlusCand ?? 0
+  }
+  
   subscript(index: Int) -> Waypoint?
   {
     return head?.find(index:index)

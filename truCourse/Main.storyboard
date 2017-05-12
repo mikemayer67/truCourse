@@ -128,13 +128,13 @@
         <scene sceneID="M5h-sb-MN6">
             <objects>
                 <viewController storyboardIdentifier="listViewController" id="D3U-2W-9gO" customClass="ListViewController" customModule="truCourse" customModuleProvider="target" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="5ZE-dj-X0i">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="5ZE-dj-X0i" customClass="ListView" customModule="truCourse" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" red="0.97647058823529409" green="0.94117647058823528" blue="0.81568627450980391" alpha="1" colorSpace="calibratedRGB"/>
                         <color key="separatorColor" red="0.25098040700000002" green="0.50196081400000003" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" shouldIndentWhileEditing="NO" reuseIdentifier="postCell" id="w4s-ZM-sLe" customClass="ListViewPostCell" customModule="truCourse" customModuleProvider="target">
+                            <tableViewCell clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" restorationIdentifier="postCell" selectionStyle="default" indentationWidth="10" shouldIndentWhileEditing="NO" reuseIdentifier="postCell" id="w4s-ZM-sLe" customClass="ListViewPostCell" customModule="truCourse" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="28" width="320" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="w4s-ZM-sLe" id="4th-LU-vhV">
@@ -165,7 +165,7 @@
                                                 <constraint firstAttribute="height" constant="21" id="YjA-yG-7zl"/>
                                             </constraints>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                            <nil key="textColor"/>
+                                            <color key="textColor" red="0.1176470588" green="0.23529411759999999" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                     </subviews>
@@ -179,6 +179,7 @@
                                         <constraint firstItem="uEB-wg-nYh" firstAttribute="centerY" secondItem="4th-LU-vhV" secondAttribute="centerY" id="wa9-b6-eug"/>
                                     </constraints>
                                 </tableViewCellContentView>
+                                <color key="backgroundColor" red="0.96862745098039216" green="0.95294117647058818" blue="0.90980392156862744" alpha="1" colorSpace="calibratedRGB"/>
                                 <color key="tintColor" red="0.1764705882" green="0.35294117650000001" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <connections>
                                     <outlet property="menuButton" destination="gwQ-dh-yrW" id="rT1-Be-fVG"/>
@@ -186,7 +187,7 @@
                                     <outlet property="postText" destination="uEB-wg-nYh" id="5sb-3a-gBW"/>
                                 </connections>
                             </tableViewCell>
-                            <tableViewCell clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" shouldIndentWhileEditing="NO" reuseIdentifier="forkCell" id="Dn9-tz-7sU" customClass="ListViewForkCell" customModule="truCourse" customModuleProvider="target">
+                            <tableViewCell clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" restorationIdentifier="forkCell" selectionStyle="default" indentationWidth="10" shouldIndentWhileEditing="NO" reuseIdentifier="forkCell" id="Dn9-tz-7sU" customClass="ListViewForkCell" customModule="truCourse" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="72" width="320" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Dn9-tz-7sU" id="c01-F7-MdZ">
@@ -210,7 +211,7 @@
                                                 <constraint firstAttribute="height" constant="21" id="V3L-hP-1DF"/>
                                             </constraints>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                            <nil key="textColor"/>
+                                            <color key="textColor" red="0.005168269231" green="0.0051622887199999998" blue="0.0050684698639999999" alpha="1" colorSpace="calibratedRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="rdi-gh-Oxq">
@@ -226,7 +227,7 @@
                                                 <constraint firstAttribute="height" constant="18" id="Rkp-RW-qFJ"/>
                                             </constraints>
                                             <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                                            <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                            <color key="textColor" red="0.25098040700000002" green="0.50196081400000003" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                     </subviews>
@@ -243,6 +244,7 @@
                                         <constraint firstItem="avj-3k-mnL" firstAttribute="leading" secondItem="IeO-vn-BT1" secondAttribute="trailing" constant="8" id="xfa-U2-Fa0"/>
                                     </constraints>
                                 </tableViewCellContentView>
+                                <color key="backgroundColor" red="0.96862745098039216" green="0.95294117647058818" blue="0.90980392156862744" alpha="1" colorSpace="calibratedRGB"/>
                                 <color key="tintColor" red="0.1764705882" green="0.35294117650000001" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <connections>
                                     <outlet property="candText" destination="IeO-vn-BT1" id="g26-Pf-Iv3"/>
@@ -251,7 +253,7 @@
                                     <outlet property="postText" destination="JtQ-Iq-rZj" id="6R5-7x-NUu"/>
                                 </connections>
                             </tableViewCell>
-                            <tableViewCell clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" shouldIndentWhileEditing="NO" reuseIdentifier="candCell" id="W68-q4-Vh7" customClass="ListViewCandCell" customModule="truCourse" customModuleProvider="target">
+                            <tableViewCell clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" restorationIdentifier="candCell" selectionStyle="default" indentationWidth="10" shouldIndentWhileEditing="NO" reuseIdentifier="candCell" id="W68-q4-Vh7" customClass="ListViewCandCell" customModule="truCourse" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="116" width="320" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="W68-q4-Vh7" id="Qjg-iT-CfX">
@@ -271,7 +273,7 @@
                                                 <constraint firstAttribute="height" constant="21" id="7aW-8Y-A9x"/>
                                             </constraints>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                            <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                            <color key="textColor" red="0.026243810409999999" green="0.25389355460000002" blue="0.68315326710000002" alpha="1" colorSpace="calibratedRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                     </subviews>
@@ -283,6 +285,7 @@
                                         <constraint firstItem="YV5-T3-KqX" firstAttribute="centerY" secondItem="Qjg-iT-CfX" secondAttribute="centerY" id="i5W-nd-u2J"/>
                                     </constraints>
                                 </tableViewCellContentView>
+                                <color key="backgroundColor" red="1" green="0.98613516115320499" blue="0.94454064461281984" alpha="1" colorSpace="calibratedRGB"/>
                                 <color key="tintColor" red="0.1764705882" green="0.35294117650000001" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <connections>
                                     <outlet property="candText" destination="MI4-R9-Nev" id="bjN-dI-LjC"/>
@@ -294,6 +297,9 @@
                             <outlet property="delegate" destination="D3U-2W-9gO" id="EPE-zn-hX1"/>
                         </connections>
                     </tableView>
+                    <connections>
+                        <outlet property="listTableView" destination="5ZE-dj-X0i" id="yJm-lk-vBf"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="emL-nz-LiU" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -592,11 +598,11 @@
                                 <rect key="frame" x="0.0" y="28" width="320" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="bCB-9Z-hcG" id="O93-EW-tHf">
-                                    <rect key="frame" x="0.0" y="0.0" width="320" height="43.5"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Start New Route..." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="614-fS-9cP">
-                                            <rect key="frame" x="15" y="0.0" width="290" height="43.5"/>
+                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="New Route..." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="614-fS-9cP">
+                                            <rect key="frame" x="15" y="0.0" width="290" height="43"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <fontDescription key="fontDescription" type="italicSystem" pointSize="17"/>
                                             <color key="textColor" red="0.1764705882" green="0.35294117650000001" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
@@ -1330,7 +1336,7 @@
         <image name="Settings_ffffff_25.png" width="25" height="25"/>
         <image name="Signpost_ffffff_25.png" width="25" height="25"/>
         <image name="TrackOff_000000_25.png" width="25" height="25"/>
-        <image name="UserLocationxcf.png" width="140" height="140"/>
+        <image name="UserLocationxcf.png" width="175" height="175"/>
         <image name="World Map_ffffff_25.png" width="25" height="25"/>
         <image name="dots_000000_25.png" width="25" height="25"/>
     </resources>
