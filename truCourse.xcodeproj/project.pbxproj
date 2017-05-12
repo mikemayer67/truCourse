@@ -24,6 +24,7 @@
 		277689631E61159C00F25FE3 /* OptionsViewAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 277689621E61159C00F25FE3 /* OptionsViewAnimator.swift */; };
 		278905E41E7961D100F1B40B /* Waypoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278905E31E7961D100F1B40B /* Waypoint.swift */; };
 		27902EEA1E821512004B6D85 /* recenter_64.png in Resources */ = {isa = PBXBuildFile; fileRef = 27902EE91E821512004B6D85 /* recenter_64.png */; };
+		279142F11EC5D7BF00C9057C /* PostImages.swift in Sources */ = {isa = PBXBuildFile; fileRef = 279142F01EC5D7BF00C9057C /* PostImages.swift */; };
 		2793480C1E8A829E00594B0D /* DataViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2793480B1E8A829E00594B0D /* DataViewController.swift */; };
 		27A4C3CC1EB23EAA00604F1E /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 27A4C3CB1EB23EAA00604F1E /* Images.xcassets */; };
 		27A4C3CE1EB23F5600604F1E /* icon_fullsize.png in Resources */ = {isa = PBXBuildFile; fileRef = 27A4C3CD1EB23F5600604F1E /* icon_fullsize.png */; };
@@ -93,6 +94,7 @@
 		277689621E61159C00F25FE3 /* OptionsViewAnimator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OptionsViewAnimator.swift; sourceTree = "<group>"; };
 		278905E31E7961D100F1B40B /* Waypoint.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Waypoint.swift; sourceTree = "<group>"; };
 		27902EE91E821512004B6D85 /* recenter_64.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = recenter_64.png; sourceTree = "<group>"; };
+		279142F01EC5D7BF00C9057C /* PostImages.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostImages.swift; sourceTree = "<group>"; };
 		2793480B1E8A829E00594B0D /* DataViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataViewController.swift; sourceTree = "<group>"; };
 		27A4C3CB1EB23EAA00604F1E /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		27A4C3CD1EB23F5600604F1E /* icon_fullsize.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_fullsize.png; sourceTree = "<group>"; };
@@ -289,6 +291,7 @@
 				27C558481E5F8790004FF32A /* ListViewController.swift */,
 				27BCD99B1EC48BA000FC33C8 /* ListView.swift */,
 				27BCD9991EC4728200FC33C8 /* ListViewCells.swift */,
+				279142F01EC5D7BF00C9057C /* PostImages.swift */,
 			);
 			name = DataViews;
 			sourceTree = "<group>";
@@ -431,6 +434,7 @@
 				27377C951EBA1509003504EF /* RouteInfoViewController.swift in Sources */,
 				27C5584E1E5F8790004FF32A /* ListViewController.swift in Sources */,
 				27C558521E5F8790004FF32A /* Types.swift in Sources */,
+				279142F11EC5D7BF00C9057C /* PostImages.swift in Sources */,
 				273D83821E8163B1003F5B49 /* RouteID.swift in Sources */,
 				273DCEB31E7ACC11005AE82E /* Route.swift in Sources */,
 				277689631E61159C00F25FE3 /* OptionsViewAnimator.swift in Sources */,

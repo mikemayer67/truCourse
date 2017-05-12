@@ -871,6 +871,7 @@ class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate
           cell.postText.text = postText
           cell.candText.text = wp!.annotationSubtitle
           cell.menuButton.tag = wp!.index!
+          cell.postImage.image = PostIcon.library[wp!.index!].image
           
           return cell
         }
@@ -886,6 +887,7 @@ class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate
       
       cell.postText.text = postText
       cell.menuButton.tag = wp!.index!
+      cell.postImage.image = PostIcon.library[wp!.index!].image
       
       return cell
     }

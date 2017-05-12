@@ -120,3 +120,13 @@ extension UIView
     self.subviews.forEach { $0.remove(filter) }
   }
 }
+
+extension CGPoint
+{
+  func offset(by s:CGSize)  -> CGPoint { return CGPoint( x: self.x+s.width, y: self.y+s.height ) }
+}
+
+extension CGSize
+{
+  func scaled(by f:CGFloat) -> CGSize { return CGSize( width: f*self.width, height: f*self.height ) }
+}
