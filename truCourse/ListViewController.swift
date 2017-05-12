@@ -47,11 +47,12 @@ class ListViewController: UITableViewController, DataViewController
   {
     let dc = DataController.shared
     
-    let n = dc.route.totalCount
+    let n = dc.tableView(self.tableView, numberOfRowsInSection: 0)
     let nt = tableView.numberOfRows(inSection: 0)
     
     if let ip = dc.insertionIndex,
-      n == nt
+      n == nt,
+      n > 1
     {
       var rows = [ IndexPath(row:ip-1, section:0) ]
       

@@ -381,7 +381,8 @@ class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate
       actions.append(
         UIAlertAction(title: "renumber post \(post)...", style: .default, handler:
           { (_:UIAlertAction)->Void in
-            dpc.confirmAction(type:.RenumberPost(post), action: { self.renumber(post:post) } )
+            dpc.confirmAction(type:.RenumberPost(post), action:
+              { self.self.renumber(post:post) } )
         } ) )
     }
     
@@ -806,7 +807,8 @@ class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate
   
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int
   {
-    return route.totalCount
+    let ncand = (candidatePost == nil ? 0 : 1)
+    return route.count + ncand
   }
   
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell
@@ -862,7 +864,7 @@ class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate
     {
       if lvt.type == .bearing
       {
-        postText = wp?.annotationTitle
+        postText = wp?.annotationTitle ?? "n/a"
         if hasCandidate
         {
           let cell = tableView.dequeueReusableCell(withIdentifier: "forkCell") as? ListViewForkCell ??
@@ -895,8 +897,8 @@ class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate
     {
       switch lvt.type!
       {
-      case .latlon:  candText = candidatePost?.location.stringForDetails
-      case .bearing: candText = candidatePost?.annotationTitle
+      case .latlon:  candText = candidatePost?.location.stringForDetails ?? "n/a"
+      case .bearing: candText = candidatePost?.annotationTitle ?? "n/a"
       }
       
       let cell = tableView.dequeueReusableCell(withIdentifier: "candCell") as? ListViewCandCell ??

@@ -315,18 +315,6 @@ class Waypoint
     return count
   }
   
-  var lengthPlusCand : Int
-  {
-    var count = 0
-    iterate { wp in
-      count += 1
-      if wp.cand != nil { count += 1 }
-    }
-    return count
-  }
-  
-  
-  
   var totalDistance : CLLocationDistance?
   {
     if next === self { return nil }
@@ -442,7 +430,7 @@ class Waypoint
   {
     guard index    != nil else { return "" }
     
-    let direction = _genTitle(bearing, distance) ?? "unknown"
+    let direction = _genTitle(bearing, distance) ?? "n/a"
     
     return "\(index!): \(direction)"
   }
@@ -454,7 +442,7 @@ class Waypoint
     let prefix = "\(index!) to \(next!.index!)"
     
     
-    let direction = _genTitle(bearing, distance) ?? "unknown"
+    let direction = _genTitle(bearing, distance) ?? "n/a"
     
     return "\(prefix): \(direction)"
   }

@@ -447,8 +447,16 @@ class DataPageController :
     {
       let alert = UIAlertController(title:title, message:message, preferredStyle: .alert)
       
-      alert.addAction( UIAlertAction(title: "OK",    style: .destructive) { (_:UIAlertAction) in action() } )
-      alert.addAction( UIAlertAction(title: "Cancel", style: .cancel)     { (_:UIAlertAction) in failure() } )
+      alert.addAction( UIAlertAction(title: "OK",    style: .destructive)
+        { (_:UIAlertAction) in
+          DataController.shared.route.locked = false
+          action()
+        }
+      )
+      
+      alert.addAction( UIAlertAction(title: "Cancel", style: .cancel)
+        { (_:UIAlertAction) in failure() }
+      )
       
       self.present(alert, animated: true)
     }
