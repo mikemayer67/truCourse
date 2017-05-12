@@ -47,7 +47,11 @@ class ListViewController: UITableViewController, DataViewController
   {
     let dc = DataController.shared
     
-    if let ip = dc.insertionIndex
+    let n = dc.route.totalCount
+    let nt = tableView.numberOfRows(inSection: 0)
+    
+    if let ip = dc.insertionIndex,
+      n == nt
     {
       var rows = [ IndexPath(row:ip-1, section:0) ]
       
@@ -57,13 +61,11 @@ class ListViewController: UITableViewController, DataViewController
         else       { rows.append( IndexPath(row:ip-2,                  section:0) ) }
       }
       
-      rows.forEach { print("update row \($0.row)") }
-      
       tableView.reloadRows(at: rows, with: .fade)
     }
     else
     {
-      tableView.reloadData()
+      tableView.reloadSections([0], with: .fade)
     }
   }
   
@@ -71,6 +73,20 @@ class ListViewController: UITableViewController, DataViewController
   
   @IBAction func handlePopupMenu(_ sender: UIButton)
   {
+    let actions = DataController.shared.popupActions(for: sender.tag)
+    
+    if actions == nil { return }
+    
+    let alert = UIAlertController( title: "Post \(index) selected",
+      message: "What do you want to do?",
+      preferredStyle: .actionSheet)
+    
+    actions!.forEach { alert.addAction($0) }
+    
+    alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+    
+    self.present(alert, animated:true)
+
   }
   
 }

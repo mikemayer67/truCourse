@@ -119,7 +119,7 @@ class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate
   
   func updateState(_ transition:AppStateTransition)
   {
-    let dvc = self.dataPageController!
+    let dpc = self.dataPageController!
 
     switch transition
     {
@@ -181,12 +181,12 @@ class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate
     case .Paused:
       updateTrackingState(authorized:true, enabled:false)
       candidatePost = nil
-      dvc.removeCandidate()
+      dpc.removeCandidate()
 
     case .Idle:
       updateTrackingState(authorized: true, enabled: true)
       candidatePost = nil
-      dvc.removeCandidate()
+      dpc.removeCandidate()
   
     case .Inserting:
       updateTrackingState(authorized: true, enabled: true)
@@ -216,10 +216,10 @@ class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate
         }
       }
       
-      dvc.updateCandidate(candidatePost!)
+      dpc.updateCandidate(candidatePost!)
     }
     
-    dvc.applyState()
+    dpc.applyState()
   }
   
   func start()
@@ -240,6 +240,7 @@ class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate
         self.route = WorkingRoute()
         self.dataPageController.updateRoute(self.route)
         self.dataPageController.applyState()
+        self.updateState( .Insert(nil) )
       }
     
     let keepRoute =
@@ -316,7 +317,7 @@ class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate
   
   func popupActions(for post:Int) -> [UIAlertAction]?
   {
-    let dvc = self.dataPageController!
+    let dpc = self.dataPageController!
     
     var actions = [UIAlertAction]()
     
@@ -327,7 +328,7 @@ class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate
         actions.append(
           UIAlertAction(title:"reverse route", style:.default, handler:
             { (_:UIAlertAction)->Void in
-              dvc.confirmAction(type: .ReverseRoute, action:
+              dpc.confirmAction(type: .ReverseRoute, action:
                 {
                   let action = ReverseRouteAction(insertionIndex: self.insertionIndex)
                   if action.redo() { UndoManager.shared.add(action) }
@@ -338,7 +339,7 @@ class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate
       actions.append(
         UIAlertAction(title: "add new first post", style:.default, handler:
           { (_:UIAlertAction)->Void in
-            dvc.confirmAction(type:.Insertion, action: { self.updateState(.Insert(post)) } )
+            dpc.confirmAction(type:.Insertion, action: { self.updateState(.Insert(post)) } )
           } ) )
     }
     else
@@ -346,7 +347,7 @@ class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate
       actions.append(
         UIAlertAction(title: "make this first post", style:.default, handler:
           { (_:UIAlertAction)->Void in
-            dvc.confirmAction(type: .NewStart(post), action:
+            dpc.confirmAction(type: .NewStart(post), action:
               {
                 let action = NewStartAction(post:post)
                 if self.redo(newStart: action) { UndoManager.shared.add(action) }
@@ -359,7 +360,7 @@ class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate
       actions.append(
         UIAlertAction(title: "add new post \(post+1)", style:.default, handler:
           { (_:UIAlertAction)->Void in
-            dvc.confirmAction(type:.Insertion, action: { self.updateState(.Insert(post+1)) } )
+            dpc.confirmAction(type:.Insertion, action: { self.updateState(.Insert(post+1)) } )
           } ) )
     }
     
@@ -367,7 +368,7 @@ class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate
       UIAlertAction(title: "move post to current location", style: .default, handler:
         { (_:UIAlertAction)->Void in
           let newLocation = self.mostRecentLocation
-          dvc.confirmAction(type: .MovePost(post), action:
+          dpc.confirmAction(type: .MovePost(post), action:
             {
               guard let oldLocation = self.route.find(post:post)?.location else { return }
               let   action = MovePostAction(post: post, from: oldLocation, to: newLocation)
@@ -380,14 +381,14 @@ class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate
       actions.append(
         UIAlertAction(title: "renumber post \(post)...", style: .default, handler:
           { (_:UIAlertAction)->Void in
-            dvc.confirmAction(type:.RenumberPost(post), action: { self.renumber(post:post) } )
+            dpc.confirmAction(type:.RenumberPost(post), action: { self.renumber(post:post) } )
         } ) )
     }
     
     actions.append(
       UIAlertAction(title: "delete post \(post)...", style:.destructive, handler:
         { (_:UIAlertAction)->Void in
-          dvc.confirmAction(type:.Deletion(post), action:
+          dpc.confirmAction(type:.Deletion(post), action:
             {
               let location = self.route.find(post:post)!.location
               let action = DeletionAction(post:post, at:location, inserting:self.insertionIndex )
@@ -834,7 +835,8 @@ class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate
     var hasCandidate = false
     var post         = row
     
-    if let ip = insertionIndex
+    if let ip = insertionIndex,
+      state == .Inserting
     {
       if row == ip
       {
@@ -867,7 +869,8 @@ class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate
           ListViewForkCell(style: .default, reuseIdentifier: "forkCell")
           
           cell.postText.text = postText
-          cell.candText.text = wp?.annotationSubtitle
+          cell.candText.text = wp!.annotationSubtitle
+          cell.menuButton.tag = wp!.index!
           
           return cell
         }
@@ -880,7 +883,9 @@ class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate
       let cell = tableView.dequeueReusableCell(withIdentifier: "postCell") as? ListViewPostCell ??
         ListViewPostCell(style: .default, reuseIdentifier: "postCell")
       
+      
       cell.postText.text = postText
+      cell.menuButton.tag = wp!.index!
       
       return cell
     }
