@@ -341,6 +341,8 @@ class DataPageController :
     default:
       break;
     }
+    
+    if dataVC === mapVC { mapVC.handleLocationUpdate() }
   }
   
   func handleOn(_ sender: UIBarButtonItem)

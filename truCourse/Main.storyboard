@@ -253,11 +253,11 @@
                                     <outlet property="postText" destination="JtQ-Iq-rZj" id="6R5-7x-NUu"/>
                                 </connections>
                             </tableViewCell>
-                            <tableViewCell clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" restorationIdentifier="candCell" selectionStyle="default" indentationWidth="10" shouldIndentWhileEditing="NO" reuseIdentifier="candCell" id="W68-q4-Vh7" customClass="ListViewCandCell" customModule="truCourse" customModuleProvider="target">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="candCell" selectionStyle="default" indentationWidth="10" shouldIndentWhileEditing="NO" reuseIdentifier="candCell" id="W68-q4-Vh7" customClass="ListViewCandCell" customModule="truCourse" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="116" width="320" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="W68-q4-Vh7" id="Qjg-iT-CfX">
-                                    <rect key="frame" x="0.0" y="0.0" width="320" height="43.5"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="UserLocationxcf.png" translatesAutoresizingMaskIntoConstraints="NO" id="YV5-T3-KqX">
@@ -268,7 +268,7 @@
                                             </constraints>
                                         </imageView>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MI4-R9-Nev">
-                                            <rect key="frame" x="51" y="11" width="253" height="21"/>
+                                            <rect key="frame" x="51" y="11" width="228" height="21"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="21" id="7aW-8Y-A9x"/>
                                             </constraints>
@@ -276,12 +276,25 @@
                                             <color key="textColor" red="0.026243810409999999" green="0.25389355460000002" blue="0.68315326710000002" alpha="1" colorSpace="calibratedRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
+                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2Ia-5e-f3R">
+                                            <rect key="frame" x="287" y="10" width="25" height="25"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="25" id="QNE-1o-Thl"/>
+                                                <constraint firstAttribute="width" constant="25" id="xkc-Mb-r0W"/>
+                                            </constraints>
+                                            <state key="normal" image="dots_000000_25.png"/>
+                                            <connections>
+                                                <action selector="handleUserPopupMenu:" destination="D3U-2W-9gO" eventType="touchUpInside" id="X1O-Aj-pkI"/>
+                                            </connections>
+                                        </button>
                                     </subviews>
                                     <constraints>
                                         <constraint firstItem="MI4-R9-Nev" firstAttribute="leading" secondItem="YV5-T3-KqX" secondAttribute="trailing" constant="8" id="3j4-xi-8qH"/>
                                         <constraint firstItem="YV5-T3-KqX" firstAttribute="leading" secondItem="Qjg-iT-CfX" secondAttribute="leading" constant="8" id="GsQ-FF-1fx"/>
                                         <constraint firstItem="MI4-R9-Nev" firstAttribute="centerY" secondItem="Qjg-iT-CfX" secondAttribute="centerY" id="P4t-29-K4b"/>
-                                        <constraint firstAttribute="trailingMargin" secondItem="MI4-R9-Nev" secondAttribute="trailing" constant="8" id="VRa-Lz-jMC"/>
+                                        <constraint firstItem="2Ia-5e-f3R" firstAttribute="centerY" secondItem="Qjg-iT-CfX" secondAttribute="centerY" id="WMr-cT-wBF"/>
+                                        <constraint firstItem="2Ia-5e-f3R" firstAttribute="leading" secondItem="MI4-R9-Nev" secondAttribute="trailing" constant="8" id="cL0-lf-ga1"/>
+                                        <constraint firstItem="2Ia-5e-f3R" firstAttribute="trailing" secondItem="Qjg-iT-CfX" secondAttribute="trailingMargin" id="g29-4i-P0d"/>
                                         <constraint firstItem="YV5-T3-KqX" firstAttribute="centerY" secondItem="Qjg-iT-CfX" secondAttribute="centerY" id="i5W-nd-u2J"/>
                                     </constraints>
                                 </tableViewCellContentView>

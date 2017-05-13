@@ -20,6 +20,8 @@ class MapViewController: UIViewController, DataViewController, MKMapViewDelegate
   private var postNorth       : NorthType = .True
   private var postUnits       : BaseUnitType = .English
   
+  private weak var lastUserView : UIView?
+  
   private var candPrevWaypoint : Waypoint?
   
    var hasSelection : Bool         { return false    }
@@ -69,6 +71,22 @@ class MapViewController: UIViewController, DataViewController, MKMapViewDelegate
   {
     super.viewDidAppear(animated)
     trackingView.resumeAutoScaling()
+  }
+  
+  func handleLocationUpdate()
+  {
+    guard mapView.isUserLocationVisible else { return }
+    
+    let uloc = mapView.userLocation
+    
+    if let uv = mapView.view(for:uloc),
+      uv !== lastUserView
+    {
+      lastUserView = uv
+      
+      let popup = UILongPressGestureRecognizer(target: self, action: #selector(handleUserPopup(_:)))
+      uv.addGestureRecognizer(popup)
+    }
   }
 
   // MARK: - Options
@@ -158,6 +176,16 @@ class MapViewController: UIViewController, DataViewController, MKMapViewDelegate
     alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
 
     self.present(alert, animated:true)
+  }
+  
+  func handleUserPopup(_ sender:UILongPressGestureRecognizer)
+  {
+    guard sender.state == .began else { return }
+    
+    sender.isEnabled = false  // cancels the long press gesture now that it's recognized
+    sender.isEnabled = true   // rather than waiting for user to let go of screen
+    
+    DataController.shared.pickInsertionIndex()
   }
   
   // MARK: - Route update

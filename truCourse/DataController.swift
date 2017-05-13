@@ -59,7 +59,6 @@ class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate
   }
   
   private(set) var insertionIndex : Int?
-  private      var renumberIndex  : Int?
   
   private(set) var currentLocation  : CLLocation?
   private      var lastRecordedPost : CLLocation?
@@ -336,11 +335,14 @@ class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate
             } ) )
       }
       
-      actions.append(
-        UIAlertAction(title: "add new first post", style:.default, handler:
-          { (_:UIAlertAction)->Void in
-            dpc.confirmAction(type:.Insertion, action: { self.updateState(.Insert(post)) } )
-          } ) )
+      if state != .Inserting
+      {
+        actions.append(
+          UIAlertAction(title: "add new first post", style:.default, handler:
+            { (_:UIAlertAction)->Void in
+              dpc.confirmAction(type:.Insertion, action: { self.updateState(.Insert(post)) } )
+            } ) )
+      }
     }
     else
     {
@@ -355,7 +357,7 @@ class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate
           } ) )
     }
     
-    if insertionIndex != post + 1
+    if state != .Inserting
     {
       actions.append(
         UIAlertAction(title: "add new post \(post+1)", style:.default, handler:
@@ -382,7 +384,7 @@ class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate
         UIAlertAction(title: "renumber post \(post)...", style: .default, handler:
           { (_:UIAlertAction)->Void in
             dpc.confirmAction(type:.RenumberPost(post), action:
-              { self.self.renumber(post:post) } )
+              { self.renumber(post:post) } )
         } ) )
     }
     
@@ -417,29 +419,6 @@ class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate
     dataPageController.updateRoute(route)
     
     updateDeclinationIfNeeded()
-  }
-  
-  func renumber(post:Int)
-  {
-    let rc = UIStoryboard.init(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "RenumberViewController") as! RenumberViewController
-    
-    rc.delegate = self
-    rc.setNeedsStatusBarAppearanceUpdate()
-    dataPageController.definesPresentationContext = true
-    
-    self.renumberIndex = post
-    
-    dataPageController.parent!.present(rc, animated: true)
-  }
-  
-  func renumberView(_ vc: RenumberViewController, didSelect row: Int)
-  {
-    let oldPost = self.renumberIndex!
-    let newPost = (row+1 < oldPost ? row+1 : row+2)
-    
-    let action = RenumberPostAction(from:oldPost, to:newPost)
-    
-    if action.redo() { UndoManager.shared.add(action) }
   }
   
   // MARK: - Undo/Redo actions
@@ -665,17 +644,65 @@ class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate
     locationManager.stopUpdatingHeading()
   }
   
-  // MARK: - Renumber Picker delegate methods
+  // MARK: - Renumber methods
+  
+  
+  func renumber(post:Int)
+  {
+    let rc = UIStoryboard.init(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "RenumberViewController") as! RenumberViewController
+    
+    rc.delegate = self
+    rc.setNeedsStatusBarAppearanceUpdate()
+    rc.originalPost = post
+    dataPageController.definesPresentationContext = true
+    
+    dataPageController.parent!.present(rc, animated: true)
+  }
+  
+  func pickInsertionIndex()
+  {
+    renumber(post:0) // hackish... but all the squirrel logic is right here (post 0 <=> user location)
+  }
   
   func title(for vc: RenumberViewController) -> String?
   {
-    guard let post = self.renumberIndex else { return nil }
-    return "Renumber Post \(post) as:"
+    let post = vc.originalPost
+    
+    if post > 0
+    {
+      return "Renumber Post \(post) as:"
+    }
+    else
+    {
+      return "Add Next Post As:"
+    }
+  }
+  
+  func initialRow(for vc: RenumberViewController) -> Int
+  {
+    let post = vc.originalPost
+    
+    if post>0
+    {
+      return post - 1
+    }
+    else if insertionIndex != nil
+    {
+      return insertionIndex! - 1
+    }
+    else
+    {
+      return route.count
+    }
   }
   
   func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int
   {
-    return route.count - 1
+    let post = pickerView.tag
+    
+    let n = route.count
+    
+    return ( post == 0 ? n+1 : n-1 )
   }
   
   func numberOfComponents(in pickerView: UIPickerView) -> Int
@@ -685,9 +712,38 @@ class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate
   
   func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String?
   {
-    let post = (row+1 < self.renumberIndex! ? row+1 : row+2)
+    // 8 existing posts               8 existing posts
+    // renumber existing post 3       add candidate at ?
+    // oldPost = 3                    oldPost = 0
+    //  row: 0 1 2 3 4 5 6            0 1 2 3 4 5 6 7 8
+    // post: 1 2 4 5 6 7 8            1 2 3 4 5 6 7 8 9
+    
+    let oldPost = pickerView.tag
+    
+    var post = row+1
+    if oldPost > 0 && row >= oldPost-1 { post = post + 1 }
+    
     return "Post \(post)"
   }
+  
+  func renumberView(_ vc: RenumberViewController, didSelect row: Int)
+  {
+    let oldPost = vc.originalPost
+    
+    if oldPost > 0
+    {
+      let newPost = (row < oldPost-1 ? row+1 : row+2)
+      let action = RenumberPostAction(from:oldPost, to:newPost)
+      if action.redo() { UndoManager.shared.add(action) }
+    }
+    else
+    {
+      let newPost = row + 1
+      
+      updateState(.Insert(newPost))
+    }
+  }
+  
   
   // MARK: - Share Route
   
@@ -793,7 +849,6 @@ class DataController : NSObject, CLLocationManagerDelegate, UIPickerViewDelegate
       self.route = ( newRoute == nil ? WorkingRoute() : WorkingRoute(from:newRoute!) )
       if self.state == .Inserting { self.updateState(.Pause) }
       self.insertionIndex = nil
-      self.renumberIndex  = nil
       self.lastRecordedPost = nil
       self.dataPageController.updateRoute(self.route)
     }

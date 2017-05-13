@@ -87,7 +87,10 @@ class ListViewController: UITableViewController, DataViewController
     alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
     
     self.present(alert, animated:true)
-
   }
   
+  @IBAction func handleUserPopupMenu(_ sender: UIButton)
+  {
+    DataController.shared.pickInsertionIndex()
+  }
 }
