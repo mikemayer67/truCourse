@@ -31,13 +31,13 @@ class MainController : UINavigationController, UINavigationControllerDelegate
     if ( toVC   is OptionsViewController && operation == .push ) ||
        ( fromVC is OptionsViewController && operation == .pop )
     {
-      animator = OptionsViewAnimator(self, operator: operation)
+      animator = NavBarItemAnimator(self, operator: operation)
     }
 
     else if ( toVC   is RoutesViewController && operation == .push ) ||
             ( fromVC is RoutesViewController && operation == .pop )
     {
-      animator = RoutesViewAnimator(self, operator: operation)
+      animator = NavBarItemAnimator(self, operator: operation)
     }
     
     return animator

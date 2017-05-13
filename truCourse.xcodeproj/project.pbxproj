@@ -21,7 +21,7 @@
 		2749E0811EB6E44B00B34C0E /* WorkingRoute.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2749E0801EB6E44B00B34C0E /* WorkingRoute.swift */; };
 		274B508F1EA9A7C7000A1527 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 274B508E1EA9A7C7000A1527 /* Extensions.swift */; };
 		2755C5DB1E84E6CC000800F5 /* Trash_ffffff_25.png in Resources */ = {isa = PBXBuildFile; fileRef = 2755C5DA1E84E6CC000800F5 /* Trash_ffffff_25.png */; };
-		277689631E61159C00F25FE3 /* OptionsViewAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 277689621E61159C00F25FE3 /* OptionsViewAnimator.swift */; };
+		277689631E61159C00F25FE3 /* NavBarItemAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 277689621E61159C00F25FE3 /* NavBarItemAnimator.swift */; };
 		278905E41E7961D100F1B40B /* Waypoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278905E31E7961D100F1B40B /* Waypoint.swift */; };
 		27902EEA1E821512004B6D85 /* recenter_64.png in Resources */ = {isa = PBXBuildFile; fileRef = 27902EE91E821512004B6D85 /* recenter_64.png */; };
 		279142F11EC5D7BF00C9057C /* PostImages.swift in Sources */ = {isa = PBXBuildFile; fileRef = 279142F01EC5D7BF00C9057C /* PostImages.swift */; };
@@ -68,7 +68,6 @@
 		27E7754C1E7CB9CE00091C78 /* Circled Pause_ffffff_25.png in Resources */ = {isa = PBXBuildFile; fileRef = 27E7754B1E7CB9CE00091C78 /* Circled Pause_ffffff_25.png */; };
 		27E7754E1E7CC16600091C78 /* Routes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E7754D1E7CC16600091C78 /* Routes.swift */; };
 		27ED92191EBD1E890004028E /* RoutesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27ED92181EBD1E890004028E /* RoutesViewController.swift */; };
-		27ED921B1EBD52AC0004028E /* RoutesViewAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27ED921A1EBD52AC0004028E /* RoutesViewAnimator.swift */; };
 		27ED921D1EBEC9790004028E /* Waypoint Map_000000_25.png in Resources */ = {isa = PBXBuildFile; fileRef = 27ED921C1EBEC9790004028E /* Waypoint Map_000000_25.png */; };
 		27ED921F1EBED6B60004028E /* Trash_000000_25.png in Resources */ = {isa = PBXBuildFile; fileRef = 27ED921E1EBED6B60004028E /* Trash_000000_25.png */; };
 		27F26E1C1EA94E90001EF37B /* Near Me_ffffff_25.png in Resources */ = {isa = PBXBuildFile; fileRef = 27F26E1B1EA94E90001EF37B /* Near Me_ffffff_25.png */; };
@@ -91,7 +90,7 @@
 		2749E0801EB6E44B00B34C0E /* WorkingRoute.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WorkingRoute.swift; sourceTree = "<group>"; };
 		274B508E1EA9A7C7000A1527 /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		2755C5DA1E84E6CC000800F5 /* Trash_ffffff_25.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Trash_ffffff_25.png; sourceTree = "<group>"; };
-		277689621E61159C00F25FE3 /* OptionsViewAnimator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OptionsViewAnimator.swift; sourceTree = "<group>"; };
+		277689621E61159C00F25FE3 /* NavBarItemAnimator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavBarItemAnimator.swift; sourceTree = "<group>"; };
 		278905E31E7961D100F1B40B /* Waypoint.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Waypoint.swift; sourceTree = "<group>"; };
 		27902EE91E821512004B6D85 /* recenter_64.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = recenter_64.png; sourceTree = "<group>"; };
 		279142F01EC5D7BF00C9057C /* PostImages.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostImages.swift; sourceTree = "<group>"; };
@@ -140,7 +139,6 @@
 		27E7754B1E7CB9CE00091C78 /* Circled Pause_ffffff_25.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Circled Pause_ffffff_25.png"; sourceTree = "<group>"; };
 		27E7754D1E7CC16600091C78 /* Routes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Routes.swift; sourceTree = "<group>"; };
 		27ED92181EBD1E890004028E /* RoutesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoutesViewController.swift; sourceTree = "<group>"; };
-		27ED921A1EBD52AC0004028E /* RoutesViewAnimator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoutesViewAnimator.swift; sourceTree = "<group>"; };
 		27ED921C1EBEC9790004028E /* Waypoint Map_000000_25.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Waypoint Map_000000_25.png"; sourceTree = "<group>"; };
 		27ED921E1EBED6B60004028E /* Trash_000000_25.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Trash_000000_25.png; sourceTree = "<group>"; };
 		27F26E1B1EA94E90001EF37B /* Near Me_ffffff_25.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Near Me_ffffff_25.png"; sourceTree = "<group>"; };
@@ -176,6 +174,7 @@
 				278905E31E7961D100F1B40B /* Waypoint.swift */,
 				273DCEB21E7ACC11005AE82E /* Route.swift */,
 				273D83811E8163B1003F5B49 /* RouteID.swift */,
+				27E7754D1E7CC16600091C78 /* Routes.swift */,
 				2742AC9D1EAC39AB00B2EC53 /* UndoableActions.swift */,
 				2749E0801EB6E44B00B34C0E /* WorkingRoute.swift */,
 			);
@@ -218,8 +217,7 @@
 				27AA19831EB07055003FB5F6 /* SupportClasses */,
 				27DB65E21E60E2D100498C12 /* DataViews */,
 				278905E21E7961AC00F1B40B /* Data */,
-				27ED92151EBD007F0004028E /* Routes */,
-				27DB65E11E60E2B500498C12 /* Options */,
+				27ED92151EBD007F0004028E /* NavBarItems */,
 				27C558461E5F877E004FF32A /* Icons */,
 				27C558531E5F885B004FF32A /* Main.storyboard */,
 				27C558331E5F872E004FF32A /* LaunchScreen.storyboard */,
@@ -267,16 +265,6 @@
 			name = Icons;
 			sourceTree = "<group>";
 		};
-		27DB65E11E60E2B500498C12 /* Options */ = {
-			isa = PBXGroup;
-			children = (
-				27C558551E5F8ABB004FF32A /* Options.swift */,
-				27C5585D1E5F97B2004FF32A /* OptionsViewController.swift */,
-				277689621E61159C00F25FE3 /* OptionsViewAnimator.swift */,
-			);
-			name = Options;
-			sourceTree = "<group>";
-		};
 		27DB65E21E60E2D100498C12 /* DataViews */ = {
 			isa = PBXGroup;
 			children = (
@@ -296,15 +284,16 @@
 			name = DataViews;
 			sourceTree = "<group>";
 		};
-		27ED92151EBD007F0004028E /* Routes */ = {
+		27ED92151EBD007F0004028E /* NavBarItems */ = {
 			isa = PBXGroup;
 			children = (
-				27E7754D1E7CC16600091C78 /* Routes.swift */,
 				27ED92181EBD1E890004028E /* RoutesViewController.swift */,
-				27ED921A1EBD52AC0004028E /* RoutesViewAnimator.swift */,
 				2717BC201EC02D1400082BD7 /* RouteDetailViewController.swift */,
+				27C558551E5F8ABB004FF32A /* Options.swift */,
+				27C5585D1E5F97B2004FF32A /* OptionsViewController.swift */,
+				277689621E61159C00F25FE3 /* NavBarItemAnimator.swift */,
 			);
-			name = Routes;
+			name = NavBarItems;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -423,7 +412,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				27ED921B1EBD52AC0004028E /* RoutesViewAnimator.swift in Sources */,
 				270A77721E8CC570001E605B /* InsertionPoint.swift in Sources */,
 				2749E0811EB6E44B00B34C0E /* WorkingRoute.swift in Sources */,
 				2793480C1E8A829E00594B0D /* DataViewController.swift in Sources */,
@@ -437,7 +425,7 @@
 				279142F11EC5D7BF00C9057C /* PostImages.swift in Sources */,
 				273D83821E8163B1003F5B49 /* RouteID.swift in Sources */,
 				273DCEB31E7ACC11005AE82E /* Route.swift in Sources */,
-				277689631E61159C00F25FE3 /* OptionsViewAnimator.swift in Sources */,
+				277689631E61159C00F25FE3 /* NavBarItemAnimator.swift in Sources */,
 				27BCD99A1EC4728200FC33C8 /* ListViewCells.swift in Sources */,
 				27B10CFE1E6060E3005099BD /* MainController.swift in Sources */,
 				27E7754E1E7CC16600091C78 /* Routes.swift in Sources */,
@@ -578,7 +566,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 3.0;
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
@@ -594,7 +582,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.vmwishes.app1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};

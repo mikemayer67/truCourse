@@ -1,5 +1,5 @@
 //
-//  OptionsViewAnimator.swift
+//  NavBarItemAnimator.swift
 //  truCourse
 //
 //  Created by Mike Mayer on 2/24/17.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class OptionsViewAnimator: NSObject, UIViewControllerAnimatedTransitioning
+class NavBarItemAnimator: NSObject, UIViewControllerAnimatedTransitioning
 {
   var nav  : UINavigationController
   var type : UINavigationControllerOperation
